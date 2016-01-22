@@ -1,0 +1,832 @@
+ARM GAS  C:\Users\Sean\AppData\Local\Temp\ccAVJWGl.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"cymetadata.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.global	cy_metadata
+  19              		.global	cy_meta_flashprotect
+  20              		.global	cy_meta_wonvl
+  21              		.global	cy_meta_custnvl
+  22              		.global	cy_meta_configecc
+  23              		.section	.cyconfigecc,"a",%progbits
+  24              		.align	2
+  25              		.type	cy_meta_configecc, %object
+  26              		.size	cy_meta_configecc, 320
+  27              	cy_meta_configecc:
+  28 0000 01       		.byte	1
+  29 0001 52       		.byte	82
+  30 0002 00       		.byte	0
+  31 0003 40       		.byte	64
+  32 0004 02       		.byte	2
+  33 0005 64       		.byte	100
+  34 0006 00       		.byte	0
+  35 0007 40       		.byte	64
+  36 0008 01       		.byte	1
+  37 0009 0B       		.byte	11
+  38 000a 01       		.byte	1
+  39 000b 40       		.byte	64
+  40 000c 54       		.byte	84
+  41 000d 0C       		.byte	12
+  42 000e 01       		.byte	1
+  43 000f 40       		.byte	64
+  44 0010 2E       		.byte	46
+  45 0011 0D       		.byte	13
+  46 0012 01       		.byte	1
+  47 0013 40       		.byte	64
+  48 0014 02       		.byte	2
+  49 0015 45       		.byte	69
+  50 0016 01       		.byte	1
+  51 0017 40       		.byte	64
+  52 0018 02       		.byte	2
+  53 0019 46       		.byte	70
+  54 001a 01       		.byte	1
+  55 001b 40       		.byte	64
+  56 001c 02       		.byte	2
+  57 001d 50       		.byte	80
+ARM GAS  C:\Users\Sean\AppData\Local\Temp\ccAVJWGl.s 			page 2
+
+
+  58 001e 01       		.byte	1
+  59 001f 40       		.byte	64
+  60 0020 10       		.byte	16
+  61 0021 02       		.byte	2
+  62 0022 8C       		.byte	-116
+  63 0023 0D       		.byte	13
+  64 0024 8D       		.byte	-115
+  65 0025 0D       		.byte	13
+  66 0026 B4       		.byte	-76
+  67 0027 40       		.byte	64
+  68 0028 02       		.byte	2
+  69 0029 08       		.byte	8
+  70 002a 07       		.byte	7
+  71 002b 01       		.byte	1
+  72 002c 0C       		.byte	12
+  73 002d 01       		.byte	1
+  74 002e 0E       		.byte	14
+  75 002f 02       		.byte	2
+  76 0030 10       		.byte	16
+  77 0031 02       		.byte	2
+  78 0032 12       		.byte	18
+  79 0033 01       		.byte	1
+  80 0034 13       		.byte	19
+  81 0035 04       		.byte	4
+  82 0036 16       		.byte	22
+  83 0037 14       		.byte	20
+  84 0038 1A       		.byte	26
+  85 0039 10       		.byte	16
+  86 003a 1B       		.byte	27
+  87 003b 05       		.byte	5
+  88 003c 1E       		.byte	30
+  89 003d 04       		.byte	4
+  90 003e 23       		.byte	35
+  91 003f 08       		.byte	8
+  92 0040 2F       		.byte	47
+  93 0041 02       		.byte	2
+  94 0042 30       		.byte	48
+  95 0043 03       		.byte	3
+  96 0044 31       		.byte	49
+  97 0045 01       		.byte	1
+  98 0046 32       		.byte	50
+  99 0047 08       		.byte	8
+ 100 0048 33       		.byte	51
+ 101 0049 02       		.byte	2
+ 102 004a 34       		.byte	52
+ 103 004b 10       		.byte	16
+ 104 004c 35       		.byte	53
+ 105 004d 04       		.byte	4
+ 106 004e 36       		.byte	54
+ 107 004f 04       		.byte	4
+ 108 0050 37       		.byte	55
+ 109 0051 08       		.byte	8
+ 110 0052 3E       		.byte	62
+ 111 0053 11       		.byte	17
+ 112 0054 3F       		.byte	63
+ 113 0055 10       		.byte	16
+ 114 0056 40       		.byte	64
+ARM GAS  C:\Users\Sean\AppData\Local\Temp\ccAVJWGl.s 			page 3
+
+
+ 115 0057 30       		.byte	48
+ 116 0058 41       		.byte	65
+ 117 0059 06       		.byte	6
+ 118 005a 45       		.byte	69
+ 119 005b D2       		.byte	-46
+ 120 005c 46       		.byte	70
+ 121 005d 20       		.byte	32
+ 122 005e 47       		.byte	71
+ 123 005f 10       		.byte	16
+ 124 0060 48       		.byte	72
+ 125 0061 2B       		.byte	43
+ 126 0062 49       		.byte	73
+ 127 0063 FF       		.byte	-1
+ 128 0064 4A       		.byte	74
+ 129 0065 FF       		.byte	-1
+ 130 0066 4B       		.byte	75
+ 131 0067 FF       		.byte	-1
+ 132 0068 4D       		.byte	77
+ 133 0069 A0       		.byte	-96
+ 134 006a 4F       		.byte	79
+ 135 006b 04       		.byte	4
+ 136 006c 50       		.byte	80
+ 137 006d 18       		.byte	24
+ 138 006e 52       		.byte	82
+ 139 006f 80       		.byte	-128
+ 140 0070 54       		.byte	84
+ 141 0071 05       		.byte	5
+ 142 0072 58       		.byte	88
+ 143 0073 04       		.byte	4
+ 144 0074 59       		.byte	89
+ 145 0075 04       		.byte	4
+ 146 0076 5A       		.byte	90
+ 147 0077 04       		.byte	4
+ 148 0078 5B       		.byte	91
+ 149 0079 04       		.byte	4
+ 150 007a 5F       		.byte	95
+ 151 007b 01       		.byte	1
+ 152 007c 60       		.byte	96
+ 153 007d 40       		.byte	64
+ 154 007e 62       		.byte	98
+ 155 007f C0       		.byte	-64
+ 156 0080 64       		.byte	100
+ 157 0081 40       		.byte	64
+ 158 0082 65       		.byte	101
+ 159 0083 40       		.byte	64
+ 160 0084 66       		.byte	102
+ 161 0085 C0       		.byte	-64
+ 162 0086 68       		.byte	104
+ 163 0087 C0       		.byte	-64
+ 164 0088 6A       		.byte	106
+ 165 0089 C0       		.byte	-64
+ 166 008a 6C       		.byte	108
+ 167 008b C0       		.byte	-64
+ 168 008c 6E       		.byte	110
+ 169 008d C0       		.byte	-64
+ 170 008e 88       		.byte	-120
+ 171 008f 02       		.byte	2
+ARM GAS  C:\Users\Sean\AppData\Local\Temp\ccAVJWGl.s 			page 4
+
+
+ 172 0090 92       		.byte	-110
+ 173 0091 01       		.byte	1
+ 174 0092 9C       		.byte	-100
+ 175 0093 01       		.byte	1
+ 176 0094 A6       		.byte	-90
+ 177 0095 06       		.byte	6
+ 178 0096 B0       		.byte	-80
+ 179 0097 01       		.byte	1
+ 180 0098 B2       		.byte	-78
+ 181 0099 04       		.byte	4
+ 182 009a B6       		.byte	-74
+ 183 009b 02       		.byte	2
+ 184 009c C0       		.byte	-64
+ 185 009d 20       		.byte	32
+ 186 009e C1       		.byte	-63
+ 187 009f 05       		.byte	5
+ 188 00a0 C5       		.byte	-59
+ 189 00a1 D1       		.byte	-47
+ 190 00a2 C7       		.byte	-57
+ 191 00a3 20       		.byte	32
+ 192 00a4 C8       		.byte	-56
+ 193 00a5 23       		.byte	35
+ 194 00a6 C9       		.byte	-55
+ 195 00a7 FF       		.byte	-1
+ 196 00a8 CA       		.byte	-54
+ 197 00a9 FF       		.byte	-1
+ 198 00aa CB       		.byte	-53
+ 199 00ab FF       		.byte	-1
+ 200 00ac CD       		.byte	-51
+ 201 00ad A0       		.byte	-96
+ 202 00ae CF       		.byte	-49
+ 203 00af 04       		.byte	4
+ 204 00b0 D0       		.byte	-48
+ 205 00b1 18       		.byte	24
+ 206 00b2 D2       		.byte	-46
+ 207 00b3 80       		.byte	-128
+ 208 00b4 D4       		.byte	-44
+ 209 00b5 05       		.byte	5
+ 210 00b6 D8       		.byte	-40
+ 211 00b7 04       		.byte	4
+ 212 00b8 DA       		.byte	-38
+ 213 00b9 04       		.byte	4
+ 214 00ba DB       		.byte	-37
+ 215 00bb 04       		.byte	4
+ 216 00bc DF       		.byte	-33
+ 217 00bd 01       		.byte	1
+ 218 00be E0       		.byte	-32
+ 219 00bf 40       		.byte	64
+ 220 00c0 E2       		.byte	-30
+ 221 00c1 C0       		.byte	-64
+ 222 00c2 E4       		.byte	-28
+ 223 00c3 40       		.byte	64
+ 224 00c4 E5       		.byte	-27
+ 225 00c5 40       		.byte	64
+ 226 00c6 E6       		.byte	-26
+ 227 00c7 C0       		.byte	-64
+ 228 00c8 E8       		.byte	-24
+ARM GAS  C:\Users\Sean\AppData\Local\Temp\ccAVJWGl.s 			page 5
+
+
+ 229 00c9 C0       		.byte	-64
+ 230 00ca EA       		.byte	-22
+ 231 00cb C0       		.byte	-64
+ 232 00cc EC       		.byte	-20
+ 233 00cd C0       		.byte	-64
+ 234 00ce EE       		.byte	-18
+ 235 00cf C0       		.byte	-64
+ 236 00d0 00       		.byte	0
+ 237 00d1 10       		.byte	16
+ 238 00d2 05       		.byte	5
+ 239 00d3 40       		.byte	64
+ 240 00d4 07       		.byte	7
+ 241 00d5 40       		.byte	64
+ 242 00d6 09       		.byte	9
+ 243 00d7 41       		.byte	65
+ 244 00d8 0D       		.byte	13
+ 245 00d9 02       		.byte	2
+ 246 00da 0E       		.byte	14
+ 247 00db 20       		.byte	32
+ 248 00dc 0F       		.byte	15
+ 249 00dd 0A       		.byte	10
+ 250 00de 13       		.byte	19
+ 251 00df 04       		.byte	4
+ 252 00e0 18       		.byte	24
+ 253 00e1 10       		.byte	16
+ 254 00e2 19       		.byte	25
+ 255 00e3 80       		.byte	-128
+ 256 00e4 1A       		.byte	26
+ 257 00e5 40       		.byte	64
+ 258 00e6 1C       		.byte	28
+ 259 00e7 40       		.byte	64
+ 260 00e8 1D       		.byte	29
+ 261 00e9 48       		.byte	72
+ 262 00ea 1E       		.byte	30
+ 263 00eb 28       		.byte	40
+ 264 00ec 25       		.byte	37
+ 265 00ed 42       		.byte	66
+ 266 00ee 27       		.byte	39
+ 267 00ef 34       		.byte	52
+ 268 00f0 2E       		.byte	46
+ 269 00f1 82       		.byte	-126
+ 270 00f2 36       		.byte	54
+ 271 00f3 02       		.byte	2
+ 272 00f4 37       		.byte	55
+ 273 00f5 20       		.byte	32
+ 274 00f6 3F       		.byte	63
+ 275 00f7 04       		.byte	4
+ 276 00f8 43       		.byte	67
+ 277 00f9 10       		.byte	16
+ 278 00fa 45       		.byte	69
+ 279 00fb 08       		.byte	8
+ 280 00fc 49       		.byte	73
+ 281 00fd 02       		.byte	2
+ 282 00fe 4A       		.byte	74
+ 283 00ff 02       		.byte	2
+ 284 0100 4B       		.byte	75
+ 285 0101 04       		.byte	4
+ARM GAS  C:\Users\Sean\AppData\Local\Temp\ccAVJWGl.s 			page 6
+
+
+ 286 0102 4D       		.byte	77
+ 287 0103 01       		.byte	1
+ 288 0104 4F       		.byte	79
+ 289 0105 28       		.byte	40
+ 290 0106 52       		.byte	82
+ 291 0107 02       		.byte	2
+ 292 0108 55       		.byte	85
+ 293 0109 01       		.byte	1
+ 294 010a 56       		.byte	86
+ 295 010b 02       		.byte	2
+ 296 010c 57       		.byte	87
+ 297 010d 11       		.byte	17
+ 298 010e 59       		.byte	89
+ 299 010f 82       		.byte	-126
+ 300 0110 5B       		.byte	91
+ 301 0111 04       		.byte	4
+ 302 0112 5D       		.byte	93
+ 303 0113 01       		.byte	1
+ 304 0114 5E       		.byte	94
+ 305 0115 48       		.byte	72
+ 306 0116 72       		.byte	114
+ 307 0117 80       		.byte	-128
+ 308 0118 77       		.byte	119
+ 309 0119 40       		.byte	64
+ 310 011a C0       		.byte	-64
+ 311 011b 92       		.byte	-110
+ 312 011c C2       		.byte	-62
+ 313 011d F9       		.byte	-7
+ 314 011e C4       		.byte	-60
+ 315 011f 04       		.byte	4
+ 316 0120 CA       		.byte	-54
+ 317 0121 90       		.byte	-112
+ 318 0122 CC       		.byte	-52
+ 319 0123 A0       		.byte	-96
+ 320 0124 CE       		.byte	-50
+ 321 0125 40       		.byte	64
+ 322 0126 D0       		.byte	-48
+ 323 0127 44       		.byte	68
+ 324 0128 D2       		.byte	-46
+ 325 0129 28       		.byte	40
+ 326 012a D6       		.byte	-42
+ 327 012b DB       		.byte	-37
+ 328 012c 57       		.byte	87
+ 329 012d 80       		.byte	-128
+ 330 012e D4       		.byte	-44
+ 331 012f 02       		.byte	2
+ 332 0130 B7       		.byte	-73
+ 333 0131 80       		.byte	-128
+ 334 0132 E8       		.byte	-24
+ 335 0133 02       		.byte	2
+ 336 0134 00       		.byte	0
+ 337 0135 01       		.byte	1
+ 338 0136 0E       		.byte	14
+ 339 0137 01       		.byte	1
+ 340 0138 00       		.byte	0
+ 341 0139 02       		.byte	2
+ 342 013a 02       		.byte	2
+ARM GAS  C:\Users\Sean\AppData\Local\Temp\ccAVJWGl.s 			page 7
+
+
+ 343 013b 00       		.byte	0
+ 344 013c 02       		.byte	2
+ 345 013d 00       		.byte	0
+ 346 013e 00       		.byte	0
+ 347 013f 00       		.byte	0
+ 348              		.section	.cywolatch,"a",%progbits
+ 349              		.align	2
+ 350              		.type	cy_meta_wonvl, %object
+ 351              		.size	cy_meta_wonvl, 4
+ 352              	cy_meta_wonvl:
+ 353 0000 BC       		.byte	-68
+ 354 0001 90       		.byte	-112
+ 355 0002 AC       		.byte	-84
+ 356 0003 AF       		.byte	-81
+ 357              		.section	.cycustnvl,"a",%progbits
+ 358              		.align	2
+ 359              		.type	cy_meta_custnvl, %object
+ 360              		.size	cy_meta_custnvl, 4
+ 361              	cy_meta_custnvl:
+ 362 0000 00       		.byte	0
+ 363 0001 00       		.byte	0
+ 364 0002 40       		.byte	64
+ 365 0003 05       		.byte	5
+ 366              		.section	.cymeta,"a",%progbits
+ 367              		.align	2
+ 368              		.type	cy_metadata, %object
+ 369              		.size	cy_metadata, 12
+ 370              	cy_metadata:
+ 371 0000 00       		.byte	0
+ 372 0001 01       		.byte	1
+ 373 0002 2E       		.byte	46
+ 374 0003 12       		.byte	18
+ 375 0004 30       		.byte	48
+ 376 0005 69       		.byte	105
+ 377 0006 00       		.byte	0
+ 378 0007 01       		.byte	1
+ 379 0008 00       		.byte	0
+ 380 0009 00       		.byte	0
+ 381 000a 00       		.byte	0
+ 382 000b 00       		.byte	0
+ 383              		.section	.cyflashprotect,"a",%progbits
+ 384              		.align	2
+ 385              		.type	cy_meta_flashprotect, %object
+ 386              		.size	cy_meta_flashprotect, 256
+ 387              	cy_meta_flashprotect:
+ 388 0000 00000000 		.space	256
+ 388      00000000 
+ 388      00000000 
+ 388      00000000 
+ 388      00000000 
+ 389              		.text
+ 390              	.Letext0:
+ 391              		.file 1 ".\\Generated_Source\\PSoC5\\cymetadata.c"
+ 392              		.file 2 ".\\Generated_Source\\PSoC5\\cytypes.h"
+ 393              		.section	.debug_info,"",%progbits
+ 394              	.Ldebug_info0:
+ 395 0000 36010000 		.4byte	0x136
+ARM GAS  C:\Users\Sean\AppData\Local\Temp\ccAVJWGl.s 			page 8
+
+
+ 396 0004 0400     		.2byte	0x4
+ 397 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 398 000a 04       		.byte	0x4
+ 399 000b 01       		.uleb128 0x1
+ 400 000c 94000000 		.4byte	.LASF18
+ 401 0010 01       		.byte	0x1
+ 402 0011 00000000 		.4byte	.LASF19
+ 403 0015 9E010000 		.4byte	.LASF20
+ 404 0019 00000000 		.4byte	.Ldebug_line0
+ 405 001d 02       		.uleb128 0x2
+ 406 001e 01       		.byte	0x1
+ 407 001f 06       		.byte	0x6
+ 408 0020 F4010000 		.4byte	.LASF0
+ 409 0024 02       		.uleb128 0x2
+ 410 0025 01       		.byte	0x1
+ 411 0026 08       		.byte	0x8
+ 412 0027 38000000 		.4byte	.LASF1
+ 413 002b 02       		.uleb128 0x2
+ 414 002c 02       		.byte	0x2
+ 415 002d 05       		.byte	0x5
+ 416 002e 85010000 		.4byte	.LASF2
+ 417 0032 02       		.uleb128 0x2
+ 418 0033 02       		.byte	0x2
+ 419 0034 07       		.byte	0x7
+ 420 0035 58000000 		.4byte	.LASF3
+ 421 0039 02       		.uleb128 0x2
+ 422 003a 04       		.byte	0x4
+ 423 003b 05       		.byte	0x5
+ 424 003c 95010000 		.4byte	.LASF4
+ 425 0040 02       		.uleb128 0x2
+ 426 0041 04       		.byte	0x4
+ 427 0042 07       		.byte	0x7
+ 428 0043 46000000 		.4byte	.LASF5
+ 429 0047 02       		.uleb128 0x2
+ 430 0048 08       		.byte	0x8
+ 431 0049 05       		.byte	0x5
+ 432 004a 72010000 		.4byte	.LASF6
+ 433 004e 02       		.uleb128 0x2
+ 434 004f 08       		.byte	0x8
+ 435 0050 07       		.byte	0x7
+ 436 0051 2F010000 		.4byte	.LASF7
+ 437 0055 03       		.uleb128 0x3
+ 438 0056 04       		.byte	0x4
+ 439 0057 05       		.byte	0x5
+ 440 0058 696E7400 		.ascii	"int\000"
+ 441 005c 02       		.uleb128 0x2
+ 442 005d 04       		.byte	0x4
+ 443 005e 07       		.byte	0x7
+ 444 005f 22010000 		.4byte	.LASF8
+ 445 0063 04       		.uleb128 0x4
+ 446 0064 8F010000 		.4byte	.LASF21
+ 447 0068 02       		.byte	0x2
+ 448 0069 C2       		.byte	0xc2
+ 449 006a 24000000 		.4byte	0x24
+ 450 006e 02       		.uleb128 0x2
+ 451 006f 04       		.byte	0x4
+ 452 0070 04       		.byte	0x4
+ARM GAS  C:\Users\Sean\AppData\Local\Temp\ccAVJWGl.s 			page 9
+
+
+ 453 0071 32000000 		.4byte	.LASF9
+ 454 0075 02       		.uleb128 0x2
+ 455 0076 08       		.byte	0x8
+ 456 0077 04       		.byte	0x4
+ 457 0078 6B000000 		.4byte	.LASF10
+ 458 007c 02       		.uleb128 0x2
+ 459 007d 01       		.byte	0x1
+ 460 007e 08       		.byte	0x8
+ 461 007f 80010000 		.4byte	.LASF11
+ 462 0083 05       		.uleb128 0x5
+ 463 0084 63000000 		.4byte	0x63
+ 464 0088 94000000 		.4byte	0x94
+ 465 008c 06       		.uleb128 0x6
+ 466 008d 94000000 		.4byte	0x94
+ 467 0091 3F01     		.2byte	0x13f
+ 468 0093 00       		.byte	0
+ 469 0094 02       		.uleb128 0x2
+ 470 0095 04       		.byte	0x4
+ 471 0096 07       		.byte	0x7
+ 472 0097 69010000 		.4byte	.LASF12
+ 473 009b 07       		.uleb128 0x7
+ 474 009c 82000000 		.4byte	.LASF13
+ 475 00a0 01       		.byte	0x1
+ 476 00a1 1C       		.byte	0x1c
+ 477 00a2 AC000000 		.4byte	0xac
+ 478 00a6 05       		.uleb128 0x5
+ 479 00a7 03       		.byte	0x3
+ 480 00a8 00000000 		.4byte	cy_meta_configecc
+ 481 00ac 08       		.uleb128 0x8
+ 482 00ad 83000000 		.4byte	0x83
+ 483 00b1 05       		.uleb128 0x5
+ 484 00b2 63000000 		.4byte	0x63
+ 485 00b6 C1000000 		.4byte	0xc1
+ 486 00ba 09       		.uleb128 0x9
+ 487 00bb 94000000 		.4byte	0x94
+ 488 00bf 03       		.byte	0x3
+ 489 00c0 00       		.byte	0
+ 490 00c1 07       		.uleb128 0x7
+ 491 00c2 72000000 		.4byte	.LASF14
+ 492 00c6 01       		.byte	0x1
+ 493 00c7 4E       		.byte	0x4e
+ 494 00c8 D2000000 		.4byte	0xd2
+ 495 00cc 05       		.uleb128 0x5
+ 496 00cd 03       		.byte	0x3
+ 497 00ce 00000000 		.4byte	cy_meta_custnvl
+ 498 00d2 08       		.uleb128 0x8
+ 499 00d3 B1000000 		.4byte	0xb1
+ 500 00d7 07       		.uleb128 0x7
+ 501 00d8 5B010000 		.4byte	.LASF15
+ 502 00dc 01       		.byte	0x1
+ 503 00dd 59       		.byte	0x59
+ 504 00de E8000000 		.4byte	0xe8
+ 505 00e2 05       		.uleb128 0x5
+ 506 00e3 03       		.byte	0x3
+ 507 00e4 00000000 		.4byte	cy_meta_wonvl
+ 508 00e8 08       		.uleb128 0x8
+ 509 00e9 B1000000 		.4byte	0xb1
+ARM GAS  C:\Users\Sean\AppData\Local\Temp\ccAVJWGl.s 			page 10
+
+
+ 510 00ed 05       		.uleb128 0x5
+ 511 00ee 63000000 		.4byte	0x63
+ 512 00f2 FD000000 		.4byte	0xfd
+ 513 00f6 09       		.uleb128 0x9
+ 514 00f7 94000000 		.4byte	0x94
+ 515 00fb FF       		.byte	0xff
+ 516 00fc 00       		.byte	0
+ 517 00fd 07       		.uleb128 0x7
+ 518 00fe 46010000 		.4byte	.LASF16
+ 519 0102 01       		.byte	0x1
+ 520 0103 64       		.byte	0x64
+ 521 0104 0E010000 		.4byte	0x10e
+ 522 0108 05       		.uleb128 0x5
+ 523 0109 03       		.byte	0x3
+ 524 010a 00000000 		.4byte	cy_meta_flashprotect
+ 525 010e 08       		.uleb128 0x8
+ 526 010f ED000000 		.4byte	0xed
+ 527 0113 05       		.uleb128 0x5
+ 528 0114 63000000 		.4byte	0x63
+ 529 0118 23010000 		.4byte	0x123
+ 530 011c 09       		.uleb128 0x9
+ 531 011d 94000000 		.4byte	0x94
+ 532 0121 0B       		.byte	0xb
+ 533 0122 00       		.byte	0
+ 534 0123 07       		.uleb128 0x7
+ 535 0124 26000000 		.4byte	.LASF17
+ 536 0128 01       		.byte	0x1
+ 537 0129 8E       		.byte	0x8e
+ 538 012a 34010000 		.4byte	0x134
+ 539 012e 05       		.uleb128 0x5
+ 540 012f 03       		.byte	0x3
+ 541 0130 00000000 		.4byte	cy_metadata
+ 542 0134 08       		.uleb128 0x8
+ 543 0135 13010000 		.4byte	0x113
+ 544 0139 00       		.byte	0
+ 545              		.section	.debug_abbrev,"",%progbits
+ 546              	.Ldebug_abbrev0:
+ 547 0000 01       		.uleb128 0x1
+ 548 0001 11       		.uleb128 0x11
+ 549 0002 01       		.byte	0x1
+ 550 0003 25       		.uleb128 0x25
+ 551 0004 0E       		.uleb128 0xe
+ 552 0005 13       		.uleb128 0x13
+ 553 0006 0B       		.uleb128 0xb
+ 554 0007 03       		.uleb128 0x3
+ 555 0008 0E       		.uleb128 0xe
+ 556 0009 1B       		.uleb128 0x1b
+ 557 000a 0E       		.uleb128 0xe
+ 558 000b 10       		.uleb128 0x10
+ 559 000c 17       		.uleb128 0x17
+ 560 000d 00       		.byte	0
+ 561 000e 00       		.byte	0
+ 562 000f 02       		.uleb128 0x2
+ 563 0010 24       		.uleb128 0x24
+ 564 0011 00       		.byte	0
+ 565 0012 0B       		.uleb128 0xb
+ 566 0013 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Sean\AppData\Local\Temp\ccAVJWGl.s 			page 11
+
+
+ 567 0014 3E       		.uleb128 0x3e
+ 568 0015 0B       		.uleb128 0xb
+ 569 0016 03       		.uleb128 0x3
+ 570 0017 0E       		.uleb128 0xe
+ 571 0018 00       		.byte	0
+ 572 0019 00       		.byte	0
+ 573 001a 03       		.uleb128 0x3
+ 574 001b 24       		.uleb128 0x24
+ 575 001c 00       		.byte	0
+ 576 001d 0B       		.uleb128 0xb
+ 577 001e 0B       		.uleb128 0xb
+ 578 001f 3E       		.uleb128 0x3e
+ 579 0020 0B       		.uleb128 0xb
+ 580 0021 03       		.uleb128 0x3
+ 581 0022 08       		.uleb128 0x8
+ 582 0023 00       		.byte	0
+ 583 0024 00       		.byte	0
+ 584 0025 04       		.uleb128 0x4
+ 585 0026 16       		.uleb128 0x16
+ 586 0027 00       		.byte	0
+ 587 0028 03       		.uleb128 0x3
+ 588 0029 0E       		.uleb128 0xe
+ 589 002a 3A       		.uleb128 0x3a
+ 590 002b 0B       		.uleb128 0xb
+ 591 002c 3B       		.uleb128 0x3b
+ 592 002d 0B       		.uleb128 0xb
+ 593 002e 49       		.uleb128 0x49
+ 594 002f 13       		.uleb128 0x13
+ 595 0030 00       		.byte	0
+ 596 0031 00       		.byte	0
+ 597 0032 05       		.uleb128 0x5
+ 598 0033 01       		.uleb128 0x1
+ 599 0034 01       		.byte	0x1
+ 600 0035 49       		.uleb128 0x49
+ 601 0036 13       		.uleb128 0x13
+ 602 0037 01       		.uleb128 0x1
+ 603 0038 13       		.uleb128 0x13
+ 604 0039 00       		.byte	0
+ 605 003a 00       		.byte	0
+ 606 003b 06       		.uleb128 0x6
+ 607 003c 21       		.uleb128 0x21
+ 608 003d 00       		.byte	0
+ 609 003e 49       		.uleb128 0x49
+ 610 003f 13       		.uleb128 0x13
+ 611 0040 2F       		.uleb128 0x2f
+ 612 0041 05       		.uleb128 0x5
+ 613 0042 00       		.byte	0
+ 614 0043 00       		.byte	0
+ 615 0044 07       		.uleb128 0x7
+ 616 0045 34       		.uleb128 0x34
+ 617 0046 00       		.byte	0
+ 618 0047 03       		.uleb128 0x3
+ 619 0048 0E       		.uleb128 0xe
+ 620 0049 3A       		.uleb128 0x3a
+ 621 004a 0B       		.uleb128 0xb
+ 622 004b 3B       		.uleb128 0x3b
+ 623 004c 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Sean\AppData\Local\Temp\ccAVJWGl.s 			page 12
+
+
+ 624 004d 49       		.uleb128 0x49
+ 625 004e 13       		.uleb128 0x13
+ 626 004f 3F       		.uleb128 0x3f
+ 627 0050 19       		.uleb128 0x19
+ 628 0051 02       		.uleb128 0x2
+ 629 0052 18       		.uleb128 0x18
+ 630 0053 00       		.byte	0
+ 631 0054 00       		.byte	0
+ 632 0055 08       		.uleb128 0x8
+ 633 0056 26       		.uleb128 0x26
+ 634 0057 00       		.byte	0
+ 635 0058 49       		.uleb128 0x49
+ 636 0059 13       		.uleb128 0x13
+ 637 005a 00       		.byte	0
+ 638 005b 00       		.byte	0
+ 639 005c 09       		.uleb128 0x9
+ 640 005d 21       		.uleb128 0x21
+ 641 005e 00       		.byte	0
+ 642 005f 49       		.uleb128 0x49
+ 643 0060 13       		.uleb128 0x13
+ 644 0061 2F       		.uleb128 0x2f
+ 645 0062 0B       		.uleb128 0xb
+ 646 0063 00       		.byte	0
+ 647 0064 00       		.byte	0
+ 648 0065 00       		.byte	0
+ 649              		.section	.debug_aranges,"",%progbits
+ 650 0000 14000000 		.4byte	0x14
+ 651 0004 0200     		.2byte	0x2
+ 652 0006 00000000 		.4byte	.Ldebug_info0
+ 653 000a 04       		.byte	0x4
+ 654 000b 00       		.byte	0
+ 655 000c 0000     		.2byte	0
+ 656 000e 0000     		.2byte	0
+ 657 0010 00000000 		.4byte	0
+ 658 0014 00000000 		.4byte	0
+ 659              		.section	.debug_line,"",%progbits
+ 660              	.Ldebug_line0:
+ 661 0000 4F000000 		.section	.debug_str,"MS",%progbits,1
+ 661      02004900 
+ 661      00000201 
+ 661      FB0E0D00 
+ 661      01010101 
+ 662              	.LASF19:
+ 663 0000 2E5C4765 		.ascii	".\\Generated_Source\\PSoC5\\cymetadata.c\000"
+ 663      6E657261 
+ 663      7465645F 
+ 663      536F7572 
+ 663      63655C50 
+ 664              	.LASF17:
+ 665 0026 63795F6D 		.ascii	"cy_metadata\000"
+ 665      65746164 
+ 665      61746100 
+ 666              	.LASF9:
+ 667 0032 666C6F61 		.ascii	"float\000"
+ 667      7400
+ 668              	.LASF1:
+ 669 0038 756E7369 		.ascii	"unsigned char\000"
+ARM GAS  C:\Users\Sean\AppData\Local\Temp\ccAVJWGl.s 			page 13
+
+
+ 669      676E6564 
+ 669      20636861 
+ 669      7200
+ 670              	.LASF5:
+ 671 0046 6C6F6E67 		.ascii	"long unsigned int\000"
+ 671      20756E73 
+ 671      69676E65 
+ 671      6420696E 
+ 671      7400
+ 672              	.LASF3:
+ 673 0058 73686F72 		.ascii	"short unsigned int\000"
+ 673      7420756E 
+ 673      7369676E 
+ 673      65642069 
+ 673      6E7400
+ 674              	.LASF10:
+ 675 006b 646F7562 		.ascii	"double\000"
+ 675      6C6500
+ 676              	.LASF14:
+ 677 0072 63795F6D 		.ascii	"cy_meta_custnvl\000"
+ 677      6574615F 
+ 677      63757374 
+ 677      6E766C00 
+ 678              	.LASF13:
+ 679 0082 63795F6D 		.ascii	"cy_meta_configecc\000"
+ 679      6574615F 
+ 679      636F6E66 
+ 679      69676563 
+ 679      6300
+ 680              	.LASF18:
+ 681 0094 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 681      4320342E 
+ 681      392E3320 
+ 681      32303135 
+ 681      30333033 
+ 682 00c7 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m3 -mthumb -g -O"
+ 682      20726576 
+ 682      6973696F 
+ 682      6E203232 
+ 682      31323230 
+ 683 00fa 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 683      66756E63 
+ 683      74696F6E 
+ 683      2D736563 
+ 683      74696F6E 
+ 684              	.LASF8:
+ 685 0122 756E7369 		.ascii	"unsigned int\000"
+ 685      676E6564 
+ 685      20696E74 
+ 685      00
+ 686              	.LASF7:
+ 687 012f 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 687      206C6F6E 
+ 687      6720756E 
+ 687      7369676E 
+ 687      65642069 
+ 688              	.LASF16:
+ARM GAS  C:\Users\Sean\AppData\Local\Temp\ccAVJWGl.s 			page 14
+
+
+ 689 0146 63795F6D 		.ascii	"cy_meta_flashprotect\000"
+ 689      6574615F 
+ 689      666C6173 
+ 689      6870726F 
+ 689      74656374 
+ 690              	.LASF15:
+ 691 015b 63795F6D 		.ascii	"cy_meta_wonvl\000"
+ 691      6574615F 
+ 691      776F6E76 
+ 691      6C00
+ 692              	.LASF12:
+ 693 0169 73697A65 		.ascii	"sizetype\000"
+ 693      74797065 
+ 693      00
+ 694              	.LASF6:
+ 695 0172 6C6F6E67 		.ascii	"long long int\000"
+ 695      206C6F6E 
+ 695      6720696E 
+ 695      7400
+ 696              	.LASF11:
+ 697 0180 63686172 		.ascii	"char\000"
+ 697      00
+ 698              	.LASF2:
+ 699 0185 73686F72 		.ascii	"short int\000"
+ 699      7420696E 
+ 699      7400
+ 700              	.LASF21:
+ 701 018f 75696E74 		.ascii	"uint8\000"
+ 701      3800
+ 702              	.LASF4:
+ 703 0195 6C6F6E67 		.ascii	"long int\000"
+ 703      20696E74 
+ 703      00
+ 704              	.LASF20:
+ 705 019e 443A5C44 		.ascii	"D:\\Documents\\GoogleDrive\\Courses\\ECEN5053\\PSoC"
+ 705      6F63756D 
+ 705      656E7473 
+ 705      5C476F6F 
+ 705      676C6544 
+ 706 01cc 5F576F72 		.ascii	"_Workspace\\PSoC_Workspace\\AN77759.cydsn\000"
+ 706      6B737061 
+ 706      63655C50 
+ 706      536F435F 
+ 706      576F726B 
+ 707              	.LASF0:
+ 708 01f4 7369676E 		.ascii	"signed char\000"
+ 708      65642063 
+ 708      68617200 
+ 709              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br
