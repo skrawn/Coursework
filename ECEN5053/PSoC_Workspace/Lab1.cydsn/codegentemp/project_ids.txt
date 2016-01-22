@@ -1,0 +1,5 @@
+D:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|889dbfa5-6f32-4cd9-bf49-c44304ad9c5f
+D:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|5cde38fc-0195-4703-b09f-d54a2da68677
+D:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|d505e61d-52a6-44f0-8a9c-bfc151b56126
+D:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|96e7f18e-be66-4f3e-a7a4-ef84b3be3239
+D:\CU_Boulder\Documents\GoogleDrive\ECEN5053\PSOC_Workspace\Lab1.cydsn\Lab1.cyprj|88c05d67-ce1f-4243-a5e1-d401a68eefda
