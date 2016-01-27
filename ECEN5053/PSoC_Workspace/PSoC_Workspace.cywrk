@@ -3,11 +3,15 @@
 <!--This file is machine generated and read. It is not intended to be edited by hand.-->
 <!--Due to this, there is no schema for this file.-->
 <CyGuid_2867d519-54d2-4c01-9830-c51cb08bc3dd type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWrkspc" version="5" xml_contents_version="3" name="PSoC_Workspace" persistent="" platform="NOT_USED">
-<current_project name=".\AN77759.cydsn\AN77759.cyprj" />
+<current_project name=".\Thermistor_HighEnd.cydsn\Thermistor_HighEnd.cyprj" />
 <wrkspc_folders />
 <files />
 <projects>
 <v>.\AN77759.cydsn\AN77759.cyprj</v>
+<v>.\Lab1.cydsn\Lab1.cyprj</v>
+<v>.\Thermistor_HighEnd.cydsn\Thermistor_HighEnd.cyprj</v>
+<v>.\Thermistor_LowEnd.cydsn\Thermistor_LowEnd.cyprj</v>
+<v>.\Thermistor_MidEnd.cydsn\Thermistor_MidEnd.cyprj</v>
 </projects>
 <workspace_id v="b965a2aa-12ec-4628-a836-802771a5ba80" />
 <WriteAppVersionLastSavedWith v="3.3.0.410" />
