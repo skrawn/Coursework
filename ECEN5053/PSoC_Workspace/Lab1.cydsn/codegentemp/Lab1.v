@@ -1,6 +1,6 @@
 // ======================================================================
 // Lab1.v generated from TopDesign.cysch
-// 01/19/2016 at 18:20
+// 01/24/2016 at 14:03
 // This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 // ======================================================================
 
@@ -111,7 +111,7 @@
 `include "D:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\cy_analog_virtualmux_v1_0\cy_analog_virtualmux_v1_0.v"
 `endif
 
-// PGA_v2_0(Gain=0, Power=1, VddaValue=5, Vref_Input=1, CY_API_CALLBACK_HEADER_INCLUDE=#include "cyapicallbacks.h", CY_COMPONENT_NAME=PGA_v2_0, CY_CONTROL_FILE=<:default:>, CY_DATASHEET_FILE=<:default:>, CY_FITTER_NAME=PGA_1, CY_INSTANCE_SHORT_NAME=PGA_1, CY_MAJOR_VERSION=2, CY_MINOR_VERSION=0, CY_REMOVE=false, CY_SUPPRESS_API_GEN=false, CY_VERSION=PSoC Creator  3.3 CP1, INSTANCE_NAME=PGA_1, )
+// PGA_v2_0(Gain=0, Power=3, VddaValue=5, Vref_Input=1, CY_API_CALLBACK_HEADER_INCLUDE=#include "cyapicallbacks.h", CY_COMPONENT_NAME=PGA_v2_0, CY_CONTROL_FILE=<:default:>, CY_DATASHEET_FILE=<:default:>, CY_FITTER_NAME=PGA_1, CY_INSTANCE_SHORT_NAME=PGA_1, CY_MAJOR_VERSION=2, CY_MINOR_VERSION=0, CY_REMOVE=false, CY_SUPPRESS_API_GEN=false, CY_VERSION=PSoC Creator  3.3 CP1, INSTANCE_NAME=PGA_1, )
 module PGA_v2_0_0 (
     Vin,
     Vref,
@@ -246,11 +246,11 @@ module top ;
 
 	assign tmpOE__P0_0_net = (`CYDEV_CHIP_MEMBER_USED == `CYDEV_CHIP_MEMBER_3A && `CYDEV_CHIP_REVISION_USED < `CYDEV_CHIP_REVISION_3A_ES3) ? ~{1'b1} : {1'b1};
 
-	wire [0:0] tmpOE__P0_2_net;
-	wire [0:0] tmpFB_0__P0_2_net;
-	wire [0:0] tmpIO_0__P0_2_net;
-	wire [0:0] tmpINTERRUPT_0__P0_2_net;
-	electrical [0:0] tmpSIOVREF__P0_2_net;
+	wire [0:0] tmpOE__P3_0_net;
+	wire [0:0] tmpFB_0__P3_0_net;
+	wire [0:0] tmpIO_0__P3_0_net;
+	wire [0:0] tmpINTERRUPT_0__P3_0_net;
+	electrical [0:0] tmpSIOVREF__P3_0_net;
 
 	cy_psoc3_pins_v1_10
 		#(.id("77715107-f8d5-47e5-a629-0fb83101ac6b"),
@@ -303,14 +303,14 @@ module top ;
 		  .ovt_needed(1'b0),
 		  .ovt_slew_control(2'b00),
 		  .input_buffer_sel(2'b00))
-		P0_2
-		 (.oe(tmpOE__P0_2_net),
+		P3_0
+		 (.oe(tmpOE__P3_0_net),
 		  .y({1'b0}),
-		  .fb({tmpFB_0__P0_2_net[0:0]}),
+		  .fb({tmpFB_0__P3_0_net[0:0]}),
 		  .analog({Net_9}),
-		  .io({tmpIO_0__P0_2_net[0:0]}),
-		  .siovref(tmpSIOVREF__P0_2_net),
-		  .interrupt({tmpINTERRUPT_0__P0_2_net[0:0]}),
+		  .io({tmpIO_0__P3_0_net[0:0]}),
+		  .siovref(tmpSIOVREF__P3_0_net),
+		  .interrupt({tmpINTERRUPT_0__P3_0_net[0:0]}),
 		  .in_clock({1'b0}),
 		  .in_clock_en({1'b1}),
 		  .in_reset({1'b0}),
@@ -318,7 +318,7 @@ module top ;
 		  .out_clock_en({1'b1}),
 		  .out_reset({1'b0}));
 
-	assign tmpOE__P0_2_net = (`CYDEV_CHIP_MEMBER_USED == `CYDEV_CHIP_MEMBER_3A && `CYDEV_CHIP_REVISION_USED < `CYDEV_CHIP_REVISION_3A_ES3) ? ~{1'b1} : {1'b1};
+	assign tmpOE__P3_0_net = (`CYDEV_CHIP_MEMBER_USED == `CYDEV_CHIP_MEMBER_3A && `CYDEV_CHIP_REVISION_USED < `CYDEV_CHIP_REVISION_3A_ES3) ? ~{1'b1} : {1'b1};
 
     PGA_v2_0_0 PGA_1 (
         .Vin(Net_7),

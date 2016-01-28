@@ -1,6 +1,6 @@
 -- ======================================================================
 -- Lab1.ctl generated from Lab1
--- 01/19/2016 at 18:20
+-- 01/24/2016 at 14:03
 -- This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 -- ======================================================================
 

@@ -138,5 +138,5 @@
     </register>
   </block>
   <block name="P0_0" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="P0_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="P3_0" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
 </blockRegMap>

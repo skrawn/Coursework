@@ -20,8 +20,8 @@
 <dep name=".\Generated_Source\PSoC5\P0_0_aliases.h" />
 <dep name=".\Generated_Source\PSoC5\P0_1.h" />
 <dep name=".\Generated_Source\PSoC5\P0_1_aliases.h" />
-<dep name=".\Generated_Source\PSoC5\P0_2.h" />
-<dep name=".\Generated_Source\PSoC5\P0_2_aliases.h" />
+<dep name=".\Generated_Source\PSoC5\P3_0.h" />
+<dep name=".\Generated_Source\PSoC5\P3_0_aliases.h" />
 <dep name=".\Generated_Source\PSoC5\PGA_1.h" />
 <dep name=".\Generated_Source\PSoC5\core_cm3.h" />
 <dep name=".\Generated_Source\PSoC5\core_cm3_psoc5.h" />
@@ -46,8 +46,8 @@
 <file name=".\Generated_Source\PSoC5\P0_0_aliases.h" />
 <file name=".\Generated_Source\PSoC5\P0_1.h" />
 <file name=".\Generated_Source\PSoC5\P0_1_aliases.h" />
-<file name=".\Generated_Source\PSoC5\P0_2.h" />
-<file name=".\Generated_Source\PSoC5\P0_2_aliases.h" />
+<file name=".\Generated_Source\PSoC5\P3_0.h" />
+<file name=".\Generated_Source\PSoC5\P3_0_aliases.h" />
 <file name=".\Generated_Source\PSoC5\PGA_1.h" />
 <file name=".\Generated_Source\PSoC5\core_cm3.h" />
 <file name=".\Generated_Source\PSoC5\core_cm3_psoc5.h" />
@@ -176,17 +176,17 @@
 <dep name=".\Generated_Source\PSoC5\cytypes.h" />
 </file>
 <file name=".\Generated_Source\PSoC5\P0_1.c" />
-<file name=".\CortexM3\ARM_GCC_493\Debug\P0_2.o">
-<dep name=".\Generated_Source\PSoC5\P0_2.c" />
-<dep name=".\Generated_Source\PSoC5\P0_2.h" />
-<dep name=".\Generated_Source\PSoC5\P0_2_aliases.h" />
+<file name=".\CortexM3\ARM_GCC_493\Debug\P3_0.o">
+<dep name=".\Generated_Source\PSoC5\P3_0.c" />
+<dep name=".\Generated_Source\PSoC5\P3_0.h" />
+<dep name=".\Generated_Source\PSoC5\P3_0_aliases.h" />
 <dep name=".\Generated_Source\PSoC5\cydevice.h" />
 <dep name=".\Generated_Source\PSoC5\cydevice_trm.h" />
 <dep name=".\Generated_Source\PSoC5\cyfitter.h" />
 <dep name=".\Generated_Source\PSoC5\cypins.h" />
 <dep name=".\Generated_Source\PSoC5\cytypes.h" />
 </file>
-<file name=".\Generated_Source\PSoC5\P0_2.c" />
+<file name=".\Generated_Source\PSoC5\P3_0.c" />
 <file name=".\CortexM3\ARM_GCC_493\Debug\cyPm.o">
 <dep name=".\Generated_Source\PSoC5\CyFlash.h" />
 <dep name=".\Generated_Source\PSoC5\CyLib.h" />
@@ -239,6 +239,19 @@
 <file name=".\Generated_Source\PSoC5\cydevicegnu.inc" />
 <file name=".\Generated_Source\PSoC5\cydevicegnu_trm.inc" />
 <file name=".\Generated_Source\PSoC5\cyfittergnu.inc" />
+<file name=".\Generated_Source\PSoC5\P0_2.h" />
+<file name=".\Generated_Source\PSoC5\P0_2_aliases.h" />
+<file name=".\CortexM3\ARM_GCC_493\Debug\P0_2.o">
+<dep name=".\Generated_Source\PSoC5\P0_2.c" />
+<dep name=".\Generated_Source\PSoC5\P0_2.h" />
+<dep name=".\Generated_Source\PSoC5\P0_2_aliases.h" />
+<dep name=".\Generated_Source\PSoC5\cydevice.h" />
+<dep name=".\Generated_Source\PSoC5\cydevice_trm.h" />
+<dep name=".\Generated_Source\PSoC5\cyfitter.h" />
+<dep name=".\Generated_Source\PSoC5\cypins.h" />
+<dep name=".\Generated_Source\PSoC5\cytypes.h" />
+</file>
+<file name=".\Generated_Source\PSoC5\P0_2.c" />
 </CyGuid_1173175f-1b9b-4ad4-a065-754a48a27021>
 </dependency_info>
 </CyGuid_f44455c5-3770-4452-b988-0a7a7ff46256>
@@ -252,7 +265,6 @@
 <dep name=".\CortexM3\ARM_GCC_493\Debug\cyfitter_cfg.o" />
 <dep name=".\CortexM3\ARM_GCC_493\Debug\cymetadata.o" />
 <dep name=".\CortexM3\ARM_GCC_493\Debug\P0_0.o" />
-<dep name=".\CortexM3\ARM_GCC_493\Debug\P0_2.o" />
 <dep name=".\CortexM3\ARM_GCC_493\Debug\PGA_1.o" />
 <dep name=".\CortexM3\ARM_GCC_493\Debug\PGA_1_PM.o" />
 <dep name=".\CortexM3\ARM_GCC_493\Debug\P0_1.o" />
@@ -264,6 +276,7 @@
 <dep name=".\CortexM3\ARM_GCC_493\Debug\cyPm.o" />
 <dep name=".\CortexM3\ARM_GCC_493\Debug\CySpc.o" />
 <dep name=".\CortexM3\ARM_GCC_493\Debug\cyutils.o" />
+<dep name=".\CortexM3\ARM_GCC_493\Debug\P3_0.o" />
 <dep name=".\CortexM3\ARM_GCC_493\Debug\Lab1.a" />
 <dep name="${CyRoot}\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CortexM3\ARM_GCC_493\Debug\CyComponentLibrary.a" />
 </file>
@@ -294,9 +307,11 @@
 <name_val_pair name=".\Generated_Source\PSoC5\CySpc.c" v="-mcpu=cortex-m3 -mthumb -Wno-main -I. -IGenerated_Source\PSoC5 -Wa,-alh=${OutputDir}/${CompileFile}.lst -g -D DEBUG -Wall -ffunction-sections -Og -ffat-lto-objects" />
 <name_val_pair name=".\Generated_Source\PSoC5\cyutils.c" v="-mcpu=cortex-m3 -mthumb -Wno-main -I. -IGenerated_Source\PSoC5 -Wa,-alh=${OutputDir}/${CompileFile}.lst -g -D DEBUG -Wall -ffunction-sections -Og -ffat-lto-objects" />
 <name_val_pair name="D:\CU_Boulder\Documents\GoogleDrive\ECEN5053\PSOC_Workspace\Lab1.cydsn\CortexM3\ARM_GCC_493\Debug\Lab1.hex" v="-mcpu=cortex-m3 -mthumb -g -ffunction-sections -Og -L Generated_Source\PSoC5 -Wl,-Map,${OutputDir}/${ProjectShortName}.map -T Generated_Source\PSoC5\cm3gcc.ld -specs=nano.specs -Wl,--gc-sections" />
+<name_val_pair name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab1.cydsn\CortexM3\ARM_GCC_493\Debug\Lab1.hex" v="-mcpu=cortex-m3 -mthumb -g -ffunction-sections -Og -L Generated_Source\PSoC5 -Wl,-Map,${OutputDir}/${ProjectShortName}.map -T Generated_Source\PSoC5\cm3gcc.ld -specs=nano.specs -Wl,--gc-sections" />
+<name_val_pair name=".\Generated_Source\PSoC5\P3_0.c" v="-mcpu=cortex-m3 -mthumb -Wno-main -I. -IGenerated_Source\PSoC5 -Wa,-alh=${OutputDir}/${CompileFile}.lst -g -D DEBUG -Wall -ffunction-sections -Og -ffat-lto-objects" />
 </name>
 </genericCmdLineData>
-<codeGenCmdLineTag v="-.appdatapath &quot;C:\Users\cuskrawn\AppData\Local\Cypress Semiconductor\PSoC Creator\3.3&quot; -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -p D:\CU_Boulder\Documents\GoogleDrive\ECEN5053\PSOC_Workspace\Lab1.cydsn\Lab1.cyprj -d CY8C5868AXI-LP035 -s D:\CU_Boulder\Documents\GoogleDrive\ECEN5053\PSOC_Workspace\Lab1.cydsn\Generated_Source\PSoC5 -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE" />
+<codeGenCmdLineTag v="-.appdatapath &quot;C:\Users\cuskrawn\AppData\Local\Cypress Semiconductor\PSoC Creator\3.3&quot; -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -p D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab1.cydsn\Lab1.cyprj -d CY8C5868AXI-LP035 -s D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab1.cydsn\Generated_Source\PSoC5 -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE" />
 </CyGuid_b0374e30-ce3a-47f2-ad85-821643292c68>
 </dataGuid>
 <dataGuid v="597c5b74-0c46-4204-8b7f-96f3570671dc">
@@ -603,20 +618,23 @@
 <v>.\Generated_Source\PSoC5\Cm3Iar.icf</v>
 <v>.\Generated_Source\PSoC5\CyBootAsmIar.s</v>
 <v>.\Generated_Source\PSoC5\project.h</v>
+<v>.\Generated_Source\PSoC5\P3_0_aliases.h</v>
+<v>.\Generated_Source\PSoC5\P3_0.c</v>
+<v>.\Generated_Source\PSoC5\P3_0.h</v>
 </gen_list>
 <warp_dep>
 <v>D:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\warp\lib\ieee\work\stdlogic.vif</v>
 <v>D:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\warp\lib\common\stdlogic\mod_genv.vif</v>
 <v>D:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\warp\lib\common\stdlogic\rtlpkg.vif</v>
 </warp_dep>
-<deps_time v="130977264330744822" />
+<deps_time v="130981429853973468" />
 <top_block v="TopDesign" />
 <last_generation v="0" />
 </CyGuid_925cc1e1-309e-4e08-b0a1-09a83c35b157>
 </dataGuid>
 <dataGuid v="769d31ea-68b1-4f0c-b90a-7c10a43ee563">
 <CyGuid_769d31ea-68b1-4f0c-b90a-7c10a43ee563 type_name="CyDesigner.Common.ProjMgmt.Model.CyLinkCustomData" version="1">
-<deps_time v="130977264336835170" />
+<deps_time v="130981429858943752" />
 </CyGuid_769d31ea-68b1-4f0c-b90a-7c10a43ee563>
 </dataGuid>
 </userData>

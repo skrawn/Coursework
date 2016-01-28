@@ -1,5 +1,5 @@
 -- Project:   Lab1
--- Generated: 01/19/2016 18:20:29
+-- Generated: 01/24/2016 14:03:03
 -- PSoC Creator  3.3 CP1
 
 ENTITY Lab1 IS
@@ -28,7 +28,7 @@ ARCHITECTURE __DEFAULT__ OF Lab1 IS
     SIGNAL ClockBlock_XTAL_32KHZ : bit;
     SIGNAL P0_0(0)__PA : bit;
     SIGNAL P0_1(0)__PA : bit;
-    SIGNAL P0_2(0)__PA : bit;
+    SIGNAL P3_0(0)__PA : bit;
     SIGNAL \PGA_1:Net_41\ : bit;
     SIGNAL __ONE__ : bit;
     ATTRIBUTE POWER OF __ONE__ : SIGNAL IS true;
@@ -41,8 +41,8 @@ ARCHITECTURE __DEFAULT__ OF Lab1 IS
     ATTRIBUTE Location OF ClockBlock : LABEL IS "F(Clock,0)";
     ATTRIBUTE lib_model OF P0_0(0) : LABEL IS "iocell1";
     ATTRIBUTE Location OF P0_0(0) : LABEL IS "P0[0]";
-    ATTRIBUTE lib_model OF P0_2(0) : LABEL IS "iocell2";
-    ATTRIBUTE Location OF P0_2(0) : LABEL IS "P0[2]";
+    ATTRIBUTE lib_model OF P3_0(0) : LABEL IS "iocell2";
+    ATTRIBUTE Location OF P3_0(0) : LABEL IS "P3[0]";
     ATTRIBUTE lib_model OF P0_1(0) : LABEL IS "iocell3";
     ATTRIBUTE Location OF P0_1(0) : LABEL IS "P0[1]";
     ATTRIBUTE Location OF \PGA_1:SC\ : LABEL IS "F(SC,2)";
@@ -269,7 +269,7 @@ BEGIN
             out_clock_en => '1',
             out_reset => '0');
 
-    P0_2:logicalport
+    P3_0:logicalport
         GENERIC MAP(
             drive_mode => "000",
             ibuf_enabled => "0",
@@ -340,16 +340,16 @@ BEGIN
             out_clock_en => open,
             out_reset => open);
 
-    P0_2(0):iocell
+    P3_0(0):iocell
         GENERIC MAP(
             in_sync_mode => 0,
             out_sync_mode => 0,
             oe_sync_mode => 0,
-            logicalport => "P0_2",
+            logicalport => "P3_0",
             logicalport_pin_id => 0,
             io_capabilities => "0000000000000000000000000000000000000000000000000000000000000010")
         PORT MAP(
-            pa_out => P0_2(0)__PA,
+            pa_out => P3_0(0)__PA,
             oe => open,
             in_clock => open,
             in_clock_en => '1',
