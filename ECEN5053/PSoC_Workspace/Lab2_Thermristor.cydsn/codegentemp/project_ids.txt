@@ -1,0 +1,12 @@
+D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\AN77759.cydsn\AN77759.cyprj|229e17f2-c029-4070-afef-a8e0dfe1f125
+D:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|18f80b95-a47f-4ba2-b0c8-804c8f87a1d7
+D:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|e863f6b2-78f2-4cb7-a7cc-e71fa2ba1b97
+D:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|eb60b901-8c3e-4aa4-8193-7145a62e5efe
+D:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|9ad9fa1d-b95a-4953-b925-4d8fd0a763db
+D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab1.cydsn\Lab1.cyprj|8281da50-d1d2-4657-8b5f-57eda540116f
+D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Thermistor_HighEnd.cydsn\Thermistor_HighEnd.cyprj|5076e54e-c89a-435c-a1cb-5747473c8c7f
+D:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\default\CyReferenceLibrary\CyReferenceLibrary.cylib\CyReferenceLibrary.cyprj|36581416-0aa5-4824-8f8f-208b8db15d1b
+D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Thermistor_LowEnd.cydsn\Thermistor_LowEnd.cyprj|651d6700-8ce2-42d0-9a79-2d5873c276c8
+D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Thermistor_MidEnd.cydsn\Thermistor_MidEnd.cyprj|fd35987c-15ab-48a5-8a1d-216560504af9
+D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab2_Thermristor.cydsn\Lab2_Thermristor.cyprj|73a7176d-c6d8-4c55-8112-a5913ce109ca
+D:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\dev\psoc3\AnalogDevice\PSoC35AnalogDevice.cylib\PSoC35AnalogDevice.cyprj|79274b4f-2d8c-4ba8-ab3c-0f08c03d7a02
