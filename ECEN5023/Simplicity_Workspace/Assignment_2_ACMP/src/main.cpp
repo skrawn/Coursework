@@ -1,33 +1,50 @@
 /**************************************************************************//**
- * @file
- * @brief Empty Project
- * @author Energy Micro AS
- * @version 3.20.2
+ * @file main.cpp
+ * @brief Assignment 2 - ACMP
+ * @author Sean Donohue
  ******************************************************************************
  * @section License
- * <b>(C) Copyright 2014 Silicon Labs, http://www.silabs.com</b>
- *******************************************************************************
+ * <b>(C) Copyright 2016 Sean Donohue</b>
  *
- * This file is licensed under the Silicon Labs Software License Agreement. See 
- * "http://developer.silabs.com/legal/version/v11/Silicon_Labs_Software_License_Agreement.txt"  
- * for details. Before using this software for any purpose, you must agree to the 
- * terms of that agreement.
+ * All rights reserved.
  *
- ******************************************************************************/
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+ * OF SUCH DAMAGE.
+ *
+ *******************************************************************************/
+
 #include "mbed.h"
 #include "em_chip.h"
 #include "em_acmp.h"
 #include "em_gpio.h"
+#include "em_dac.h"
 #include "sleepmodes.h"
 #include "em_letimer.h"
 
 #define ULFRCO_FREQ			850	// Hz
 
-#define LED0PinPort			gpioPortE
-#define LED0PinPin			2
-#define LED0PinMode			gpioModePushPullDrive
-#define LED0DriveMode		gpioDriveModeLowest
-#define LED0ACMP0Output		1
+#define LED0PinPort					gpioPortE
+#define LED0PinPin					2
+#define LED0PinMode					gpioModePushPullDrive
+#define LED0DriveMode				gpioDriveModeLowest
 
 #define LES_LIGHT_EXCITE_Port		gpioPortD
 #define LES_LIGHT_EXCITE_Pin		6
@@ -38,11 +55,10 @@
 #define LES_LIGHT_SENSE_Pin			6
 #define LES_LIGHT_SENSE_ACMP0_CH	acmpChannel6
 
-#define ACMP_BIASPROG				4
-#define ACMP_HYSTSEL				acmpHysteresisLevel4
-#define ACMP_VDDLEVEL				63
+#define ACMP_BIASPROG				0
+#define ACMP_HYSTSEL				acmpHysteresisLevel7
 
-#define DesiredPeriod		2000 // ms
+#define DesiredPeriod				2000 // ms
 
 #define MIN_POWER_MODE		1
 
@@ -51,14 +67,12 @@ Serial pc(USBTX, USBRX);
 #endif
 
 const uint16_t TimerPRDVal = (DesiredPeriod / 1000) * ULFRCO_FREQ;
-const uint8_t Dark_Threshold = 13;		// About 0.68V
-const uint8_t Light_Threshold = 51;		// About 2.67V
-
-bool lightDetected = false;
+const uint16_t DAC_Dark_Threshold = 2293;	// About 0.7V with 1.25V reference
 
 void GPIO_Initialize(void);
 void LETIMER_Initialize(void);
 void ACMP0_Initialize(void);
+void DAC0_Initialize(void);
 void BSP_TraceSwoSetup(void);
 
 /**************************************************************************//**
@@ -128,31 +142,59 @@ void ACMP0_Initialize(void)
 
 	// Configure ACMP for measurement
 	ACMP0_InitValues.biasProg = ACMP_BIASPROG;
+	ACMP0_InitValues.halfBias = true;
+	ACMP0_InitValues.fullBias = false;
 	ACMP0_InitValues.hysteresisLevel = ACMP_HYSTSEL;
-	ACMP0_InitValues.vddLevel = Dark_Threshold;
-	ACMP0_InitValues.inactiveValue = true;
+	ACMP0_InitValues.inactiveValue = false;
 	ACMP0_InitValues.enable = false;
-	ACMP0_InitValues.lowPowerReferenceEnabled = true;
+	ACMP0_InitValues.lowPowerReferenceEnabled = false;
+	ACMP0_InitValues.warmTime = acmpWarmTime256;
 
-	// Interrupt on BOTH rising and falling edges of the comparator.
-	//ACMP0_InitValues.interruptOnRisingEdge = true;
-	//ACMP0_InitValues.interruptOnFallingEdge = true;
+	// Interrupt on rising edge of the comparator.
+	ACMP0_InitValues.interruptOnRisingEdge = true;
 
 	ACMP_Init(ACMP0, &ACMP0_InitValues);
+	ACMP0->CTRL |= ACMP_CTRL_MUXEN;
 
-	// Set CH6 as the positive comparator input and VDD as the negative input
-	ACMP_ChannelSet(ACMP0,acmpChannelVDD, LES_LIGHT_SENSE_ACMP0_CH);
+	// Set CH6 as the positive comparator input and DAC0 CH0 as the negative input
+	ACMP_ChannelSet(ACMP0, acmpChannelDAC0Ch0, LES_LIGHT_SENSE_ACMP0_CH);
 
-	// Set the comparator GPIO output on pin #1, PE2
-	//ACMP_GPIOSetup(ACMP0, LED0ACMP0Output, true, false);
+	// Enable ACMP0 edge interrupt
+	ACMP_IntEnable(ACMP0, ACMP_IEN_EDGE);
+}
 
-	// Enable the comparator
-	ACMP0->CTRL |= ACMP_CTRL_EN;
+/**************************************************************************//**
+ * @brief Initializes DAC0.
+ * @verbatim DAC0_Initialize(void); @endverbatim
+ *****************************************************************************/
+void DAC0_Initialize(void)
+{
+	DAC_Init_TypeDef DAC0_InitValues = DAC_INIT_DEFAULT;
+	DAC_InitChannel_TypeDef DAC0_CH0_Init = DAC_INITCHANNEL_DEFAULT;
 
-	// Take measurement and decide what the LED should do and what the new
-	// threshold should be
+	// Enable the clock to DAC0
+	CMU_ClockEnable(cmuClock_DAC0, true);
 
-	// Disable ACMP interrupt
+	// Configure DAC0
+	DAC0_InitValues.convMode = dacConvModeContinuous;
+	DAC0_InitValues.reference = dacRef1V25;
+	DAC0_InitValues.outMode = dacOutputADC;
+	DAC0_InitValues.outEnablePRS = false;
+
+	// Set the DAC clock to 14M / (2^4) = 875k
+	DAC0_InitValues.prescale = 4;
+
+	DAC_Init(DAC0, &DAC0_InitValues);
+
+	DAC0->BIASPROG = DAC_BIASPROG_HALFBIAS;
+
+	// Enable channel 1
+	DAC0_CH0_Init.enable = true;
+	DAC_InitChannel(DAC0, &DAC0_CH0_Init, 0);
+
+	// Enable the CH1 conversion complete interrupt
+	DAC_IntEnable(DAC0, DAC_IEN_CH0);
+
 }
 
 /**************************************************************************//**
@@ -162,40 +204,54 @@ void ACMP0_Initialize(void)
 void LETIMER0_IRQHandler(void)
 {
 	uint32_t intflags = LETIMER_IntGet(LETIMER0);
+	DAC_InitChannel_TypeDef DAC0_CH0_Init = DAC_INITCHANNEL_DEFAULT;
+
 #if !MIN_POWER_MODE
 	printf("Entered IRQ\r\n");
 #endif
 	LETIMER_IntClear(LETIMER0, intflags);
 
 	// Underflow interrupt
-	if (intflags & LETIMER_IFS_UF) {
-		// Check the comparator output state
-		if (ACMP0->STATUS & ACMP_STATUS_ACMPOUT) {
-			GPIO_PinOutClear(LED0PinPort, LED0PinPin);
+	if (intflags & LETIMER_IF_UF) {
 
+		// Start the DAC
+		DAC0_CH0_Init.enable = true;
+		DAC_InitChannel(DAC0, &DAC0_CH0_Init, 0);
+		DAC_Channel0OutputSet(DAC0, DAC_Dark_Threshold);
+
+		ACMP0->CTRL |= ACMP_CTRL_EN;
+
+		// Wait for conversion complete
+		while (!(DAC0->IF & DAC_IF_CH0)) {
+		}
+
+		// Wait for ACMP warmup to be complete
+		while (!(ACMP0->IF & ACMP_IF_WARMUP)) {
+		}
+
+		if (ACMP0->IF & ACMP_IF_EDGE) {
+			// Light detected, turn off LED
+			GPIO_PinOutClear(LED0PinPort, LED0PinPin);
 		}
 		else
 			GPIO_PinOutSet(LED0PinPort, LED0PinPin);
 
-		// Excite the sensor
-		//GPIO_PinOutSet(LES_LIGHT_EXCITE_Port, LES_LIGHT_EXCITE_Pin);
+		// Turn off comparator
+		ACMP0->CTRL = ACMP0->CTRL & ~(ACMP_CTRL_EN);
 
-		// Set up ACMP for a measurement
+		// Turn off DAC
+		DAC0_CH0_Init.enable = false;
+		DAC_InitChannel(DAC0, &DAC0_CH0_Init, 0);
 
-		// Enable ACMP interrupt
+		// Clear flags
+		intflags = DAC_IntGet(DAC0);
+		DAC_IntClear(DAC0, intflags);
+		intflags = ACMP_IntGet(ACMP0);
+		ACMP_IntClear(ACMP0, intflags);
 	}
 
 	// Resync the core to the peripheral clock.
 	__DSB();
-}
-
-/**************************************************************************//**
- * @brief ACMP0 IRQ Handler
- * @verbatim ACMP0_IRQHandler(void); @endverbatim
- *****************************************************************************/
-void ACMP0_IRQHandler(void)
-{
-
 }
 
 /**************************************************************************//**
@@ -267,11 +323,13 @@ int main(void)
 #endif
 
 	GPIO_Initialize();
-	LETIMER_Initialize();
-	ACMP0_Initialize();
 
 	// Excite the sensor
 	GPIO_PinOutSet(LES_LIGHT_EXCITE_Port, LES_LIGHT_EXCITE_Pin);
+
+	LETIMER_Initialize();
+	ACMP0_Initialize();
+	DAC0_Initialize();
 
 	/* Infinite loop */
 	while (1) {
