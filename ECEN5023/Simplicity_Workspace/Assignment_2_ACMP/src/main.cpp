@@ -59,6 +59,8 @@
 #define ACMP_HYSTSEL				acmpHysteresisLevel7
 
 #define DesiredPeriod				2000 // ms
+#define SensorExciteTime			1 	 // ms
+#define SleepTime					(DesiredPeriod - SensorExciteTime)
 
 #define MIN_POWER_MODE		1
 
@@ -66,7 +68,8 @@
 Serial pc(USBTX, USBRX);
 #endif
 
-const uint16_t TimerPRDVal = (DesiredPeriod / 1000) * ULFRCO_FREQ;
+const uint16_t SleepTimePRDVal = (SleepTime * ULFRCO_FREQ) / 1000;
+const uint16_t SensorExcitePRDVal = ((SensorExciteTime * ULFRCO_FREQ) / 1000) < 1 ? 1 : ((SensorExciteTime * ULFRCO_FREQ) / 1000);
 const uint16_t DAC_Dark_Threshold = 2293;	// About 0.7V with 1.25V reference
 
 void GPIO_Initialize(void);
@@ -111,13 +114,9 @@ void LETIMER_Initialize(void)
 
 	// Initialize LETIMER
 	LETIMER_InitValues.enable = true;
-	LETIMER_InitValues.comp0Top = true;
-
-	// Set COMP0
-	LETIMER_CompareSet(LETIMER0, 0, TimerPRDVal);
 
 	// Pre-load CNT
-	LETIMER0->CNT = 1;
+	LETIMER0->CNT = SleepTimePRDVal;
 
 	// Enable underflow interrupt
 	LETIMER_IntEnable(LETIMER0, LETIMER_IEN_UF);
@@ -148,7 +147,7 @@ void ACMP0_Initialize(void)
 	ACMP0_InitValues.inactiveValue = false;
 	ACMP0_InitValues.enable = false;
 	ACMP0_InitValues.lowPowerReferenceEnabled = false;
-	ACMP0_InitValues.warmTime = acmpWarmTime256;
+	ACMP0_InitValues.warmTime = acmpWarmTime128;
 
 	// Interrupt on rising edge of the comparator.
 	ACMP0_InitValues.interruptOnRisingEdge = true;
@@ -170,13 +169,13 @@ void ACMP0_Initialize(void)
 void DAC0_Initialize(void)
 {
 	DAC_Init_TypeDef DAC0_InitValues = DAC_INIT_DEFAULT;
-	DAC_InitChannel_TypeDef DAC0_CH0_Init = DAC_INITCHANNEL_DEFAULT;
 
 	// Enable the clock to DAC0
 	CMU_ClockEnable(cmuClock_DAC0, true);
 
 	// Configure DAC0
-	DAC0_InitValues.convMode = dacConvModeContinuous;
+	DAC0_InitValues.convMode = dacConvModeSampleOff;
+	//DAC0_InitValues.convMode = dacConvModeSampleHold;
 	DAC0_InitValues.reference = dacRef1V25;
 	DAC0_InitValues.outMode = dacOutputADC;
 	DAC0_InitValues.outEnablePRS = false;
@@ -186,11 +185,8 @@ void DAC0_Initialize(void)
 
 	DAC_Init(DAC0, &DAC0_InitValues);
 
+	// Lowest power mode
 	DAC0->BIASPROG = DAC_BIASPROG_HALFBIAS;
-
-	// Enable channel 1
-	DAC0_CH0_Init.enable = true;
-	DAC_InitChannel(DAC0, &DAC0_CH0_Init, 0);
 
 	// Enable the CH1 conversion complete interrupt
 	DAC_IntEnable(DAC0, DAC_IEN_CH0);
@@ -214,40 +210,53 @@ void LETIMER0_IRQHandler(void)
 	// Underflow interrupt
 	if (intflags & LETIMER_IF_UF) {
 
-		// Start the DAC
-		DAC0_CH0_Init.enable = true;
-		DAC_InitChannel(DAC0, &DAC0_CH0_Init, 0);
-		DAC_Channel0OutputSet(DAC0, DAC_Dark_Threshold);
+		if (!GPIO_PinOutGet(LES_LIGHT_EXCITE_Port, LES_LIGHT_EXCITE_Pin)) {
+			// Excite the sensor
+			GPIO_PinOutSet(LES_LIGHT_EXCITE_Port, LES_LIGHT_EXCITE_Pin);
 
-		ACMP0->CTRL |= ACMP_CTRL_EN;
-
-		// Wait for conversion complete
-		while (!(DAC0->IF & DAC_IF_CH0)) {
-		}
-
-		// Wait for ACMP warmup to be complete
-		while (!(ACMP0->IF & ACMP_IF_WARMUP)) {
-		}
-
-		if (ACMP0->IF & ACMP_IF_EDGE) {
-			// Light detected, turn off LED
-			GPIO_PinOutClear(LED0PinPort, LED0PinPin);
+			// Set the counter register to the excite time
+			LETIMER0->CNT = SensorExcitePRDVal;
 		}
 		else
-			GPIO_PinOutSet(LED0PinPort, LED0PinPin);
+		{
+			// Set the counter register to the sleep time
+			LETIMER0->CNT = SleepTimePRDVal;
 
-		// Turn off comparator
-		ACMP0->CTRL = ACMP0->CTRL & ~(ACMP_CTRL_EN);
+			// Start the DAC
+			DAC0_CH0_Init.enable = true;
+			DAC_InitChannel(DAC0, &DAC0_CH0_Init, 0);
+			DAC_Channel0OutputSet(DAC0, DAC_Dark_Threshold);
 
-		// Turn off DAC
-		DAC0_CH0_Init.enable = false;
-		DAC_InitChannel(DAC0, &DAC0_CH0_Init, 0);
+			ACMP0->CTRL |= ACMP_CTRL_EN;
 
-		// Clear flags
-		intflags = DAC_IntGet(DAC0);
-		DAC_IntClear(DAC0, intflags);
-		intflags = ACMP_IntGet(ACMP0);
-		ACMP_IntClear(ACMP0, intflags);
+			// Wait for ACMP warmup to be complete
+			while (!(ACMP0->IF & ACMP_IF_WARMUP)) {
+			}
+
+			//if (ACMP0->IF & ACMP_IF_EDGE) {
+			if (ACMP0->STATUS & ACMP_STATUS_ACMPOUT) {
+				// Light detected, turn off LED
+				GPIO_PinOutClear(LED0PinPort, LED0PinPin);
+			}
+			else
+				GPIO_PinOutSet(LED0PinPort, LED0PinPin);
+
+			// Turn off comparator
+			ACMP0->CTRL = ACMP0->CTRL & ~(ACMP_CTRL_EN);
+
+			// Shut down the excitation signal
+			GPIO_PinOutClear(LES_LIGHT_EXCITE_Port, LES_LIGHT_EXCITE_Pin);
+
+			// Turn off DAC
+			DAC0_CH0_Init.enable = false;
+			DAC_InitChannel(DAC0, &DAC0_CH0_Init, 0);
+
+			// Clear flags
+			intflags = DAC_IntGet(DAC0);
+			DAC_IntClear(DAC0, intflags);
+			intflags = ACMP_IntGet(ACMP0);
+			ACMP_IntClear(ACMP0, intflags);
+		}
 	}
 
 	// Resync the core to the peripheral clock.
@@ -323,9 +332,6 @@ int main(void)
 #endif
 
 	GPIO_Initialize();
-
-	// Excite the sensor
-	GPIO_PinOutSet(LES_LIGHT_EXCITE_Port, LES_LIGHT_EXCITE_Pin);
 
 	LETIMER_Initialize();
 	ACMP0_Initialize();
