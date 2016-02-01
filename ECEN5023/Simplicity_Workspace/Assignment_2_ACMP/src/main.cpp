@@ -175,7 +175,6 @@ void DAC0_Initialize(void)
 
 	// Configure DAC0
 	DAC0_InitValues.convMode = dacConvModeSampleOff;
-	//DAC0_InitValues.convMode = dacConvModeSampleHold;
 	DAC0_InitValues.reference = dacRef1V25;
 	DAC0_InitValues.outMode = dacOutputADC;
 	DAC0_InitValues.outEnablePRS = false;
