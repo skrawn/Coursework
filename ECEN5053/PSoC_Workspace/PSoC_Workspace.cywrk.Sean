@@ -13,7 +13,7 @@
 <v>Output</v>
 </TreeKeys>
 <TreeStates>
-<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="PSoC_Workspace\Thermistor_HighEnd">
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="PSoC_Workspace">
 <ExpandedNodeIds>
 <v>PSoC_Workspace</v>
 <v>PSoC_Workspace\AN77759\TopDesign</v>
@@ -124,10 +124,6 @@
 <v>PSoC_Workspace\Lab1\Generated_Source\PSoC5\P0_1\P0_1.c</v>
 <v>PSoC_Workspace\Lab1\Generated_Source\PSoC5\P0_1\P0_1.h</v>
 <v>PSoC_Workspace\Lab1\Generated_Source\PSoC5\P0_1\P0_1_aliases.h</v>
-<v>PSoC_Workspace\Lab1\Generated_Source\PSoC5\P0_2</v>
-<v>PSoC_Workspace\Lab1\Generated_Source\PSoC5\P0_2\P0_2.c</v>
-<v>PSoC_Workspace\Lab1\Generated_Source\PSoC5\P0_2\P0_2.h</v>
-<v>PSoC_Workspace\Lab1\Generated_Source\PSoC5\P0_2\P0_2_aliases.h</v>
 <v>PSoC_Workspace\Lab1\Generated_Source\PSoC5\PGA_1</v>
 <v>PSoC_Workspace\Lab1\Generated_Source\PSoC5\PGA_1\PGA_1.c</v>
 <v>PSoC_Workspace\Lab1\Generated_Source\PSoC5\PGA_1\PGA_1.h</v>
@@ -151,6 +147,12 @@
 <v>PSoC_Workspace\Lab1\Generated_Source\PSoC5\cyfitterrv.inc</v>
 <v>PSoC_Workspace\Lab1\Generated_Source\PSoC5\cymetadata.c</v>
 <v>PSoC_Workspace\Lab1\Generated_Source\PSoC5\project.h</v>
+<v>PSoC_Workspace\Lab2_Thermristor</v>
+<v>PSoC_Workspace\Lab2_Thermristor\TopDesign</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Header Files</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Source Files</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Generated_Source\PSoC5</v>
+<v>PSoC_Workspace\Thermistor_HighEnd</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\TopDesign</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\Thermistor_HighEnd.cydwr</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\Thermistor_HighEnd.cyre</v>
@@ -412,6 +414,7 @@
 <v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC5\cyfitterrv.inc</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC5\cymetadata.c</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC5\project.h</v>
+<v>PSoC_Workspace\Thermistor_LowEnd</v>
 <v>PSoC_Workspace\Thermistor_LowEnd\TopDesign</v>
 <v>PSoC_Workspace\Thermistor_LowEnd\Thermistor_LowEnd.cydwr</v>
 <v>PSoC_Workspace\Thermistor_LowEnd\Header Files</v>
@@ -592,6 +595,7 @@
 <v>PSoC_Workspace\Thermistor_LowEnd\Generated_Source\PSoC5\cyfitterrv.inc</v>
 <v>PSoC_Workspace\Thermistor_LowEnd\Generated_Source\PSoC5\cymetadata.c</v>
 <v>PSoC_Workspace\Thermistor_LowEnd\Generated_Source\PSoC5\project.h</v>
+<v>PSoC_Workspace\Thermistor_MidEnd</v>
 <v>PSoC_Workspace\Thermistor_MidEnd\TopDesign</v>
 <v>PSoC_Workspace\Thermistor_MidEnd\Thermistor_MidEnd.cydwr</v>
 <v>PSoC_Workspace\Thermistor_MidEnd\Header Files</v>
@@ -777,9 +781,71 @@
 <v>PSoC_Workspace</v>
 <v>PSoC_Workspace\AN77759</v>
 <v>PSoC_Workspace\Lab1</v>
+<v>PSoC_Workspace\Lab2_Thermristor</v>
+<v>PSoC_Workspace\Lab2_Thermristor\TopDesign</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Lab2_Thermristor.cydwr</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Lab2_Thermristor.cyre</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Header Files</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Header Files\device.h</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Header Files\measurement.h</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Header Files\median5.h</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Header Files\removeOffsetNoise.h</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Source Files</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Source Files\main.c</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Source Files\measurement.c</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Source Files\median5.c</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Source Files\removeOffsetNoise.c</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Generated_Source</v>
 <v>PSoC_Workspace\Thermistor_HighEnd</v>
-<v>PSoC_Workspace\Thermistor_LowEnd</v>
-<v>PSoC_Workspace\Thermistor_MidEnd</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\TopDesign</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Thermistor_HighEnd.cydwr</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Thermistor_HighEnd.cyre</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Header Files</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Header Files\calibration.h</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Header Files\device.h</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Header Files\measurement.h</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Header Files\removeOffsetNoise.h</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Source Files</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Source Files\calibration.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Source Files\main.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Source Files\measurement.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Source Files\removeOffsetNoise.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\ADC</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\ADC\ADC.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\ADC\ADC.h</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\ADC\ADC_INT.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\ADC\ADC_PM.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\ADC_Ext_CP_Clk</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\ADC_Ext_CP_Clk\ADC_Ext_CP_Clk.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\ADC_Ext_CP_Clk\ADC_Ext_CP_Clk.h</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\ADC_IRQ</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\ADC_IRQ\ADC_IRQ.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\ADC_IRQ\ADC_IRQ.h</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\ADC_theACLK</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\ADC_theACLK\ADC_theACLK.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\ADC_theACLK\ADC_theACLK.h</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\AMux</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\AMux\AMux.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\AMux\AMux.h</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense\CapSense.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense\CapSense.h</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense\CapSense_CSHL.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense\CapSense_CSHL.h</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense\CapSense_INT.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense\CapSense_Pins.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense\CapSense_Pins.h</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense\CapSense_PM.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense\CapSense_SMS_Wrapper.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense\CapSense_TunerHelper.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense\CapSense_TunerHelper.h</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense_AMuxCH0</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense_AMuxCH0\CapSense_AMuxCH0.c</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense_AMuxCH0\CapSense_AMuxCH0.h</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense_CompCH0</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\Generated_Source\PSoC3\CapSense_CompCH0\CapSense_CompCH0.c</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 <CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="PSoC_Workspace">
@@ -809,6 +875,7 @@
 <v>PSoC_Workspace\Lab1</v>
 <v>PSoC_Workspace\Lab1\TopDesign</v>
 <v>PSoC_Workspace\Lab1\TopDesign\TopDesign.cysch</v>
+<v>PSoC_Workspace\Lab2_Thermristor</v>
 <v>PSoC_Workspace\Thermistor_HighEnd</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\TopDesign</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\TopDesign\TopDesign.cysch</v>
@@ -869,7 +936,7 @@
 <v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\main.lst</v>
 <v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\P0_0.lst</v>
 <v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\P0_1.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\P0_2.lst</v>
+<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\P3_0.lst</v>
 <v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\PGA_1.lst</v>
 <v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\PGA_1_PM.lst</v>
 <v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Lab1.elf</v>
@@ -878,10 +945,101 @@
 <v>PSoC_Workspace\Lab1\Lab1.gpdsc</v>
 <v>PSoC_Workspace\Lab1\Lab1.rpt</v>
 <v>PSoC_Workspace\Lab1\Lab1_timing.html</v>
+<v>PSoC_Workspace\Lab2_Thermristor</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\ADC.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\ADC_Ext_CP_Clk.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\ADC_INT.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\ADC_IRQ.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\ADC_PM.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\ADC_theACLK.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\AMux.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\Cm3Start.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\CyBootAsmGnu.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\CyDmac.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\cyfitter_cfg.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\CyFlash.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\CyLib.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\cymetadata.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\cyPm.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\CySpc.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\cyutils.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\LCD.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\LCD_LCDPort.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\LCD_PM.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\main.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\measurement.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\median5.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\Opamp.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\Opamp_PM.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\removeOffsetNoise.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\Thermistor.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\VDAC8.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\VDAC8_PM.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\Vhi.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\Vlow.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Listing Files\Vtherm.lst</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Lab2_Thermristor.elf</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Lab2_Thermristor.hex</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CortexM3\ARM_GCC_493\Debug\Lab2_Thermristor.map</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Lab2_Thermristor.gpdsc</v>
 <v>PSoC_Workspace\Thermistor_HighEnd</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\DP8051</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_Ext_CP_Clk.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_INT.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_IRQ.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_theACLK.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\AMux.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\calibration.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CapSense.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CapSense_AMuxCH0.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CapSense_CompCH0.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CapSense_CompCH0_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CapSense_CSHL.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CapSense_IdacCH0.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CapSense_IdacCH0_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CapSense_INT.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CapSense_IntClock.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CapSense_Pins.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CapSense_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CapSense_SMS_Wrapper.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CapSense_TunerHelper.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CJTemp.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Clock_1.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CyBootAsmKeil.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CyDmac.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\cyfitter_cfg.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CyFlash.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CyLib.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\cymem.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\cyPm.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CySpc.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\cyutils.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\EEPROM.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\isr_Calibration.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\KeilStart.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\LCD.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\LCD_LCDPort.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\LCD_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\main.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\measurement.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Opamp.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Opamp_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\removeOffsetNoise.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Thermistor.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\VDAC8.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\VDAC8_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Vhi.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Vlow.lst</v>
+<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Vtherm.lst</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Thermistor_HighEnd.elf</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Thermistor_HighEnd.hex</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Thermistor_HighEnd.map</v>
@@ -892,6 +1050,38 @@
 <v>PSoC_Workspace\Thermistor_LowEnd\DP8051</v>
 <v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951</v>
 <v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_Ext_CP_Clk.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_INT.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_IRQ.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_theACLK.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\AMux.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CyBootAsmKeil.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CyDmac.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\cyfitter_cfg.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CyFlash.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CyLib.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\cymem.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\cyPm.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CySpc.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\cyutils.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\KeilStart.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\LCD.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\LCD_LCDPort.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\LCD_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\main.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\measurement.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Opamp.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Opamp_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\removeOffsetNoise.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Thermistor.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\VDAC8.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\VDAC8_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Vhi.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Vlow.lst</v>
+<v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Vtherm.lst</v>
 <v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Thermistor_LowEnd.elf</v>
 <v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Thermistor_LowEnd.hex</v>
 <v>PSoC_Workspace\Thermistor_LowEnd\DP8051\DP8051_Keil_951\Debug\Thermistor_LowEnd.map</v>
@@ -902,6 +1092,38 @@
 <v>PSoC_Workspace\Thermistor_MidEnd\DP8051</v>
 <v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951</v>
 <v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_Ext_CP_Clk.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_INT.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_IRQ.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\ADC_theACLK.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\AMux.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CyBootAsmKeil.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CyDmac.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\cyfitter_cfg.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CyFlash.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CyLib.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\cymem.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\cyPm.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\CySpc.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\cyutils.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\KeilStart.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\LCD.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\LCD_LCDPort.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\LCD_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\main.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\measurement.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Opamp.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Opamp_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\removeOffsetNoise.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Thermistor.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\VDAC8.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\VDAC8_PM.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Vhi.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Vlow.lst</v>
+<v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Listing Files\Vtherm.lst</v>
 <v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Thermistor_MidEnd.elf</v>
 <v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Thermistor_MidEnd.hex</v>
 <v>PSoC_Workspace\Thermistor_MidEnd\DP8051\DP8051_Keil_951\Debug\Thermistor_MidEnd.map</v>
@@ -912,72 +1134,12 @@
 <VisibleNodeIds>
 <v>PSoC_Workspace</v>
 <v>PSoC_Workspace\AN77759</v>
-<v>PSoC_Workspace\AN77759\CortexM3</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\Clock_1.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\Cm3Start.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\CyBootAsmGnu.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\CyDmac.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\cyfitter_cfg.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\CyFlash.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\CyLib.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\cymetadata.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\cyPm.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\CySpc.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\cyutils.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\main.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\Pin_1.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\PWM_1.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\PWM_1_PM.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\PWM_2.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\Listing Files\PWM_2_PM.lst</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\AN77759.elf</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\AN77759.hex</v>
-<v>PSoC_Workspace\AN77759\CortexM3\ARM_GCC_493\Debug\AN77759.map</v>
-<v>PSoC_Workspace\AN77759\AN77759.gpdsc</v>
 <v>PSoC_Workspace\AN77759\AN77759.rpt</v>
 <v>PSoC_Workspace\AN77759\AN77759_timing.html</v>
 <v>PSoC_Workspace\Lab1</v>
-<v>PSoC_Workspace\Lab1\CortexM3</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\Cm3Start.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\CyBootAsmGnu.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\CyDmac.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\cyfitter_cfg.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\CyFlash.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\CyLib.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\cymetadata.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\cyPm.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\CySpc.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\cyutils.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\main.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\P0_0.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\P0_1.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\P0_2.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\PGA_1.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Listing Files\PGA_1_PM.lst</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Lab1.elf</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Lab1.hex</v>
-<v>PSoC_Workspace\Lab1\CortexM3\ARM_GCC_493\Debug\Lab1.map</v>
-<v>PSoC_Workspace\Lab1\Lab1.gpdsc</v>
 <v>PSoC_Workspace\Lab1\Lab1.rpt</v>
 <v>PSoC_Workspace\Lab1\Lab1_timing.html</v>
-<v>PSoC_Workspace\Thermistor_HighEnd</v>
-<v>PSoC_Workspace\Thermistor_HighEnd\DP8051</v>
-<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951</v>
-<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug</v>
-<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Thermistor_HighEnd.elf</v>
-<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Thermistor_HighEnd.hex</v>
-<v>PSoC_Workspace\Thermistor_HighEnd\DP8051\DP8051_Keil_951\Debug\Thermistor_HighEnd.map</v>
-<v>PSoC_Workspace\Thermistor_HighEnd\Thermistor_HighEnd.gpdsc</v>
-<v>PSoC_Workspace\Thermistor_HighEnd\Thermistor_HighEnd.rpt</v>
-<v>PSoC_Workspace\Thermistor_HighEnd\Thermistor_HighEnd_timing.html</v>
-<v>PSoC_Workspace\Thermistor_LowEnd</v>
-<v>PSoC_Workspace\Thermistor_LowEnd\DP8051</v>
+<v>PSoC_Workspace\Lab2_Thermristor</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 </TreeStates>
@@ -1010,6 +1172,21 @@
 <v>PSoC_Workspace\Lab1\cy_pins_v2_10</v>
 <v>PSoC_Workspace\Lab1\cy_pins_v2_10\cy_pins_v2_10.pdf</v>
 <v>PSoC_Workspace\Lab1\PGA_v2_0.pdf</v>
+<v>PSoC_Workspace\Lab2_Thermristor\PSoC 5 Architecture TRM</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CY8C58LP Family Datasheet</v>
+<v>PSoC_Workspace\Lab2_Thermristor\System Reference Guides</v>
+<v>PSoC_Workspace\Lab2_Thermristor\System Reference Guides\cy_boot_v4_0</v>
+<v>PSoC_Workspace\Lab2_Thermristor\ADC_DelSig_v3_0.pdf</v>
+<v>PSoC_Workspace\Lab2_Thermristor\AMux_v1_80.pdf</v>
+<v>PSoC_Workspace\Lab2_Thermristor\CharLCD_v1_90.pdf</v>
+<v>PSoC_Workspace\Lab2_Thermristor\cy_pins_v1_90</v>
+<v>PSoC_Workspace\Lab2_Thermristor\cy_pins_v1_90\cy_pins_v1_90.pdf</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Gnd_v1_0.pdf</v>
+<v>PSoC_Workspace\Lab2_Thermristor\OpAmp_v1_90.pdf</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Resistor_v1_0.pdf</v>
+<v>PSoC_Workspace\Lab2_Thermristor\Thermistor_v1_0.pdf</v>
+<v>PSoC_Workspace\Lab2_Thermristor\ThermistorCalc_v1_20.pdf</v>
+<v>PSoC_Workspace\Lab2_Thermristor\VDAC8_v1_90.pdf</v>
 <v>PSoC_Workspace\Thermistor_HighEnd</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\PSoC 3 Architecture TRM</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\CY8C38 Family Datasheet</v>
@@ -1092,6 +1269,7 @@
 <v>PSoC_Workspace\Lab1\cy_pins_v2_10</v>
 <v>PSoC_Workspace\Lab1\cy_pins_v2_10\cy_pins_v2_10.pdf</v>
 <v>PSoC_Workspace\Lab1\PGA_v2_0.pdf</v>
+<v>PSoC_Workspace\Lab2_Thermristor</v>
 <v>PSoC_Workspace\Thermistor_HighEnd</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\PSoC 3 Architecture TRM</v>
 <v>PSoC_Workspace\Thermistor_HighEnd\CY8C38 Family Datasheet</v>
@@ -1136,7 +1314,6 @@
 <v>PSoC_Workspace\Thermistor_MidEnd</v>
 <v>PSoC_Workspace\Thermistor_MidEnd\PSoC 3 Architecture TRM</v>
 <v>PSoC_Workspace\Thermistor_MidEnd\CY8C38 Family Datasheet</v>
-<v>PSoC_Workspace\Thermistor_MidEnd\System Reference Guides</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 </TreeStatesV2>
@@ -1151,7 +1328,9 @@
 </CyGuid_fdba8dfd-b15b-4469-9bbb-9e40c3e70997>
 <Unloaded />
 <OpenDocs>
-<name v=".\Thermistor_HighEnd.cydsn\Thermistor_HighEnd.cydwr" />
+<name v=".\Lab2_Thermristor.cydsn\measurement.c" />
+<name v=".\Lab2_Thermristor.cydsn\main.c" />
+<name v=".\Lab2_Thermristor.cydsn\median5.c" />
 </OpenDocs>
 <config v="" />
 <AutoUpdate v="true" />

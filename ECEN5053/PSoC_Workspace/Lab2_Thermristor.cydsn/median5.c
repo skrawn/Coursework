@@ -19,7 +19,7 @@ void median5_Update(int32 *filter, int32 new_val)
 {
     int i;
     
-    for (int i = 0; i < (MEDIAN_FILTER_ORDER - 1); i++)    
+    for (i = 0; i < (MEDIAN_FILTER_ORDER - 1); i++)    
         // Shift the current filter components down by 1.
         filter[i] = filter[i+1];    
         

@@ -85,7 +85,7 @@ int32 MeasureResistorVoltage(uint8 channel)
 	result = result - offset;
 	
 	/* Filter signal*/
-	result = FilterSignal(result, channel);
+	//result = FilterSignal(result, channel);
 	
 	return result;
 	

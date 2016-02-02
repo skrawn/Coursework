@@ -56,7 +56,7 @@ int main()
 {
 	/* Voltages across reference resistor and thermistor*/
 	int32 iVref, iVtherm;
-    int32 iVref_filtered[MEDIAN_FILTER_ORDER];
+    int32 iVref_filt[MEDIAN_FILTER_ORDER] = {0}, iVtherm_filt[MEDIAN_FILTER_ORDER] = {0};
 	
 	/* Resistance of Thermistor*/
 	uint32 iRes;
@@ -76,25 +76,24 @@ int main()
     LCD_PrintString((char8 *)"AN66477");
 	
 	/* Start Capsense*/
-	CapSense_Start();
-    CapSense_InitializeAllBaselines();
+	//CapSense_Start();
+    //CapSense_InitializeAllBaselines();
 
 	/* Wait until CapSense Finishes */
-	while (CapSense_IsBusy());
+	//while (CapSense_IsBusy());
 	
 	/*Start all the hardware components required*/
-	isr_Calibration_Start();
+	//isr_Calibration_Start();
 	ADC_Start();
 	AMux_Start();
-	VDAC8_Start();
-	Opamp_Start();
-	EEPROM_Start();
+	VDAC8_Start();	
+	//EEPROM_Start();
 	
 	/* Run Calibration Routine */
-	Calibrate();
+	//Calibrate();
 	
 	/* Read the gain and offset calibration coefficients from EEPROM */
-	ReadCalibrationData();
+	//ReadCalibrationData();
 	
 	/* 	Get Display Ready*/
 	LCD_Position(0,0);
@@ -102,15 +101,21 @@ int main()
 
 	for(;;)
     {
-
+        Opamp_Start();
+        CyDelay(1);        
+        
     	/* Measure Voltage Across Thermistor*/
-    	iVtherm = MeasureResistorVoltage(THERMISTOR); 
+    	iVtherm = MeasureResistorVoltage(THERMISTOR);         
+        median5_Update(iVtherm_filt, iVtherm);
 		
 		/* Measure Voltage Across Reference Resistor*/
     	iVref = MeasureResistorVoltage(REF_RES);
+        median5_Update(iVref_filt, iVref);
+        
+        Opamp_Stop();
         
 		/*Calculate the resistance of the Thermistor*/
-		iRes = ((float)iVtherm / iVref) * eepromRefRes;
+		iRes = ((float)median5_GetMedian(iVtherm_filt) / median5_GetMedian(iVref_filt)) * eepromRefRes;
 		/*Calculate the temperature from the Resistance*/
     	iTemp = Thermistor_GetTemperature(iRes) - eepromTempOffset ;
         
@@ -119,7 +124,7 @@ int main()
     	sprintf(displayStr,"%0.2f  ",(float)(iTemp/100.0));
     	LCD_Position(1,0);
     	LCD_PrintString(displayStr);
-    	CyDelay(20);
+    	CyDelay(99);
     }
 }
 
