@@ -1512,7 +1512,7 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x3d94
+.debug_info     0x00000000     0x3d9f
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x1b8 .\ARM_GCC_493\Debug\main.o
  .debug_info    0x000001b8      0x110 .\ARM_GCC_493\Debug\measurement.o
@@ -1521,20 +1521,20 @@ END GROUP
  .debug_info    0x000005a5      0x2bc .\ARM_GCC_493\Debug\Cm3Start.o
  .debug_info    0x00000861      0x13e .\ARM_GCC_493\Debug\cymetadata.o
  .debug_info    0x0000099f      0x62b .\ARM_GCC_493\Debug\Lab2_Thermristor.a(cyfitter_cfg.o)
- .debug_info    0x00000fca       0x97 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(CyBootAsmGnu.o)
- .debug_info    0x00001061      0xb90 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(CyLib.o)
- .debug_info    0x00001bf1      0x534 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(cyPm.o)
- .debug_info    0x00002125      0x171 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(Thermistor.o)
- .debug_info    0x00002296      0x383 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(LCD.o)
- .debug_info    0x00002619      0x11c .\ARM_GCC_493\Debug\Lab2_Thermristor.a(Opamp.o)
- .debug_info    0x00002735      0x183 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(VDAC8.o)
- .debug_info    0x000028b8      0x151 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(AMux.o)
- .debug_info    0x00002a09      0x71b .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC.o)
- .debug_info    0x00003124       0xcc .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC_INT.o)
- .debug_info    0x000031f0      0x295 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC_theACLK.o)
- .debug_info    0x00003485      0x259 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC_Ext_CP_Clk.o)
- .debug_info    0x000036de      0x314 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(CyFlash.o)
- .debug_info    0x000039f2      0x3a2 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(CySpc.o)
+ .debug_info    0x00000fca       0xa2 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(CyBootAsmGnu.o)
+ .debug_info    0x0000106c      0xb90 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(CyLib.o)
+ .debug_info    0x00001bfc      0x534 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(cyPm.o)
+ .debug_info    0x00002130      0x171 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(Thermistor.o)
+ .debug_info    0x000022a1      0x383 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(LCD.o)
+ .debug_info    0x00002624      0x11c .\ARM_GCC_493\Debug\Lab2_Thermristor.a(Opamp.o)
+ .debug_info    0x00002740      0x183 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(VDAC8.o)
+ .debug_info    0x000028c3      0x151 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(AMux.o)
+ .debug_info    0x00002a14      0x71b .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC.o)
+ .debug_info    0x0000312f       0xcc .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC_INT.o)
+ .debug_info    0x000031fb      0x295 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC_theACLK.o)
+ .debug_info    0x00003490      0x259 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC_Ext_CP_Clk.o)
+ .debug_info    0x000036e9      0x314 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(CyFlash.o)
+ .debug_info    0x000039fd      0x3a2 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(CySpc.o)
 
 .debug_abbrev   0x00000000     0x1454
  *(.debug_abbrev)
@@ -1644,48 +1644,48 @@ END GROUP
  .debug_frame   0x00002bd8       0x20 d:/program files (x86)/cypress/psoc creator/3.3/psoc creator/import/gnu/arm/4.9.3/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg_nano.a(lib_a-nano-msizer.o)
  .debug_frame   0x00002bf8       0x20 d:/program files (x86)/cypress/psoc creator/3.3/psoc creator/import/gnu/arm/4.9.3/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libnosys.a(sbrk.o)
 
-.debug_str      0x00000000     0x1d95
+.debug_str      0x00000000     0x1da0
  *(.debug_str)
- .debug_str     0x00000000      0x1e0 .\ARM_GCC_493\Debug\main.o
-                                0x22e (size before relaxing)
- .debug_str     0x000001e0       0x3d .\ARM_GCC_493\Debug\measurement.o
-                                0x1e8 (size before relaxing)
- .debug_str     0x0000021d       0x5c .\ARM_GCC_493\Debug\removeOffsetNoise.o
-                                0x20e (size before relaxing)
- .debug_str     0x00000279       0x52 .\ARM_GCC_493\Debug\median5.o
-                                0x1f7 (size before relaxing)
- .debug_str     0x000002cb      0x10d .\ARM_GCC_493\Debug\Cm3Start.o
-                                0x2ad (size before relaxing)
- .debug_str     0x000003d8       0x77 .\ARM_GCC_493\Debug\cymetadata.o
-                                0x1f1 (size before relaxing)
- .debug_str     0x0000044f      0x373 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(cyfitter_cfg.o)
-                                0x50d (size before relaxing)
- .debug_str     0x000007c2      0x642 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(CyLib.o)
-                                0x813 (size before relaxing)
- .debug_str     0x00000e04      0x371 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(cyPm.o)
-                                0x522 (size before relaxing)
- .debug_str     0x00001175       0x9d .\ARM_GCC_493\Debug\Lab2_Thermristor.a(Thermistor.o)
-                                0x237 (size before relaxing)
- .debug_str     0x00001212      0x153 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(LCD.o)
-                                0x2f3 (size before relaxing)
- .debug_str     0x00001365       0x73 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(Opamp.o)
-                                0x1f2 (size before relaxing)
- .debug_str     0x000013d8       0xa5 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(VDAC8.o)
-                                0x226 (size before relaxing)
- .debug_str     0x0000147d       0x7a .\ARM_GCC_493\Debug\Lab2_Thermristor.a(AMux.o)
+ .debug_str     0x00000000      0x1eb .\ARM_GCC_493\Debug\main.o
+                                0x239 (size before relaxing)
+ .debug_str     0x000001eb       0x3d .\ARM_GCC_493\Debug\measurement.o
                                 0x1f3 (size before relaxing)
- .debug_str     0x000014f7      0x2ed .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC.o)
-                                0x4da (size before relaxing)
- .debug_str     0x000017e4       0x47 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC_INT.o)
-                                0x1bb (size before relaxing)
- .debug_str     0x0000182b      0x1cf .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC_theACLK.o)
-                                0x368 (size before relaxing)
- .debug_str     0x000019fa      0x16d .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC_Ext_CP_Clk.o)
-                                0x349 (size before relaxing)
- .debug_str     0x00001b67      0x130 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(CyFlash.o)
-                                0x2e8 (size before relaxing)
- .debug_str     0x00001c97       0xfe .\ARM_GCC_493\Debug\Lab2_Thermristor.a(CySpc.o)
-                                0x2c4 (size before relaxing)
+ .debug_str     0x00000228       0x5c .\ARM_GCC_493\Debug\removeOffsetNoise.o
+                                0x219 (size before relaxing)
+ .debug_str     0x00000284       0x52 .\ARM_GCC_493\Debug\median5.o
+                                0x202 (size before relaxing)
+ .debug_str     0x000002d6      0x10d .\ARM_GCC_493\Debug\Cm3Start.o
+                                0x2b8 (size before relaxing)
+ .debug_str     0x000003e3       0x77 .\ARM_GCC_493\Debug\cymetadata.o
+                                0x1fc (size before relaxing)
+ .debug_str     0x0000045a      0x373 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(cyfitter_cfg.o)
+                                0x518 (size before relaxing)
+ .debug_str     0x000007cd      0x642 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(CyLib.o)
+                                0x81e (size before relaxing)
+ .debug_str     0x00000e0f      0x371 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(cyPm.o)
+                                0x52d (size before relaxing)
+ .debug_str     0x00001180       0x9d .\ARM_GCC_493\Debug\Lab2_Thermristor.a(Thermistor.o)
+                                0x242 (size before relaxing)
+ .debug_str     0x0000121d      0x153 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(LCD.o)
+                                0x2fe (size before relaxing)
+ .debug_str     0x00001370       0x73 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(Opamp.o)
+                                0x1fd (size before relaxing)
+ .debug_str     0x000013e3       0xa5 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(VDAC8.o)
+                                0x231 (size before relaxing)
+ .debug_str     0x00001488       0x7a .\ARM_GCC_493\Debug\Lab2_Thermristor.a(AMux.o)
+                                0x1fe (size before relaxing)
+ .debug_str     0x00001502      0x2ed .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC.o)
+                                0x4e5 (size before relaxing)
+ .debug_str     0x000017ef       0x47 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC_INT.o)
+                                0x1c6 (size before relaxing)
+ .debug_str     0x00001836      0x1cf .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC_theACLK.o)
+                                0x373 (size before relaxing)
+ .debug_str     0x00001a05      0x16d .\ARM_GCC_493\Debug\Lab2_Thermristor.a(ADC_Ext_CP_Clk.o)
+                                0x354 (size before relaxing)
+ .debug_str     0x00001b72      0x130 .\ARM_GCC_493\Debug\Lab2_Thermristor.a(CyFlash.o)
+                                0x2f3 (size before relaxing)
+ .debug_str     0x00001ca2       0xfe .\ARM_GCC_493\Debug\Lab2_Thermristor.a(CySpc.o)
+                                0x2cf (size before relaxing)
 
 .debug_loc
  *(.debug_loc)
