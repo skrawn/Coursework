@@ -38,7 +38,7 @@
 #define Thermistor_REF_RESISTOR           (10000)
 #define Thermistor_REF_RES_SHIFT          (0u)
 #define Thermistor_ACCURACY               (10u)
-#define Thermistor_MIN_TEMP               (-4 * Thermistor_SCALE)
+#define Thermistor_MIN_TEMP               (-40 * Thermistor_SCALE)
 
 
 /***************************************
@@ -57,9 +57,9 @@ int16 Thermistor_GetTemperature(uint32 resT) ;
 #define Thermistor_K2C                    (273.15)
 #define Thermistor_SCALE                  (100)
 
-#define Thermistor_THA               (0.0009112892)
-#define Thermistor_THB               (0.0002459796)
-#define Thermistor_THC               (2.449113E-07)
+#define Thermistor_THA               (0.0008613933)
+#define Thermistor_THB               (0.0002563769)
+#define Thermistor_THC               (1.680552E-07)
 
 
 #endif /* CY_THERMISTOR_CALC_Thermistor_H */
