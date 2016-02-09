@@ -56,10 +56,18 @@
 #define LED1PinMode			gpioModePushPullDrive
 #define LED1DriveMode		gpioDriveModeLowest
 
+#define ADC_DMA_CH			0
+
 #define N_ADC_SAMPLES		200
 #define SAMPLE_TIMER_PERIOD	2000	// ms
 #define UPPER_TEMP_LIMIT	30		// C
 #define LOWER_TEMP_LIMIT	15		// C
+
+#define N_DMA_CH_IN_USE		1
+
+#if N_ADC_SAMPLES > 512
+#error Too many samples for a single channel. Choose a number that is 512 or less.
+#endif
 
 #if Debug
 Serial pc(USBTX, USBRX);
@@ -67,10 +75,14 @@ Serial pc(USBTX, USBRX);
 
 // Global Variables
 DMA_CB_TypeDef ADC_Done_CB;
+uint16_t ADC_Result_Buf[N_ADC_SAMPLES];
+
+DMA_DESCRIPTOR_TypeDef DMA_DESCR_CTRL_BLOCK[N_DMA_CH_IN_USE] __attribute__((aligned(8)));
 
 void GPIO_Initialize(void);
 void LETIMER_Initialize(void);
 void ADC_Initialize(void);
+void ADC_DMA_Done_CB(unsigned int channel, bool primary, void *user);
 void DMA_Initialize(void);
 void Set_HFRCO_17_5MHz(void);
 void BSP_TraceSwoSetup(void);
@@ -132,14 +144,35 @@ void LETIMER_Initialize(void)
 void ADC_Initialize(void)
 {
 	ADC_Init_TypeDef ADC_InitValues = ADC_INIT_DEFAULT;
+	ADC_InitSingle_TypeDef ADC_Single = ADC_INITSINGLE_DEFAULT;
 
 	CMU_ClockEnable(cmuClock_ADC0, true);
 
-	// Set the ADC clock to HFRCO/2 = 8.75MHz
+	// Set the ADC clock to HFRCO/2 = 8.743MHz
 	ADC_InitValues.prescale = 1;
-	// 1us * (1/12.992) - 1 = ~12
-	ADC_InitValues.timebase = 12;
+	// 1us / (1/8.743M) - 1 = ~8
+	ADC_InitValues.timebase = 8;
 	ADC_InitValues.lpfMode = adcLPFilterBypass;
+	ADC_InitValues.warmUpMode = adcWarmupNormal;
+	ADC_Init(ADC0, &ADC_InitValues);
+
+	// Configure the ADC for single channel scan of the temperature sensor
+	// T_conv = (128+12)*(1/8.743M) = 16us
+	// f_conv = (1/16us) = 62.5kHz
+	ADC_Single.acqTime = adcAcqTime128;
+	ADC_Single.reference = adcRef1V25;
+	ADC_Single.input = adcSingleInpTemp;
+	ADC_Single.rep = true;
+	ADC_InitSingle(ADC0, &ADC_Single);
+}
+
+/**************************************************************************//**
+ * @brief
+ * @verbatim ADC_DMA_Done_CB(unsigned int channel, bool primary, void *user); @endverbatim
+ *****************************************************************************/
+void ADC_DMA_Done_CB(unsigned int channel, bool primary, void *user)
+{
+
 }
 
 /**************************************************************************//**
@@ -148,7 +181,32 @@ void ADC_Initialize(void)
  *****************************************************************************/
 void DMA_Initialize(void)
 {
+	DMA_CfgChannel_TypeDef ADC_CfgChannel;
+	DMA_CfgDescr_TypeDef ADC_Cfg_Descr;
+	DMA_Init_TypeDef DMA_InitVal;
 
+	// Assign the call back and select the request source as ADC0 Single
+	ADC_CfgChannel.cb = &ADC_Done_CB;
+	ADC_Done_CB.cbFunc = ADC_DMA_Done_CB;
+	ADC_Done_CB.userPtr = NULL;
+	ADC_CfgChannel.select = ((0b1000) << 16) | (0b0);
+
+	DMA_CfgChannel(ADC_DMA_CH, &ADC_CfgChannel);
+
+	// Configure the descriptor for word sized transfers
+	ADC_Cfg_Descr.arbRate = dmaArbitrate1;
+	ADC_Cfg_Descr.size = dmaDataSize2;
+	ADC_Cfg_Descr.dstInc = dmaDataInc2;
+	ADC_Cfg_Descr.srcInc = dmaDataIncNone;
+	ADC_Cfg_Descr.hprot = 0;
+
+	DMA_CfgDescr(ADC_DMA_CH, true, &ADC_Cfg_Descr);
+
+	DMA_InitVal.controlBlock = DMA_DESCR_CTRL_BLOCK;
+	DMA_InitVal.hprot = 0;
+	DMA_Init(&DMA_InitVal);
+
+	DMA_ActivateBasic(ADC_DMA_CH, true, false, ADC_Result_Buf, (void *) &ADC0->SCANDATA, (N_ADC_SAMPLES * sizeof(uint16_t) - 1));
 }
 
 /**************************************************************************//**
@@ -158,10 +216,10 @@ void DMA_Initialize(void)
 void Set_HFRCO_17_5MHz(void)
 {
 	// Increasing or decreasing the TUNING field in HFRCOCTRL can adjust
-	// the HFRCO frequency up or down by 0.3%. To get a 13MHz HFRCO
-	// clock, 14M - 24*0.003*14M = 12.992MHz
+	// the HFRCO frequency up or down by 0.3%. To get a 17.5MHz HFRCO
+	// clock, 14M + 83*0.003*14M = 17.486MHz
 	uint32_t hfrcoctrl = CMU->HFRCOCTRL;
-	uint8_t tune_value = ((uint8_t) (hfrcoctrl & 0xFF)) - 24;
+	uint8_t tune_value = ((uint8_t) (hfrcoctrl & 0xFF)) + 83;
 	uint32_t tuned_hfrco = (hfrcoctrl & 0xFFFFFF00) + tune_value;
 	CMU->HFRCOCTRL = tuned_hfrco;
 }
@@ -175,7 +233,7 @@ void LETIMER0_IRQHandler(void)
 	uint32_t intflags = LETIMER_IntGet(LETIMER0);
 
 	if (intflags & LETIMER_IF_UF) {
-
+		unblockSleepMode(EM3);
 	}
 }
 
@@ -246,7 +304,7 @@ int main(void)
 	blockSleepMode(EM3);
 #endif
 
-	Set_HFRCO_13MHz();
+	Set_HFRCO_17_5MHz();
 
 	GPIO_Initialize();
 	LETIMER_Initialize();
