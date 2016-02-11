@@ -152,10 +152,9 @@ void ADC_Initialize(void)
 
 	// Set the ADC clock to HFRCO/2 = 8.743MHz
 	ADC_InitValues.prescale = 1;
-	// 5us / (1/8.743M) - 1 = ~44
-	ADC_InitValues.timebase = 44;
-	ADC_InitValues.lpfMode = adcLPFilterRC;
-	//ADC_InitValues.warmUpMode = adcWarmupNormal;
+	// 5us / (1/17.486M) - 1 = ~87
+	ADC_InitValues.timebase = 87;
+	ADC_InitValues.lpfMode = adcLPFilterBypass;
 	ADC_InitValues.warmUpMode = adcWarmupKeepADCWarm;
 	ADC_Init(ADC0, &ADC_InitValues);
 
