@@ -150,18 +150,17 @@ void ADC_Initialize(void)
 
 	CMU_ClockEnable(cmuClock_ADC0, true);
 
-	// Set the ADC clock to HFRCO/2 = 8.743MHz
-	ADC_InitValues.prescale = 1;
-	// 5us / (1/17.486M) - 1 = ~87
-	ADC_InitValues.timebase = 87;
+	// Set the ADC clock to HFRCO/4 = 1.75MHz
+	ADC_InitValues.prescale = ADC_PrescaleCalc(1750000, 7000000);
+	ADC_InitValues.timebase = ADC_TimebaseCalc(0);
 	ADC_InitValues.lpfMode = adcLPFilterBypass;
 	ADC_InitValues.warmUpMode = adcWarmupKeepADCWarm;
 	ADC_Init(ADC0, &ADC_InitValues);
 
 	// Configure the ADC for single channel scan of the temperature sensor
-	// T_conv = (128+12)*(1/8.743M) = 16us
+	// T_conv = (16+12)*(1/1.75M) = 16us
 	// f_conv = (1/16us) = 62.5kHz
-	ADC_Single.acqTime = adcAcqTime128;
+	ADC_Single.acqTime = adcAcqTime16;
 	ADC_Single.reference = adcRef1V25;
 	ADC_Single.input = adcSingleInpTemp;
 	ADC_Single.rep = true;
@@ -174,7 +173,8 @@ void ADC_Initialize(void)
  *****************************************************************************/
 void ADC_DMA_Done_CB(unsigned int channel, bool primary, void *user)
 {
-	float temp_sum = 0;
+	uint32_t temp_sum = 0;
+	float result;
 
 	// Stop conversions
 	ADC0->CMD = ADC_CMD_SINGLESTOP;
@@ -182,22 +182,22 @@ void ADC_DMA_Done_CB(unsigned int channel, bool primary, void *user)
 
 	// Average the samples and determine if an LED needs to be lit
 	for (int i = 0; i < N_ADC_SAMPLES; i++)
-		temp_sum += convertToCelsius(ADC_Result_Buf[i]);
+		temp_sum += ADC_Result_Buf[i];
 	temp_sum /= N_ADC_SAMPLES;
+	result = convertToCelsius(temp_sum);
 
-	if (temp_sum > UPPER_TEMP_LIMIT)
+	if (result > UPPER_TEMP_LIMIT)
 		GPIO_PinOutSet(LED1PinPort, LED1PinPin);
 	else
 		GPIO_PinOutClear(LED1PinPort, LED1PinPin);
 
-	if (temp_sum < LOWER_TEMP_LIMIT)
+	if (result < LOWER_TEMP_LIMIT)
 		GPIO_PinOutSet(LED0PinPort, LED0PinPin);
 	else
 		GPIO_PinOutClear(LED0PinPort, LED0PinPin);
 
 	// Go back to sleep
 	unblockSleepMode(EM1);
-	blockSleepMode(EM3);
 }
 
 /**************************************************************************//**
@@ -245,7 +245,11 @@ void Set_HFRCO_17_5MHz(void)
 {
 	// Ensure the correct HFRCO band and clock source is set
 	CMU_HFRCOBandSet(cmuHFRCOBand_14MHz);
+	//CMU_HFRCOBandSet(cmuHFRCOBand_7MHz);
 	CMU_ClockSelectSet(cmuClock_HF, cmuSelect_HFRCO);
+
+	// Turn off HFXO if it was on
+	CMU_OscillatorEnable(cmuOsc_HFXO, false, false);
 
 	// Increasing or decreasing the TUNING field in HFRCOCTRL can adjust
 	// the HFRCO frequency up or down by 0.3%. To get a 17.5MHz HFRCO
@@ -289,7 +293,6 @@ void LETIMER0_IRQHandler(void)
 		ADC0->CTRL |= adcWarmupKeepADCWarm;
 		DMA_ActivateBasic(ADC_DMA_CH, true, false, ADC_Result_Buf, (void *) &ADC0->SINGLEDATA, N_ADC_SAMPLES - 1);
 		ADC_Start(ADC0, adcStartSingle);
-		unblockSleepMode(EM3);
 		blockSleepMode(EM1);
 	}
 }
@@ -361,7 +364,14 @@ int main(void)
 	blockSleepMode(EM3);
 #endif
 
-	Set_HFRCO_17_5MHz();
+	// Ensure the correct HFRCO band and clock source is set
+	CMU_HFRCOBandSet(cmuHFRCOBand_7MHz);
+	CMU_ClockSelectSet(cmuClock_HF, cmuSelect_HFRCO);
+
+	// Turn off HFXO if it was on
+	CMU_OscillatorEnable(cmuOsc_HFXO, false, false);
+
+	//Set_HFRCO_17_5MHz();
 
 	GPIO_Initialize();
 	LETIMER_Initialize();
