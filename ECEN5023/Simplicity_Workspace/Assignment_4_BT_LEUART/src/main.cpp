@@ -50,18 +50,6 @@
 
 #define ULFRCO_FREQ			850	// Hz
 
-// Cold temperature
-#define LED0PinPort			gpioPortE
-#define LED0PinPin			2
-#define LED0PinMode			gpioModePushPullDrive
-#define LED0DriveMode		gpioDriveModeLowest
-
-// Hot temperature
-#define LED1PinPort			gpioPortE
-#define LED1PinPin			3
-#define LED1PinMode			gpioModePushPullDrive
-#define LED1DriveMode		gpioDriveModeLowest
-
 // LEUART TX PD4
 #define LEUART_TX_Port		gpioPortD
 #define LEUART_TX_Pin		4
@@ -147,6 +135,7 @@ void LEUART_DMA_Init(void);
 void DMA_Initialize(void);
 void ADC_DMA_Done_CB(unsigned int channel, bool primary, void *user);
 void LEUART_TX_DMA_Done_CB(unsigned int channel, bool primary, void *user);
+void LEUART_TX_Buffer(void);
 void LEUART_RX_DMA_Done_CB(unsigned int channel, bool primary, void *user);
 float convertToCelsius(int16_t adcSample);
 void returnTemperature(void);
@@ -174,12 +163,7 @@ void GPIO_Initialize(void)
 	// Enable clock to the GPIO module
 	CMU_ClockEnable(cmuClock_GPIO, true);
 
-	GPIO_DriveModeSet(LED1PinPort, LED1DriveMode);
-	GPIO_PinModeSet(LED1PinPort, LED1PinPin, LED1PinMode, 0);
-
-	GPIO_DriveModeSet(LED0PinPort, LED0DriveMode);
-	GPIO_PinModeSet(LED0PinPort, LED0PinPin, LED0PinMode, 0);
-
+	// Drive the Bluefruit CTS pin low
 	GPIO_DriveModeSet(BluefruitCTSPort, BluefruitCTSDrive);
 	GPIO_PinModeSet(BluefruitCTSPort, BluefruitCTSPin, BluefruitCTSMode, 0);
 
@@ -368,18 +352,16 @@ void LEUART_DMA_Init(void)
 	DMA->IEN |= (1 << LEUART_RX_DMA_CH);
 
 	// Start the RX channel
-	DMA_ActivateBasic(LEUART_RX_DMA_CH, true, false, LEUART_RX_Buf, (void *) &LEUART0->RXDATA, LEUART_RX_DMA_N_XFERS);
+	DMA_ActivateBasic(LEUART_RX_DMA_CH, true, false, LEUART_RX_Buf,
+			(void *) &LEUART0->RXDATA, LEUART_RX_DMA_N_XFERS);
 
 	// Configure the TX channel
-	LEUART_TX_CfgChannel.cb = NULL;
-	//LEUART_TX_Done_CB.cbFunc = LEUART_TX_DMA_Done_CB;
-	//LEUART_TX_Done_CB.userPtr = NULL;
-	//LEUART_TX_CfgChannel.cb = &LEUART_TX_Done_CB;
-	//LEUART_TX_CfgChannel.enableInt = false;
-	//LEUART_TX_CfgChannel.enableInt = true;
+	LEUART_TX_Done_CB.cbFunc = LEUART_TX_DMA_Done_CB;
+	LEUART_TX_Done_CB.userPtr = NULL;
+	LEUART_TX_CfgChannel.cb = &LEUART_TX_Done_CB;
+	LEUART_TX_CfgChannel.enableInt = true;
 	LEUART_TX_CfgChannel.highPri = LEUART_TX_DMA_PRI;
 	LEUART_TX_CfgChannel.select = DMA_CH_CTRL_SOURCESEL_LEUART0 | DMA_CH_CTRL_SIGSEL_LEUART0TXBL;
-	//LEUART_TX_CfgChannel.select = DMA_CH_CTRL_SOURCESEL_LEUART0 | DMA_CH_CTRL_SIGSEL_LEUART0TXEMPTY;
 	DMA_CfgChannel(LEUART_TX_DMA_CH, &LEUART_TX_CfgChannel);
 
 	LEUART_TX_Cfg_Descr.arbRate = LEUART_TX_DMA_ARB;
@@ -433,13 +415,15 @@ void ADC_DMA_Done_CB(unsigned int channel, bool primary, void *user)
 	// Determine if the temperature is within range
 	if (current_temp > UPPER_TEMP_LIMIT*DEG_C_TO_TENTHS_C) {
 		memset(LEUART_TX_Buf, 0, sizeof(LEUART_TX_Buf));
-		sprintf((char *) LEUART_TX_Buf, "Temperature ABOVE set minimum = %d.%d\n\r", current_temp / DEG_C_TO_TENTHS_C, abs(current_temp % DEG_C_TO_TENTHS_C));
-		DMA_ActivateBasic(LEUART_TX_DMA_CH, true, false, (void *) &LEUART0->TXDATA, LEUART_TX_Buf, strlen((const char *) LEUART_TX_Buf) - 1);
+		sprintf((char *) LEUART_TX_Buf, "Temperature ABOVE set minimum = %d.%d\n\r",
+				current_temp / DEG_C_TO_TENTHS_C, abs(current_temp % DEG_C_TO_TENTHS_C));
+		LEUART_TX_Buffer();
  	}
 	else if (current_temp < LOWER_TEMP_LIMIT*DEG_C_TO_TENTHS_C) {
 		memset(LEUART_TX_Buf, 0, sizeof(LEUART_TX_Buf));
-		sprintf((char *) LEUART_TX_Buf, "Temperature BELOW set minimum = %d.%d\n\r", current_temp / DEG_C_TO_TENTHS_C, abs(current_temp % DEG_C_TO_TENTHS_C));
-		DMA_ActivateBasic(LEUART_TX_DMA_CH, true, false, (void *) &LEUART0->TXDATA, LEUART_TX_Buf, strlen((const char *) LEUART_TX_Buf) - 1);
+		sprintf((char *) LEUART_TX_Buf, "Temperature BELOW set minimum = %d.%d\n\r",
+				current_temp / DEG_C_TO_TENTHS_C, abs(current_temp % DEG_C_TO_TENTHS_C));
+		LEUART_TX_Buffer();
 	}
 
 	// Go back to sleep
@@ -453,10 +437,25 @@ void ADC_DMA_Done_CB(unsigned int channel, bool primary, void *user)
  *****************************************************************************/
 void LEUART_TX_DMA_Done_CB(unsigned int channel, bool primary, void *user)
 {
-	// Clear the RX DMA channel request
-	DMA->CHREQMASKC |= (1 << LEUART_RX_DMA_CH);
+	// Disable the transmitter
+	LEUART0->CMD |= LEUART_CMD_TXDIS;
+}
 
-	DMA_ActivateBasic(LEUART_RX_DMA_CH, true, false, LEUART_RX_Buf, (void *) &LEUART0->RXDATA, LEUART_RX_DMA_N_XFERS);
+/**************************************************************************//**
+ * @brief Transmits the contents of the LEUART TX buffer.
+ * @verbatim LEUART_TX_Buffer(void);
+ * @endverbatim
+ *****************************************************************************/
+void LEUART_TX_Buffer(void)
+{
+	// Enable the transmitter
+	LEUART0->CMD |= LEUART_CMD_TXEN;
+
+	// Wait for any pending previous write operation to have been completed
+	// in low frequency domain
+	while (LEUART0->SYNCBUSY & (LEUART_SYNCBUSY_TXDATA | LEUART_SYNCBUSY_CMD));
+	DMA_ActivateBasic(LEUART_TX_DMA_CH, true, false, (void *) &LEUART0->TXDATA,
+			LEUART_TX_Buf, strlen((const char *) LEUART_TX_Buf));
 }
 
 /**************************************************************************//**
@@ -503,8 +502,7 @@ void returnTemperature(void)
 {
 	memset(LEUART_TX_Buf, 0, sizeof(LEUART_TX_Buf));
 	sprintf((char *) LEUART_TX_Buf, "%d.%d\n\r", current_temp / DEG_C_TO_TENTHS_C, abs(current_temp % DEG_C_TO_TENTHS_C));
-	//sprintf((char *) LEUART_TX_Buf, "%2.1f\n\r", current_temp);
-	DMA_ActivateBasic(LEUART_TX_DMA_CH, true, false, (void *) &LEUART0->TXDATA, LEUART_TX_Buf, strlen((const char *) LEUART_TX_Buf) - 1);
+	LEUART_TX_Buffer();
 }
 
 /**************************************************************************//**
@@ -530,17 +528,13 @@ void LETIMER0_IRQHandler(void)
 void LEUART0_IRQHandler(void)
 {
 	uint32_t intflags = LEUART_IntGet(LEUART0), i = 0, j = 0;
-	uint8_t str_length;
+	uint32_t str_length;
 	bool cmd_matched = false;
 
 	LEUART_IntClear(LEUART0, intflags);
 
 	if (intflags & LEUART_IF_SIGF) {
-		// Disable the RX DMA channel
-		//DMA_ChannelEnable(LEUART_RX_DMA_CH, false);
-
 		// Disable the LEUART receiver
-		//LEUART0->CMD |= LEUART_CMD_RXBLOCKEN;
 		LEUART0->CMD |= LEUART_CMD_RXDIS;
 
 		// Find the delimiter
@@ -566,14 +560,13 @@ void LEUART0_IRQHandler(void)
 			if (!cmd_matched) {
 				memset(LEUART_TX_Buf, 0, sizeof(LEUART_TX_Buf));
 				sprintf((char *) LEUART_TX_Buf, "%s ERROR: Not valid input!\n\r", (char *) &LEUART_RX_Buf[0]);
-				DMA_ActivateBasic(LEUART_TX_DMA_CH, true, false, (void *) &LEUART0->TXDATA, LEUART_TX_Buf, strlen((const char *) LEUART_TX_Buf) - 1);
+				LEUART_TX_Buffer();
 			}
 		}
 
 		// Reset the RX DMA channel
 		memset(LEUART_RX_Buf, 0, sizeof(LEUART_RX_Buf));
 		LEUART0->CMD |= LEUART_CMD_CLEARRX;
-		//LEUART0->CMD |= LEUART_CMD_RXBLOCKDIS;
 		LEUART0->CMD |= LEUART_CMD_RXEN;
 		DMA_ActivateBasic(LEUART_RX_DMA_CH, true, false, LEUART_RX_Buf, (void *) &LEUART0->RXDATA, LEUART_RX_DMA_N_XFERS);
 	}
@@ -643,7 +636,7 @@ int main(void)
 	BSP_TraceSwoSetup();
 	blockSleepMode(EM1);
 #else
-	blockSleepMode(EM3);
+	blockSleepMode(EM2);
 #endif
 
 	// Ensure the correct HFRCO band and clock source is set
