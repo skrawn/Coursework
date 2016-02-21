@@ -101,7 +101,7 @@
 #define N_DMA_CH_IN_USE		3
 
 #if ADC_DMA_BUF_SIZE > 1024 || LEUART_TX_DMA_BUF_SIZE > 1024 || LEUART_RX_DMA_BUF_SIZE > 1024
-#error Too many samples for a single channel. Choose a number that is 512 or less.
+#error Too many samples for a single channel. Choose a number that is 1024 or less.
 #endif
 
 #if LEUART_BAUD_RATE > 9600
@@ -116,7 +116,7 @@ Serial pc(USBTX, USBRX);
 DMA_CB_TypeDef ADC_Done_CB;
 DMA_CB_TypeDef LEUART_TX_Done_CB;
 DMA_CB_TypeDef LEUART_RX_Done_CB;
-uint16_t current_temp; // 0.1C units
+int16_t current_temp; // 0.1C units
 
 // Buffers MUST be aligned on a 0x100 (256 byte) boundary to work properly
 uint16_t ADC_Result_Buf[ADC_DMA_BUF_SIZE] __attribute__((aligned(256)));
@@ -437,8 +437,8 @@ void ADC_DMA_Done_CB(unsigned int channel, bool primary, void *user)
  *****************************************************************************/
 void LEUART_TX_DMA_Done_CB(unsigned int channel, bool primary, void *user)
 {
-	// Disable the transmitter
-	LEUART0->CMD |= LEUART_CMD_TXDIS;
+	// Enable the TXC interrupt
+	LEUART_IntEnable(LEUART0, LEUART_IEN_TXC);
 }
 
 /**************************************************************************//**
@@ -538,7 +538,7 @@ void LEUART0_IRQHandler(void)
 		LEUART0->CMD |= LEUART_CMD_RXDIS;
 
 		// Find the delimiter
-		while (LEUART_RX_Buf[i] != END_OF_CMD_DELIMITER && i < (LEUART_RX_DMA_BUF_SIZE - END_OF_CMD_DELIM_SIZE)) {
+		while (LEUART_RX_Buf[i] != END_OF_CMD_DELIMITER && i < LEUART_RX_DMA_N_XFERS) {
 			i++;
 		}
 
@@ -569,6 +569,14 @@ void LEUART0_IRQHandler(void)
 		LEUART0->CMD |= LEUART_CMD_CLEARRX;
 		LEUART0->CMD |= LEUART_CMD_RXEN;
 		DMA_ActivateBasic(LEUART_RX_DMA_CH, true, false, LEUART_RX_Buf, (void *) &LEUART0->RXDATA, LEUART_RX_DMA_N_XFERS);
+	}
+
+	if (intflags & LEUART_IF_TXC) {
+		// Disable the transmitter
+		LEUART0->CMD |= LEUART_CMD_TXDIS;
+
+		// Disable the TXC interrupt
+		LEUART_IntDisable(LEUART0, LEUART_IEN_TXC);
 	}
 }
 
