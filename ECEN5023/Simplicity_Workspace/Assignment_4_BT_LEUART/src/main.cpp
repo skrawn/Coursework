@@ -398,7 +398,7 @@ void DMA_Initialize(void)
  *****************************************************************************/
 void ADC_DMA_Done_CB(unsigned int channel, bool primary, void *user)
 {
-	uint32_t temp_sum = 0;
+	uint32_t temp_sum = 0, transfer_size;
 	float float_temp;
 
 	// Stop conversions
@@ -414,15 +414,15 @@ void ADC_DMA_Done_CB(unsigned int channel, bool primary, void *user)
 
 	// Determine if the temperature is within range
 	if (current_temp > UPPER_TEMP_LIMIT*DEG_C_TO_TENTHS_C) {
-		memset(LEUART_TX_Buf, 0, sizeof(LEUART_TX_Buf));
-		sprintf((char *) LEUART_TX_Buf, "Temperature ABOVE set minimum = %d.%d\n\r",
+		transfer_size = sprintf((char *) LEUART_TX_Buf, "Temperature ABOVE set minimum = %d.%d\n\r",
 				current_temp / DEG_C_TO_TENTHS_C, abs(current_temp % DEG_C_TO_TENTHS_C));
+		LEUART_TX_Buf[transfer_size] = '\0';
 		LEUART_TX_Buffer();
  	}
 	else if (current_temp < LOWER_TEMP_LIMIT*DEG_C_TO_TENTHS_C) {
-		memset(LEUART_TX_Buf, 0, sizeof(LEUART_TX_Buf));
-		sprintf((char *) LEUART_TX_Buf, "Temperature BELOW set minimum = %d.%d\n\r",
+		transfer_size = sprintf((char *) LEUART_TX_Buf, "Temperature BELOW set minimum = %d.%d\n\r",
 				current_temp / DEG_C_TO_TENTHS_C, abs(current_temp % DEG_C_TO_TENTHS_C));
+		LEUART_TX_Buf[transfer_size] = '\0';
 		LEUART_TX_Buffer();
 	}
 
@@ -500,8 +500,11 @@ float convertToCelsius(int16_t adcSample)
  *****************************************************************************/
 void returnTemperature(void)
 {
-	memset(LEUART_TX_Buf, 0, sizeof(LEUART_TX_Buf));
-	sprintf((char *) LEUART_TX_Buf, "%d.%d\n\r", current_temp / DEG_C_TO_TENTHS_C, abs(current_temp % DEG_C_TO_TENTHS_C));
+	uint32_t transfer_size = sprintf((char *) LEUART_TX_Buf, "%d.%d\n\r", current_temp / DEG_C_TO_TENTHS_C, abs(current_temp % DEG_C_TO_TENTHS_C));
+
+	// Set the last item in the transmit buffer to a null char so it knows when to stop transmitting
+	LEUART_TX_Buf[transfer_size] = '\0';
+
 	LEUART_TX_Buffer();
 }
 
@@ -528,7 +531,7 @@ void LETIMER0_IRQHandler(void)
 void LEUART0_IRQHandler(void)
 {
 	uint32_t intflags = LEUART_IntGet(LEUART0), i = 0, j = 0;
-	uint32_t str_length;
+	uint32_t str_length, transfer_size;
 	bool cmd_matched = false;
 
 	LEUART_IntClear(LEUART0, intflags);
@@ -558,14 +561,19 @@ void LEUART0_IRQHandler(void)
 			}
 
 			if (!cmd_matched) {
-				memset(LEUART_TX_Buf, 0, sizeof(LEUART_TX_Buf));
-				sprintf((char *) LEUART_TX_Buf, "%s ERROR: Not valid input!\n\r", (char *) &LEUART_RX_Buf[0]);
+				//memset(LEUART_TX_Buf, 0, sizeof(LEUART_TX_Buf));
+				transfer_size = sprintf((char *) LEUART_TX_Buf, "%s ERROR: Not valid input!\n\r", (char *) &LEUART_RX_Buf[0]);
+
+				// Set the last item in the transmit buffer to a null char so it knows when to stop transmitting
+				LEUART_TX_Buf[transfer_size] = '\0';
+
 				LEUART_TX_Buffer();
 			}
 		}
 
 		// Reset the RX DMA channel
-		memset(LEUART_RX_Buf, 0, sizeof(LEUART_RX_Buf));
+		transfer_size = LEUART_RX_DMA_N_XFERS - ((DMA_DESCR_CTRL_BLOCK[LEUART_RX_DMA_CH].CTRL & 0x3FF0) >> 4);
+		memset(LEUART_RX_Buf, 0, transfer_size);
 		LEUART0->CMD |= LEUART_CMD_CLEARRX;
 		LEUART0->CMD |= LEUART_CMD_RXEN;
 		DMA_ActivateBasic(LEUART_RX_DMA_CH, true, false, LEUART_RX_Buf, (void *) &LEUART0->RXDATA, LEUART_RX_DMA_N_XFERS);
