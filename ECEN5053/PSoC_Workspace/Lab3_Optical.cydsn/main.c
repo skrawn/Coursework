@@ -17,14 +17,13 @@ int main()
 
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     isr_ToggleLED_Start();
-    LCD_Char_Start();
-    LCD_Char_Position(0,0);
     LED_Mux_Start();
-    LED_Mux_Select(0);
-    //Optical_Mux_Start();
+    LED_Mux_Select(1);
     VDAC8_Start();
-    //ADC_SAR_Start();
     OpAmp_Start();
+    PhotoDiode_Amp_Start();
+    Diode_Follower_Start();
+    Photodiode_Source_Start();
     
     for(;;)
     {

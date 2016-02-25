@@ -170,13 +170,11 @@ CY_ISR(isr_ToggleLED_Interrupt)
     
     if (led_state == 1) {
         led_state = 0;
-        LED_Mux_Select(0);
-        LCD_Char_PrintString("LED OFF");
+        LED_Mux_Select(0);        
     }
     else {
         led_state = 1;
-        LED_Mux_Select(1);
-        LCD_Char_PrintString("LED ON");
+        LED_Mux_Select(1);        
     }
 
     /* `#END` */

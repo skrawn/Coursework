@@ -108,12 +108,12 @@ Launch Clock Path
 pin name                                                    model name      delay     AT  edge  Fanout
 ----------------------------------------------------------  --------------  -----  -----  ----  ------
 ClockBlock/clk_bus_glb                                      clockblockcell      0      0  RISE       1
-CJTemp(0)/in_clock                                          iocell10            0      0  RISE       1
+CJTemp(0)/in_clock                                          iocell3             0      0  RISE       1
 
 Data path
 pin name                                  model name   delay     AT  slack  edge  Fanout
 ----------------------------------------  -----------  -----  -----  -----  ----  ------
-CJTemp(0)/fb                              iocell10      2234   2234  31268  RISE       1
+CJTemp(0)/fb                              iocell3       2234   2234  31268  RISE       1
 \Debouncer:DEBOUNCER[0]:d_sync_0\/main_0  macrocell2    4654   6888  31268  RISE       1
 
 Capture Clock Path
@@ -153,12 +153,12 @@ Launch Clock Path
 pin name                                                    model name      delay     AT  edge  Fanout
 ----------------------------------------------------------  --------------  -----  -----  ----  ------
 ClockBlock/clk_bus_glb                                      clockblockcell      0      0  RISE       1
-CJTemp(0)/in_clock                                          iocell10            0      0  RISE       1
+CJTemp(0)/in_clock                                          iocell3             0      0  RISE       1
 
 Data path
 pin name                                  model name   delay     AT  slack  edge  Fanout
 ----------------------------------------  -----------  -----  -----  -----  ----  ------
-CJTemp(0)/fb                              iocell10      2234   2234  31268  RISE       1
+CJTemp(0)/fb                              iocell3       2234   2234  31268  RISE       1
 \Debouncer:DEBOUNCER[0]:d_sync_0\/main_0  macrocell2    4654   6888  31268  RISE       1
 
 Capture Clock Path
@@ -205,12 +205,12 @@ Launch Clock Path
 pin name                                                    model name      delay     AT  edge  Fanout
 ----------------------------------------------------------  --------------  -----  -----  ----  ------
 ClockBlock/clk_bus_glb                                      clockblockcell      0      0  RISE       1
-CJTemp(0)/in_clock                                          iocell10            0      0  RISE       1
+CJTemp(0)/in_clock                                          iocell3             0      0  RISE       1
 
 Data path
 pin name                                  model name   delay     AT  slack  edge  Fanout
 ----------------------------------------  -----------  -----  -----  -----  ----  ------
-CJTemp(0)/fb                              iocell10      2234   2234  31268  RISE       1
+CJTemp(0)/fb                              iocell3       2234   2234  31268  RISE       1
 \Debouncer:DEBOUNCER[0]:d_sync_0\/main_0  macrocell2    4654   6888  31268  RISE       1
 
 Capture Clock Path
@@ -295,12 +295,12 @@ Launch Clock Path
 pin name                                                    model name      delay     AT  edge  Fanout
 ----------------------------------------------------------  --------------  -----  -----  ----  ------
 ClockBlock/clk_bus_glb                                      clockblockcell      0      0  RISE       1
-CJTemp(0)/in_clock                                          iocell10            0      0  RISE       1
+CJTemp(0)/in_clock                                          iocell3             0      0  RISE       1
 
 Data path
 pin name                                  model name   delay     AT  slack  edge  Fanout
 ----------------------------------------  -----------  -----  -----  -----  ----  ------
-CJTemp(0)/fb                              iocell10      2234   2234  31268  RISE       1
+CJTemp(0)/fb                              iocell3       2234   2234  31268  RISE       1
 \Debouncer:DEBOUNCER[0]:d_sync_0\/main_0  macrocell2    4654   6888  31268  RISE       1
 
 Capture Clock Path

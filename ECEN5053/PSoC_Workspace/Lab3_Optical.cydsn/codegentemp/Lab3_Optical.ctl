@@ -1,6 +1,6 @@
 -- ======================================================================
 -- Lab3_Optical.ctl generated from Lab3_Optical
--- 02/21/2016 at 18:01
+-- 02/24/2016 at 20:11
 -- This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 -- ======================================================================
 

@@ -101,12 +101,27 @@
           <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\core_cmInstr.h</File>
           <File BuildType="BUILD" Toolchain="ARM IAR Generic">.\Generated_Source\PSoC5\CyBootAsmIar.s</File>
           <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\project.h</File>
-          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\LCD_Char.c</File>
-          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\LCD_Char.h</File>
-          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\LCD_Char_PM.c</File>
-          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\LCD_Char_LCDPort_aliases.h</File>
-          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\LCD_Char_LCDPort.c</File>
-          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\LCD_Char_LCDPort.h</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\P0_1_aliases.h</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\P0_1.c</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\P0_1.h</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\P0_2_aliases.h</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\P0_2.c</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\P0_2.h</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\PhotoDiode_Amp.c</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\PhotoDiode_Amp.h</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\PhotoDiode_Amp_PM.c</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\P0_4_aliases.h</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\P0_4.c</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\P0_4.h</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\Photodiode_Source.c</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\Photodiode_Source.h</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\Photodiode_Source_PM.c</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\P3_6_aliases.h</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\P3_6.c</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\P3_6.h</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\Diode_Follower.c</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\Diode_Follower.h</File>
+          <File BuildType="BUILD" Toolchain="">.\Generated_Source\PSoC5\Diode_Follower_PM.c</File>
         </Files>
       </Folder>
       <Folder BuildType="STRICT" Path="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\Export\ARM_GCC_Generic">

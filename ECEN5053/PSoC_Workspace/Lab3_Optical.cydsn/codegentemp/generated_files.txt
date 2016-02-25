@@ -34,9 +34,6 @@
   <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\P0_0.h" value="NONE;P0_0" />
   <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\LED_Mux.c" value="ARM_C_FILE;LED_Mux" />
   <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\LED_Mux.h" value="NONE;LED_Mux" />
-  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\LCD_Char.c" value="ARM_C_FILE;LCD_Char" />
-  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\LCD_Char.h" value="NONE;LCD_Char" />
-  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\LCD_Char_PM.c" value="ARM_C_FILE;LCD_Char" />
   <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\CJTemp_aliases.h" value="NONE;CJTemp" />
   <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\CJTemp.c" value="ARM_C_FILE;CJTemp" />
   <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\CJTemp.h" value="NONE;CJTemp" />
@@ -44,9 +41,27 @@
   <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\isr_ToggleLED.h" value="NONE;isr_ToggleLED" />
   <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\Clock_1.c" value="ARM_C_FILE;Clock_1" />
   <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\Clock_1.h" value="NONE;Clock_1" />
-  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\LCD_Char_LCDPort_aliases.h" value="NONE;LCD_Char_LCDPort" />
-  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\LCD_Char_LCDPort.c" value="ARM_C_FILE;LCD_Char_LCDPort" />
-  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\LCD_Char_LCDPort.h" value="NONE;LCD_Char_LCDPort" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\Photodiode_Source.c" value="ARM_C_FILE;Photodiode_Source" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\Photodiode_Source.h" value="NONE;Photodiode_Source" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\Photodiode_Source_PM.c" value="ARM_C_FILE;Photodiode_Source" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\P0_1_aliases.h" value="NONE;P0_1" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\P0_1.c" value="ARM_C_FILE;P0_1" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\P0_1.h" value="NONE;P0_1" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\P0_2_aliases.h" value="NONE;P0_2" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\P0_2.c" value="ARM_C_FILE;P0_2" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\P0_2.h" value="NONE;P0_2" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\PhotoDiode_Amp.c" value="ARM_C_FILE;PhotoDiode_Amp" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\PhotoDiode_Amp.h" value="NONE;PhotoDiode_Amp" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\PhotoDiode_Amp_PM.c" value="ARM_C_FILE;PhotoDiode_Amp" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\P0_4_aliases.h" value="NONE;P0_4" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\P0_4.c" value="ARM_C_FILE;P0_4" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\P0_4.h" value="NONE;P0_4" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\P3_6_aliases.h" value="NONE;P3_6" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\P3_6.c" value="ARM_C_FILE;P3_6" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\P3_6.h" value="NONE;P3_6" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\Diode_Follower.c" value="ARM_C_FILE;Diode_Follower" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\Diode_Follower.h" value="NONE;Diode_Follower" />
+  <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\Diode_Follower_PM.c" value="ARM_C_FILE;Diode_Follower" />
   <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\cycodeshareimport.ld" value="NONE;" />
   <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\cycodeshareimport.scat" value="NONE;" />
   <file name="D:\CU_Boulder\Documents\Coursework\ECEN5053\PSoC_Workspace\Lab3_Optical.cydsn\codegentemp\cm3gcc.ld" value="NONE;cy_boot" />
