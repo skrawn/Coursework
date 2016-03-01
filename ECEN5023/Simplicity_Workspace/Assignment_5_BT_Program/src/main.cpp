@@ -109,14 +109,39 @@
 #define BLE_ADVERTISING_TIMEOUT
 
 #define Bluefruit_Mode_Change	"+++\n"
-#define BLE_Command_1			"AT+BLEPOWERLEVEL=0\n"
+
 //#define BLE_Command_1			"AT+BLEPOWERLEVEL?\r"
+
+// These are my settings obtained through steps 1 through 3 connecting
+// to an HTC One M8 running Android 6.0
+//#define BLE_Command_1			"AT+BLEPOWERLEVEL=-12\n"
+//#define BLE_Command_3			"AT+GAPINTERVALS=50,107,187,50\n"
+
 #define BLE_Command_2			"AT+HWMODELED=0\n"
+
+// These settings are for Steps 5 and 6.
+#define BLE_Command_1			"AT+BLEPOWERLEVEL=0\n"
+// Step 5
+//#define BLE_Command_3			"AT+GAPINTERVALS=20,150,100,30\n"
+// Step 6
+#define BLE_Command_3			"AT+GAPINTERVALS=20,100,250,30\n"
+
 // Min Conn Interval,Max Conn Interval,Adv Interval,Adv Timeout (in milliseconds)
-//#define BLE_Command_3			"AT+GAPINTERVALS=20,100,100,50\n"
-#define BLE_Command_3			"AT+GAPINTERVALS=20,100,100,30\n"
+//#define BLE_Command_3			"AT+GAPINTERVALS=20,100,100,30\n"	// Default
 //#define BLE_Command_3			"AT+GAPINTERVALS?\r"
+
 #define BLE_Command_4			"AT+FACTORYRESET\n"
+
+// With my custom settings, the average current is 1.59mA when disconnected and 2.09mA
+// when connected.
+
+// The average current when the Max Conn Interval is 150ms is 1.59mA when disconnected
+// and 2.10mA when connected. My settings improve the average current by 0mA when
+// disconnected and by 0.01mA when connected.
+
+// The average current when the Max Adv Interval is 250ms is 1.79mA when disconnected
+// and 2.10mA when connected. My settings improve the average current by 0.20mA when
+// disconnected and by 0.01mA when connected.
 
 #if ADC_DMA_BUF_SIZE > 1024 || LEUART_TX_DMA_BUF_SIZE > 1024 || LEUART_RX_DMA_BUF_SIZE > 1024
 #error Too many samples for a single channel. Choose a number that is 1024 or less.
@@ -429,17 +454,17 @@ void ADC_DMA_Done_CB(unsigned int channel, bool primary, void *user)
 		temp_sum += ADC_Result_Buf[i];
 	temp_sum /= ADC_DMA_BUF_SIZE;
 	float_temp = convertToCelsius(temp_sum);
-	current_temp = (uint16_t) (float_temp * DEG_C_TO_TENTHS_C);
+	current_temp = (int16_t) (float_temp * DEG_C_TO_TENTHS_C);
 
 	// Determine if the temperature is within range
 	if (current_temp > UPPER_TEMP_LIMIT*DEG_C_TO_TENTHS_C) {
-		transfer_size = sprintf((char *) LEUART_TX_Buf, "Temperature ABOVE set minimum = %d.%d\n\r",
+		transfer_size = sprintf((char *) LEUART_TX_Buf, "Temperature ABOVE set minimum = %d.%dC\n\r",
 				current_temp / DEG_C_TO_TENTHS_C, abs(current_temp % DEG_C_TO_TENTHS_C));
 		LEUART_TX_Buf[transfer_size] = '\0';
 		LEUART_TX_Buffer();
  	}
 	else if (current_temp < LOWER_TEMP_LIMIT*DEG_C_TO_TENTHS_C) {
-		transfer_size = sprintf((char *) LEUART_TX_Buf, "Temperature BELOW set minimum = %d.%d\n\r",
+		transfer_size = sprintf((char *) LEUART_TX_Buf, "Temperature BELOW set minimum = %d.%dC\n\r",
 				current_temp / DEG_C_TO_TENTHS_C, abs(current_temp % DEG_C_TO_TENTHS_C));
 		LEUART_TX_Buf[transfer_size] = '\0';
 		LEUART_TX_Buffer();
@@ -495,10 +520,8 @@ void LEUART_TX_Wait(uint16_t tx_length)
 
 	while (tx_idx < tx_length)
 	{
-		//LEUART_Tx(LEUART0, LEUART_TX_Buf[tx_idx++]);
 		LEUART0->TXDATA = LEUART_TX_Buf[tx_idx++];
 		while (LEUART0->SYNCBUSY & (LEUART_SYNCBUSY_TXDATA | LEUART_SYNCBUSY_CMD));
-		//while (!(LEUART0->STATUS & LEUART_STATUS_TXBL));
 		while (!(LEUART0->STATUS & LEUART_STATUS_TXC));
 	}
 
@@ -552,7 +575,7 @@ float convertToCelsius(int16_t adcSample)
  *****************************************************************************/
 void returnTemperature(void)
 {
-	uint32_t transfer_size = sprintf((char *) LEUART_TX_Buf, "%d.%d\n\r", current_temp / DEG_C_TO_TENTHS_C, abs(current_temp % DEG_C_TO_TENTHS_C));
+	uint32_t transfer_size = sprintf((char *) LEUART_TX_Buf, "%d.%dC\n\r", current_temp / DEG_C_TO_TENTHS_C, abs(current_temp % DEG_C_TO_TENTHS_C));
 
 	// Set the last item in the transmit buffer to a null char so it knows when to stop transmitting
 	LEUART_TX_Buf[transfer_size] = '\0';
@@ -735,10 +758,6 @@ int main(void)
 	// Disable the RX DMA channel
 	DMA_ChannelEnable(LEUART_RX_DMA_CH, false);
 
-	// Disable the RX receiver
-	//LEUART0->CMD |= LEUART_CMD_RXDIS;
-	//while (LEUART0->SYNCBUSY & (LEUART_SYNCBUSY_CMD));
-
 	// Place the device into CMD mode
 	// Subtract 1 to account for the null character the compiler places at the end of each string
 	memcpy(LEUART_TX_Buf, Bluefruit_Mode_Change, sizeof(Bluefruit_Mode_Change));
@@ -766,13 +785,7 @@ int main(void)
 	memcpy(LEUART_TX_Buf, Bluefruit_Mode_Change, sizeof(Bluefruit_Mode_Change));
 	LEUART_TX_Wait(sizeof(Bluefruit_Mode_Change) - 1);
 
-	// Enable the RX receiver
-	//LEUART0->CMD |= LEUART_CMD_RXEN;
-	//while (LEUART0->SYNCBUSY & (LEUART_SYNCBUSY_CMD));
-
-	// Restart the RX channel
-	//memset(LEUART_RX_Buf, 0, sizeof(LEUART_RX_Buf));
-	//DMA_ActivateBasic(LEUART_RX_DMA_CH, true, false, LEUART_RX_Buf, (void *) &LEUART0->RXDATA, LEUART_RX_DMA_N_XFERS);
+	DMA_ActivateBasic(LEUART_RX_DMA_CH, true, false, LEUART_RX_Buf, (void *) &LEUART0->RXDATA, LEUART_RX_DMA_N_XFERS);
 #endif
 
 	// Start the LETIMER
