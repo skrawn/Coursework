@@ -350,8 +350,8 @@ void LEUART_Initialize(void)
 	// Finally, enable LEUART0
 	LEUART_Init(LEUART0, &LEUART_InitVal);
 
-	// Allow TX and RXs to wake the DMA controller up when in EM2
-	LEUART0->CTRL |= LEUART_CTRL_TXDMAWU | LEUART_CTRL_RXDMAWU;
+	// Allow RXs to wake the DMA controller up when in EM2
+	LEUART0->CTRL |= LEUART_CTRL_RXDMAWU;
 
 #if LEUART_LOOPBACK
 	// Enable loopback
@@ -495,9 +495,12 @@ void LEUART_TX_Buffer(void)
 	// Enable the transmitter
 	LEUART0->CMD |= LEUART_CMD_TXEN;
 
+	// Enable TX DMA wakeup
+	LEUART0->CTRL |= LEUART_CTRL_TXDMAWU;
+
 	// Wait for any pending previous write operation to have been completed
 	// in low frequency domain
-	while (LEUART0->SYNCBUSY & (LEUART_SYNCBUSY_TXDATA | LEUART_SYNCBUSY_CMD));
+	while (LEUART0->SYNCBUSY & (LEUART_SYNCBUSY_TXDATA | LEUART_SYNCBUSY_CMD | LEUART_SYNCBUSY_CTRL));
 	DMA_ActivateBasic(LEUART_TX_DMA_CH, true, false, (void *) &LEUART0->TXDATA,
 			LEUART_TX_Buf, strlen((const char *) LEUART_TX_Buf) - 1);
 }
@@ -601,6 +604,7 @@ void LETIMER0_IRQHandler(void)
 			DMA_ChannelEnable(LEUART_RX_DMA_CH, false);
 			memset(LEUART_RX_Buf, 0, sizeof(LEUART_RX_Buf));
 			DMA_ActivateBasic(LEUART_RX_DMA_CH, true, false, LEUART_RX_Buf, (void *) &LEUART0->RXDATA, LEUART_RX_DMA_N_XFERS);
+			first_int = true;
 		}
 
 		ADC0->CTRL |= adcWarmupKeepADCWarm;
@@ -660,14 +664,16 @@ void LEUART0_IRQHandler(void)
 		// Reset the RX DMA channel
 		transfer_size = LEUART_RX_DMA_N_XFERS - ((DMA_DESCR_CTRL_BLOCK[LEUART_RX_DMA_CH].CTRL & 0x3FF0) >> 4);
 		memset(LEUART_RX_Buf, 0, transfer_size);
-		LEUART0->CMD |= LEUART_CMD_CLEARRX;
-		LEUART0->CMD |= LEUART_CMD_RXEN;
+		LEUART0->CMD |= (LEUART_CMD_CLEARRX | LEUART_CMD_RXEN);
 		DMA_ActivateBasic(LEUART_RX_DMA_CH, true, false, LEUART_RX_Buf, (void *) &LEUART0->RXDATA, LEUART_RX_DMA_N_XFERS);
 	}
 
 	if (intflags & LEUART_IF_TXC) {
 		// Disable the transmitter
 		LEUART0->CMD |= LEUART_CMD_TXDIS;
+
+		// Disable TXDMA wakeup
+		LEUART0->CTRL &= ~LEUART_CTRL_TXDMAWU;
 
 		// Disable the TXC interrupt
 		LEUART_IntDisable(LEUART0, LEUART_IEN_TXC);
