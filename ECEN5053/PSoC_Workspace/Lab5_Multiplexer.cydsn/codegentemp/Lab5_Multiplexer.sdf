@@ -1,0 +1,20 @@
+(DELAYFILE
+ (SDFVERSION "IEEE 1497 4.0")
+ (DATE "2016-03-20T21:15:20Z")
+ (DESIGN "Lab5_Multiplexer")
+ (VENDOR "Cypress Semiconductor")
+ (PROGRAM "PSoC Creator")
+ (VERSION " 3.3 CP1")
+ (DIVIDER .)
+ (TIMESCALE 1 ns)
+ (CELL
+  (CELLTYPE "Lab5_Multiplexer")
+  (INSTANCE *)
+  (DELAY
+   (ABSOLUTE
+    (INTERCONNECT ClockBlock.aclk_glb_ff_0 \\S_H\:SC\\.aclk (0.000:0.000:0.000))
+    (INTERCONNECT P0_4\(0\)_PAD P0_4\(0\).pad_in (0.000:0.000:0.000))
+   )
+  )
+ )
+)
