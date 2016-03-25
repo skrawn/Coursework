@@ -1,6 +1,6 @@
 /**************************************************************************//**
- * @file config.h
- * @brief Configuration file.
+ * @file i2c_drv.h
+ * @brief I2C Driver
  * @author Sean Donohue
  ******************************************************************************
  * @section License
@@ -31,29 +31,22 @@
  *
  *******************************************************************************/
 
-#ifndef CONFIG_H_
-#define CONFIG_H_
+#ifndef I2C_H_
+#define I2C_H_
 
+#include "em_i2c.h"
 #include "mbed.h"
-#include "em_dma.h"
 
-#define Debug				false
+#define I2C_DESC_BUF_LEN	4
 
-#define BLE_Program			false
-#define BLE_Factory_Reset	false
+typedef struct {
+	I2C_TransferSeq_TypeDef seq;
+	uint16_t turn_around_time_ms;
+	void (*transfer_done_cb)(void);
+} I2C_Desc_t;
 
-#define ULFRCO_FREQ					850		// Hz
-#define LFXO_FREQ					32768	// Hz
+void I2C_Initialize(void);
+I2C_TransferReturn_TypeDef I2C_Write_Polling(uint8_t slave_addr, uint16_t reg_addr, uint8_t reg_len, uint8_t *tx_data, uint16_t len);
+I2C_TransferReturn_TypeDef I2C_Read_Polling(uint8_t slave_addr, uint16_t reg_addr, uint8_t reg_len, uint8_t *rx_data, uint16_t len);
 
-#define UPPER_TEMP_LIMIT			30		// C
-#define LOWER_TEMP_LIMIT			15		// C
-#define DEG_C_TO_TENTHS_C			10
-
-#define LOW_POWER_MODE_SLEEP_TIME	4	// s
-
-#define N_DMA_CH_IN_USE		3
-
-float convertToCelsius(int16_t adcSample);
-void returnTemperature(void);
-
-#endif /* CONFIG_H_ */
+#endif /* I2C_H_ */

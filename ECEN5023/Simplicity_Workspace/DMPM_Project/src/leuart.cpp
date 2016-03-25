@@ -97,10 +97,6 @@ void LEUART_Initialize(void)
 	GPIO_PinModeSet(LEUART_TX_Port, LEUART_TX_Pin, LEUART_TX_Mode, 1);
 	GPIO_PinModeSet(LEUART_RX_Port, LEUART_RX_Pin, LEUART_RX_Mode, 1);
 
-	// Enable LFXO clock and set it as the source for the LFB tree
-	CMU_OscillatorEnable(cmuOsc_LFXO, true, true);
-	CMU_ClockSelectSet(cmuClock_LFB, cmuSelect_LFXO);
-
 	// Enable the clock to LEUART0
 	CMU_ClockEnable(cmuClock_LEUART0, true);
 

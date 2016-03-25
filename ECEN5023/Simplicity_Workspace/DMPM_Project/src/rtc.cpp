@@ -1,6 +1,6 @@
 /**************************************************************************//**
- * @file config.h
- * @brief Configuration file.
+ * @file rtc.cpp
+ * @brief Real-Time Clock Driver
  * @author Sean Donohue
  ******************************************************************************
  * @section License
@@ -31,29 +31,36 @@
  *
  *******************************************************************************/
 
-#ifndef CONFIG_H_
-#define CONFIG_H_
+#include "config.h"
+#include "em_cmu.h"
+#include "em_rtc.h"
+#include "rtc.h"
+#include "rtc_api_HAL.h"
 
-#include "mbed.h"
-#include "em_dma.h"
+#define RTC_TICK_VAL	305		// 30.5us
+#define RTC_CLK_FREQ	32768	// Hz
 
-#define Debug				false
+void RTC_Comp0_Handler(void);
 
-#define BLE_Program			false
-#define BLE_Factory_Reset	false
+void RTC_Initialize(void)
+{
+	RTC_Init_TypeDef rtc_init;
 
-#define ULFRCO_FREQ					850		// Hz
-#define LFXO_FREQ					32768	// Hz
+	CMU_ClockEnable(cmuClock_RTC, true);
 
-#define UPPER_TEMP_LIMIT			30		// C
-#define LOWER_TEMP_LIMIT			15		// C
-#define DEG_C_TO_TENTHS_C			10
+	rtc_init.comp0Top = true;
+	rtc_init.debugRun = true;
+	rtc_init.enable = false;
 
-#define LOW_POWER_MODE_SLEEP_TIME	4	// s
+	RTC_Init(&rtc_init);
 
-#define N_DMA_CH_IN_USE		3
+	// Setup comp0 interrupt
+	rtc_set_comp0_handler((uint32_t) (&RTC_Comp0_Handler));
 
-float convertToCelsius(int16_t adcSample);
-void returnTemperature(void);
+}
 
-#endif /* CONFIG_H_ */
+// Called by RTC_IRQHandler
+void RTC_Comp0_Handler(void)
+{
+
+}

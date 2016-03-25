@@ -1,6 +1,6 @@
 /**************************************************************************//**
- * @file config.h
- * @brief Configuration file.
+ * @file bme280.h
+ * @brief Bosch BME280 Humidity and Pressure Sensor Driver
  * @author Sean Donohue
  ******************************************************************************
  * @section License
@@ -31,29 +31,46 @@
  *
  *******************************************************************************/
 
-#ifndef CONFIG_H_
-#define CONFIG_H_
 
-#include "mbed.h"
-#include "em_dma.h"
+#ifndef BME280_H_
+#define BME280_H_
 
-#define Debug				false
+typedef enum {
+	BME280_OVS_SKIP = 0,
+	BME280_OVS_X1,
+	BME280_OVS_X2,
+	BME280_OVS_X4,
+	BME280_OVS_X8,
+	BME280_OVS_X16
+} BME280_OVS_t;
 
-#define BLE_Program			false
-#define BLE_Factory_Reset	false
+typedef enum {
+	BME280_MODE_SLEEP = 0,
+	BME280_MODE_FORCED,
+	BME280_MODE_NORMAL = 3
+} BME280_Mode_t;
 
-#define ULFRCO_FREQ					850		// Hz
-#define LFXO_FREQ					32768	// Hz
+typedef enum {
+	BME280_STANDBY_0_5 = 0,
+	BME280_STANDBY_62_5,
+	BME280_STANDBY_125,
+	BME280_STANDBY_250,
+	BME280_STANDBY_500,
+	BME280_STANDBY_1000,
+	BME280_STANDBY_10,
+	BME280_STANDBY_20
+} BME280_Standby_t;
 
-#define UPPER_TEMP_LIMIT			30		// C
-#define LOWER_TEMP_LIMIT			15		// C
-#define DEG_C_TO_TENTHS_C			10
+typedef enum {
+	BME280_Filter_Off = 0,
+	BME280_Filter_2,
+	BME280_Filter_4,
+	BME280_Filter_8,
+	BME280_Filter_16,
+} BME280_Filter_t;
 
-#define LOW_POWER_MODE_SLEEP_TIME	4	// s
+void BME280_Init(void);
+void BME280_Enable(bool enable);
 
-#define N_DMA_CH_IN_USE		3
 
-float convertToCelsius(int16_t adcSample);
-void returnTemperature(void);
-
-#endif /* CONFIG_H_ */
+#endif /* BME280_H_ */

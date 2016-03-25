@@ -1,6 +1,6 @@
 /**************************************************************************//**
- * @file config.h
- * @brief Configuration file.
+ * @file rtc.h
+ * @brief Real-Time Clock Driver
  * @author Sean Donohue
  ******************************************************************************
  * @section License
@@ -31,29 +31,11 @@
  *
  *******************************************************************************/
 
-#ifndef CONFIG_H_
-#define CONFIG_H_
+#ifndef RTC_H_
+#define RTC_H_
 
-#include "mbed.h"
-#include "em_dma.h"
+void RTC_Initialize(void);
 
-#define Debug				false
+#endif /* RTC_H_ */
 
-#define BLE_Program			false
-#define BLE_Factory_Reset	false
 
-#define ULFRCO_FREQ					850		// Hz
-#define LFXO_FREQ					32768	// Hz
-
-#define UPPER_TEMP_LIMIT			30		// C
-#define LOWER_TEMP_LIMIT			15		// C
-#define DEG_C_TO_TENTHS_C			10
-
-#define LOW_POWER_MODE_SLEEP_TIME	4	// s
-
-#define N_DMA_CH_IN_USE		3
-
-float convertToCelsius(int16_t adcSample);
-void returnTemperature(void);
-
-#endif /* CONFIG_H_ */

@@ -35,6 +35,7 @@
 #include <string.h>
 #include <math.h>
 #include "adc.h"
+#include "bme280.h"
 #include "config.h"
 #include "dma.h"
 #include "em_chip.h"
@@ -42,6 +43,7 @@
 #include "em_gpio.h"
 #include "em_prs.h"
 #include "em_letimer.h"
+#include "i2c_drv.h"
 #include "leuart.h"
 #include "mbed.h"
 #include "sleepmodes.h"
@@ -97,10 +99,6 @@
 // and 2.10mA when connected. My settings improve the average current by 0.20mA when
 // disconnected and by 0.01mA when connected.
 
-#if ADC_DMA_BUF_SIZE > 1024 || LEUART_TX_DMA_BUF_SIZE > 1024 || LEUART_RX_DMA_BUF_SIZE > 1024
-#error Too many samples for a single channel. Choose a number that is 1024 or less.
-#endif
-
 #if Debug
 Serial pc(USBTX, USBRX);
 #endif
@@ -124,6 +122,33 @@ void GPIO_Initialize(void)
 }
 
 /**************************************************************************//**
+ * @brief Initializes GPIOs needed for this project
+ * @verbatim GPIO_Initialize(void); @endverbatim
+ *****************************************************************************/
+void Clock_Setup(void)
+{
+	// Ensure the correct HFRCO band and clock source is set
+	CMU_HFRCOBandSet(cmuHFRCOBand_7MHz);
+	CMU_ClockSelectSet(cmuClock_HF, cmuSelect_HFRCO);
+
+	// Turn off HFXO if it was on
+	CMU_OscillatorEnable(cmuOsc_HFXO, false, false);
+
+	// Set the HFRCO as the clock source of the HFPER tree
+	CMU_ClockSelectSet(cmuClock_HFPER, cmuSelect_HFRCO);
+
+	// Turn on the LFXO
+	CMU_OscillatorEnable(cmuOsc_LFXO, true, true);
+
+	// Set LFXO as the source of the LFA and LFB tree.
+	CMU_ClockSelectSet(cmuClock_LFA, cmuSelect_LFXO);
+	CMU_ClockSelectSet(cmuClock_LFB, cmuSelect_LFXO);
+
+	// Enable the low energy core clock
+	CMU_ClockEnable(cmuClock_CORELE, true);
+}
+
+/**************************************************************************//**
  * @brief Initializes LETIMER to run off of the ULFRCO clock.
  * @verbatim LETIMER_Initialize(void); @endverbatim
  *****************************************************************************/
@@ -137,9 +162,6 @@ void LETIMER_Initialize(void)
 
 	// Enable the clock to the LETIMER0
 	CMU_ClockEnable(cmuClock_LETIMER0, true);
-
-	// Enable the low energy core clock
-	CMU_ClockEnable(cmuClock_CORELE, true);
 
 	// Initialize LETIMER
 	LETIMER_InitValues.enable = false;
@@ -285,18 +307,14 @@ int main(void)
 	blockSleepMode(EM2);
 #endif
 
-	// Ensure the correct HFRCO band and clock source is set
-	CMU_HFRCOBandSet(cmuHFRCOBand_7MHz);
-	CMU_ClockSelectSet(cmuClock_HF, cmuSelect_HFRCO);
-
-	// Turn off HFXO if it was on
-	CMU_OscillatorEnable(cmuOsc_HFXO, false, false);
-
 	GPIO_Initialize();
 	LETIMER_Initialize();
 	DMA_Initialize();
 	ADC_Initialize();
 	LEUART_Initialize();
+
+	I2C_Initialize();
+	BME280_Init();
 
 #if BLE_Program
 	// Disable the RX DMA channel
