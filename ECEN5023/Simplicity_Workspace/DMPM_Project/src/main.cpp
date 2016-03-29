@@ -54,8 +54,6 @@
 #define BluefruitCTSMode	gpioModePushPullDrive
 #define BluefruitCTSDrive	gpioDriveModeLowest
 
-#define SAMPLE_TIMER_PERIOD	4000	// ms
-
 #define N_DMA_CH_IN_USE		3
 
 // Bluefruit Commands

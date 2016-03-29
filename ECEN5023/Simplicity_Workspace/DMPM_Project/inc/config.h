@@ -49,6 +49,8 @@
 #define LOWER_TEMP_LIMIT			15		// C
 #define DEG_C_TO_TENTHS_C			10
 
+#define SAMPLE_TIMER_PERIOD			4000	// ms
+
 #define LOW_POWER_MODE_SLEEP_TIME	4	// s
 
 #define N_DMA_CH_IN_USE		3

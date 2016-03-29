@@ -34,7 +34,8 @@
 #include "bme280.h"
 #include "i2c_drv.h"
 
-#define BME280_SLAVE_ADDR	0xAC
+// SDO = 0
+#define BME280_SLAVE_ADDR	0xEC
 
 #define REG_ID				0xD0
 #define REG_RESET			0xE0

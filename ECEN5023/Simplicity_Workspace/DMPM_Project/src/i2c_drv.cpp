@@ -36,13 +36,13 @@
 #include "i2c_drv.h"
 #include "sleepmodes.h"
 
-#define I2C1_SDA_Port	gpioPortE
-#define I2C1_SDA_Pin	0
+#define I2C1_SDA_Port	gpioPortC
+#define I2C1_SDA_Pin	4
 //#define I2C1_SDA_Mode	gpioModeWiredAnd
 #define I2C1_SDA_Mode	gpioModeWiredAndPullUp
 
-#define I2C1_SCL_Port	gpioPortE
-#define I2C1_SCL_Pin	1
+#define I2C1_SCL_Port	gpioPortC
+#define I2C1_SCL_Pin	5
 //#define I2C1_SCL_Mode	gpioModeWiredAnd
 #define I2C1_SCL_Mode	gpioModeWiredAndPullUp
 
@@ -66,12 +66,12 @@ void I2C_Initialize(void)
 	// Temporary: enable all the I2C devices
 
 	// BME280
-	GPIO_DriveModeSet(gpioPortC, gpioDriveModeStandard);
-	GPIO_PinModeSet(gpioPortC, 1, gpioModePushPullDrive, 1);
+	GPIO_DriveModeSet(gpioPortD, gpioDriveModeStandard);
+	GPIO_PinModeSet(gpioPortD, 7, gpioModePushPullDrive, 1);
 
 	// Accelerometer
-	GPIO_DriveModeSet(gpioPortA, gpioDriveModeLowest);
-	GPIO_PinModeSet(gpioPortA, 14, gpioModePushPullDrive, 1);
+	GPIO_DriveModeSet(gpioPortB, gpioDriveModeLowest);
+	GPIO_PinModeSet(gpioPortB, 11, gpioModePushPullDrive, 1);
 
 	// Magnetometer
 	GPIO_DriveModeSet(gpioPortC, gpioDriveModeLowest);
@@ -81,39 +81,22 @@ void I2C_Initialize(void)
 	// Send 9 clock pulses just in case.
 	for (int i = 0; i < 9; i++)
 	{
-		GPIO_PinOutClear(I2C1_SCL_Port, I2C1_SCL_Pin);
-		GPIO_PinOutSet(I2C1_SCL_Port, I2C1_SCL_Pin);
+		GPIO_PinModeSet(I2C1_SCL_Port, I2C1_SCL_Pin, I2C1_SCL_Mode, 0);
+		GPIO_PinModeSet(I2C1_SCL_Port, I2C1_SCL_Pin, I2C1_SCL_Mode, 1);
 	}
 
-	// Route pins to position #2
-	I2C1->ROUTE = I2C_ROUTE_SDAPEN | I2C_ROUTE_SCLPEN | I2C_ROUTE_LOCATION_LOC2;
+	// Route pins to position #0
+	I2C1->ROUTE = I2C_ROUTE_SDAPEN | I2C_ROUTE_SCLPEN | I2C_ROUTE_LOCATION_LOC0;
 
 	i2cInit.enable = true;
+	i2cInit.master = true;
+	i2cInit.clhr = i2cClockHLRStandard;
 	i2cInit.freq = I2C1_Bus_Freq;
 	I2C_Init(I2C1, &i2cInit);
 
 	// Enable interrupts
-	/*I2C_IntEnable(I2C1, //I2C_IEN_SSTOP |
-			//I2C_IEN_CLTO |
-			//I2C_IEN_BITO |
-			//I2C_IEN_RXUF |
-			//I2C_IEN_TXOF |
-			//I2C_IEN_BUSHOLD |
-			I2C_IEN_BUSERR |
-			I2C_IEN_ARBLOST |
-			I2C_IEN_MSTOP |
-			I2C_IEN_NACK |
-			I2C_IEN_ACK |
-			I2C_IEN_RXDATAV
-			//I2C_IEN_TXBL |
-			//I2C_IEN_TXC |
-			//I2C_IEN_ADDR |
-			//I2C_IEN_RSTART |
-			//I2C_IEN_START
-			);
 	I2C_IntClear(I2C1, 0x1FFFF);
-
-	NVIC_EnableIRQ(I2C1_IRQn);*/
+	NVIC_EnableIRQ(I2C1_IRQn);
 }
 
 I2C_TransferReturn_TypeDef I2C_Write_Polling(uint8_t slave_addr, uint16_t reg_addr, uint8_t reg_len, uint8_t *tx_data, uint16_t len)
@@ -122,13 +105,14 @@ I2C_TransferReturn_TypeDef I2C_Write_Polling(uint8_t slave_addr, uint16_t reg_ad
 	uint8_t *reg_ptr;
 
 	seq.addr = slave_addr;
-	seq.flags = I2C_FLAG_WRITE;
+	seq.flags = I2C_FLAG_WRITE_WRITE;
 
 	// Make sure the register address is set correctly, if it is a 16-bit or 8-bit register
 	reg_ptr = (uint8_t *) &reg_addr;
-	if (reg_len == 1)
+	if (reg_len > 1)
 		reg_ptr += 1;
 	seq.buf[0].data = reg_ptr;
+	seq.buf[0].len = reg_len;
 
 	seq.buf[1].data = tx_data;
 	seq.buf[1].len = len;
@@ -151,13 +135,14 @@ I2C_TransferReturn_TypeDef I2C_Read_Polling(uint8_t slave_addr, uint16_t reg_add
 
 	seq.addr = slave_addr;
 	seq.flags = I2C_FLAG_WRITE_READ;
+	//seq.flags = I2C_FLAG_READ;
 
 	// Make sure the register address is set correctly, if it is a 16-bit or 8-bit register
 	reg_ptr = (uint8_t *) &reg_addr;
-	if (reg_len == 1) {
+	if (reg_len > 1)
 		reg_ptr += 1;
-	}
 	seq.buf[0].data = reg_ptr;
+	seq.buf[0].len = reg_len;
 
 	seq.buf[1].data = rx_data;
 	seq.buf[1].len = len;
@@ -166,8 +151,8 @@ I2C_TransferReturn_TypeDef I2C_Read_Polling(uint8_t slave_addr, uint16_t reg_add
 
 	blockSleepMode(EM1);
 	while (I2C_Status == i2cTransferInProgress) {
-		//sleep();
-		I2C_Status = I2C_Transfer(I2C1);
+		sleep();
+		//I2C_Status = I2C_Transfer(I2C1);
 	}
 	unblockSleepMode(EM1);
 
