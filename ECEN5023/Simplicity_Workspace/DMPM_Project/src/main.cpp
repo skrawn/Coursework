@@ -43,6 +43,7 @@
 #include "em_gpio.h"
 #include "em_prs.h"
 #include "em_letimer.h"
+#include "flash.h"
 #include "i2c_drv.h"
 #include "leuart.h"
 #include "mbed.h"
@@ -134,6 +135,10 @@ void Clock_Setup(void)
 
 	// Set the HFRCO as the clock source of the HFPER tree
 	CMU_ClockSelectSet(cmuClock_HFPER, cmuSelect_HFRCO);
+
+	// Enable the AUXHFRCO clock and set it to 7MHz
+	CMU_ClockEnable(cmuClock_AUX, true);
+	CMU_AUXHFRCOBandSet(cmuAUXHFRCOBand_7MHz);
 
 	// Turn on the LFXO
 	CMU_OscillatorEnable(cmuOsc_LFXO, true, true);
@@ -314,10 +319,13 @@ int main(void)
 
 	I2C_Initialize();
 	BME280_Init();
+	Flash_Init();
 
-	while (1) {
-	BME280_Convert_And_Read_All();
-	}
+	EE_Variable_TypeDef var1;
+	uint32_t read_val;
+	EE_DeclareVariable(&var1);
+	EE_Write(&var1, 0xDEADBEEF);
+	EE_Read(&var1, &read_val);
 
 #if BLE_Program
 	// Disable the RX DMA channel

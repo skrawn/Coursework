@@ -60,8 +60,7 @@ void I2C_Initialize(void)
 
 	CMU_ClockEnable(cmuClock_I2C1, true);
 
-	// Temporary: enable all the I2C devices
-
+	// Enable all the I2C devices
 	// BME280
 	GPIO_DriveModeSet(gpioPortD, gpioDriveModeStandard);
 	GPIO_PinModeSet(gpioPortD, 7, gpioModePushPullDrive, 1);
