@@ -60,9 +60,6 @@ void I2C_Initialize(void)
 
 	CMU_ClockEnable(cmuClock_I2C1, true);
 
-	GPIO_PinModeSet(I2C1_SDA_Port, I2C1_SDA_Pin, I2C1_SDA_Mode, 1);
-	GPIO_PinModeSet(I2C1_SCL_Port, I2C1_SCL_Pin, I2C1_SCL_Mode, 1);
-
 	// Temporary: enable all the I2C devices
 
 	// BME280
@@ -76,6 +73,9 @@ void I2C_Initialize(void)
 	// Magnetometer
 	GPIO_DriveModeSet(gpioPortC, gpioDriveModeLowest);
 	GPIO_PinModeSet(gpioPortC, 0, gpioModePushPullDrive, 1);
+
+	GPIO_PinModeSet(I2C1_SDA_Port, I2C1_SDA_Pin, I2C1_SDA_Mode, 1);
+	GPIO_PinModeSet(I2C1_SCL_Port, I2C1_SCL_Pin, I2C1_SCL_Mode, 1);
 
 	// In some situations, the slave device may be left in an unknown state.
 	// Send 9 clock pulses just in case.

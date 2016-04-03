@@ -305,6 +305,7 @@ int main(void)
 	blockSleepMode(EM2);
 #endif
 
+	Clock_Setup();
 	GPIO_Initialize();
 	LETIMER_Initialize();
 	DMA_Initialize();
@@ -313,6 +314,10 @@ int main(void)
 
 	I2C_Initialize();
 	BME280_Init();
+
+	while (1) {
+	BME280_Convert_And_Read_All();
+	}
 
 #if BLE_Program
 	// Disable the RX DMA channel

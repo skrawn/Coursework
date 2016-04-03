@@ -29,6 +29,9 @@
  *
  ******************************************************************************/
 
+#ifndef CLOCKING_H
+#define CLOCKING_H
+
 #include "device_peripherals.h"
 
 #if( CORE_CLOCK_SOURCE == HFXO)
@@ -65,4 +68,6 @@
 #else
 #define LEUART_REF_FREQ (REFERENCE_FREQUENCY / 2)
 #endif
+#endif
+
 #endif

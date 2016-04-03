@@ -35,6 +35,8 @@
 #ifndef BME280_H_
 #define BME280_H_
 
+#include "mbed.h"
+
 typedef enum {
 	BME280_OVS_SKIP = 0,
 	BME280_OVS_X1,
@@ -70,6 +72,14 @@ typedef enum {
 } BME280_Filter_t;
 
 void BME280_Init(void);
+void BME280_Set_Mode(BME280_Mode_t mode);
+void BME280_Convert_And_Read_All(void);
+void BME280_Read_Temp(void);
+void BME280_Read_Pres(void);
+void BME280_Read_Humidity(void);
+int32_t BME280_Get_Temp(void);
+uint32_t BME280_Get_Pres(void);
+uint32_t BME280_Get_Humidity(void);
 void BME280_Enable(bool enable);
 
 

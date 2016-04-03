@@ -67,7 +67,7 @@
  * 	* HFXO: external crystal, please define frequency.
  * 	* HFRCO: High-frequency internal RC oscillator. Please select band as well.
  */
-#define CORE_CLOCK_SOURCE		HFXO
+#define CORE_CLOCK_SOURCE		HFRCO
 
 /** HFRCO frequency band
  * Options:
@@ -78,7 +78,7 @@
  * 	* CMU_HFRCOCTRL_BAND_7MHZ
  * 	* CMU_HFRCOCTRL_BAND_1MHZ
  */
-#define HFRCO_FREQUENCY 		CMU_HFRCOCTRL_BAND_14MHZ
+#define HFRCO_FREQUENCY 		CMU_HFRCOCTRL_BAND_7MHZ
 
 #define LFXO_FREQUENCY			32768
 #define HFXO_FREQUENCY			48000000
