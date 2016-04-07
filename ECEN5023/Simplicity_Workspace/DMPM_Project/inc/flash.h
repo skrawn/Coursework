@@ -57,6 +57,15 @@ typedef enum {
 	eePageStatusActive = PAGE_STATUS_ACTIVE
 } EE_PageStatus_TypeDef;
 
+typedef enum
+{
+  eeReturnOk          = 0,  /**< Flash write/erase successful. */
+  eeReturnInvalidAddr = -1, /**< Invalid address. Write to an address that is not flash. */
+  eeReturnLocked      = -2, /**< Flash address is locked. */
+  eeReturnTimeOut     = -3, /**< Timeout while writing to flash. */
+  eeReturnUnaligned   = -4  /**< Unaligned access to flash. */
+} EE_Status_TypeDef;
+
 /*******************************************************************************
  ******************************   STRUCTS   ************************************
  ******************************************************************************/
@@ -74,6 +83,8 @@ typedef struct
 } EE_Page_TypeDef;
 
 void Flash_Init(void);
+void Flash_Enable(bool enabled);
+void Flash_ChipEnable(bool enable);
 bool EE_Init(uint32_t);
 bool EE_Format(uint32_t);
 bool EE_Read(EE_Variable_TypeDef *var, uint32_t *readData);
@@ -107,9 +118,10 @@ __STATIC_INLINE EE_PageStatus_TypeDef EE_getPageStatus(EE_Page_TypeDef *page)
  * @return
  *   Returns the status of the flash operation.
  ******************************************************************************/
-__STATIC_INLINE msc_Return_TypeDef EE_setPageStatusActive(EE_Page_TypeDef *page)
+__STATIC_INLINE EE_Status_TypeDef EE_setPageStatusActive(EE_Page_TypeDef *page)
 {
-  return MSC_WriteWord(page->startAddress, &pageStatusActiveValue, SIZE_OF_VARIABLE);
+  //eturn MSC_WriteWord(page->startAddress, &pageStatusActiveValue, SIZE_OF_VARIABLE);
+	return eeReturnOk;
 }
 
 /***************************************************************************//**
@@ -122,9 +134,10 @@ __STATIC_INLINE msc_Return_TypeDef EE_setPageStatusActive(EE_Page_TypeDef *page)
  * @return
  *   Returns the status of the flash operation.
  ******************************************************************************/
-__STATIC_INLINE msc_Return_TypeDef EE_setPageStatusReceiving(EE_Page_TypeDef *page)
+__STATIC_INLINE EE_Status_TypeDef EE_setPageStatusReceiving(EE_Page_TypeDef *page)
 {
-  return MSC_WriteWord(page->startAddress, &pageStatusReceivingValue, SIZE_OF_VARIABLE);
+  //return MSC_WriteWord(page->startAddress, &pageStatusReceivingValue, SIZE_OF_VARIABLE);
+	return eeReturnOk;
 }
 
 #endif /* FLASH_H_ */

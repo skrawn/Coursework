@@ -31,8 +31,10 @@
  *
  *******************************************************************************/
 
+#include "em_ebi.h"
 #include "em_gpio.h"
 #include "flash.h"
+#include "nandflash.h"
 
 // Define all of the pins for the flash device
 #define NAND_IO_Port	gpioPortE
@@ -48,20 +50,20 @@
 #define NAND_PWR_EN_Port	gpioPortB
 #define NAND_PWR_EN_Pin		15
 
-#define NAND_RB_Port	gpioPortD
-#define NAND_RB_Pin		15
+#define NAND_RnB_Port	gpioPortD
+#define NAND_RnB_Pin		15
 
-#define NAND_CE_Port	gpioPortD
-#define NAND_CE_Pin		14
+#define NAND_nCE_Port	gpioPortD
+#define NAND_nCE_Pin		14
 
-#define NAND_WP_Port	gpioPortD
-#define NAND_WP_Pin		13
+#define NAND_nWP_Port	gpioPortD
+#define NAND_nWP_Pin		13
 
-#define NAND_RE_Port	gpioPortF
-#define NAND_RE_Pin		9
+#define NAND_nRE_Port	gpioPortF
+#define NAND_nRE_Pin		9
 
-#define NAND_WE_Port	gpioPortF
-#define NAND_WE_Pin		8
+#define NAND_nWE_Port	gpioPortF
+#define NAND_nWE_Pin		8
 
 #define NAND_ALE_Port	gpioPortC
 #define NAND_ALE_Pin	1
@@ -73,55 +75,95 @@
 #define NAND_N_Blocks
 #define NAND_Block_Size	512	//bytes
 
+#define NAND_ALE_BIT	24
+#define NAND_CLE_BIT	25
+
 #define NAND_FLASH_SIZE				32000000
+#define BLOCK_SIZE					(16 * 1024)
 #define PAGE_SIZE					512
-#define DEFAULT_NUMBER_OF_PAGES		16
+#define DEFAULT_NUMBER_OF_PAGES		32
 #define MAX_NUMBER_OF_PAGES			(NAND_FLASH_SIZE/PAGE_SIZE)
+
+#define EBI_REGION0_BASE			0x80000000
 
 #define MAX_ACTIVE_VARIABLES 		(PAGE_SIZE / SIZE_OF_VARIABLE)
 
 static bool EE_validateIfErased(EE_Page_TypeDef *page);
 static bool EE_WriteToPage(EE_Page_TypeDef *page, uint16_t virtualAddress, uint16_t writeData);
-static msc_Return_TypeDef EE_TransferPage(EE_Variable_TypeDef *var, uint16_t writeData);
+static EE_Status_TypeDef EE_TransferPage(EE_Variable_TypeDef *var, uint16_t writeData);
+
+uint8_t activePageBuffer[PAGE_SIZE];
+
+__STATIC_INLINE void waitReady(void);
 
 void Flash_Init(void)
 {
+	EBI_Init_TypeDef ebiInit;
+
 	// Configure GPIOs
-	GPIO_PinModeSet(NAND_PWR_EN_Port, NAND_PWR_EN_Pin, gpioModePushPullDrive, 1);
+	GPIO_PinModeSet(NAND_PWR_EN_Port, NAND_PWR_EN_Pin, gpioModePushPull, 1);
 
 	// Read/Busy - input from NAND
-	GPIO_PinModeSet(NAND_RB_Port, NAND_RB_Pin, gpioModeWiredAnd, 0);
+	GPIO_PinModeSet(NAND_RnB_Port, NAND_RnB_Pin, gpioModeInput, 0);
 
 	// Adress Latch Enable, Command Latch Enable, Write Protect, Chip Enable,
 	// Read Enable - outputs to NAND
-	GPIO_PinModeSet(NAND_CE_Port, NAND_CE_Pin, gpioModeWiredAnd, 0);
-	GPIO_PinModeSet(NAND_WP_Port, NAND_WP_Pin, gpioModeWiredAnd, 0);
-	GPIO_PinModeSet(NAND_ALE_Port, NAND_ALE_Pin, gpioModeWiredAnd, 0);
-	GPIO_PinModeSet(NAND_CLE_Port, NAND_CLE_Pin, gpioModeWiredAnd, 0);
-	GPIO_PinModeSet(NAND_RE_Port, NAND_RE_Pin, gpioModeWiredAnd, 0);
-	GPIO_PinModeSet(NAND_WE_Port, NAND_WE_Pin, gpioModeWiredAnd, 0);
+	GPIO_PinModeSet(NAND_nCE_Port, NAND_nCE_Pin, gpioModePushPull, 1);
+	GPIO_PinModeSet(NAND_nWP_Port, NAND_nWP_Pin, gpioModePushPull, 1);
+	GPIO_PinModeSet(NAND_ALE_Port, NAND_ALE_Pin, gpioModePushPull, 0);
+	GPIO_PinModeSet(NAND_CLE_Port, NAND_CLE_Pin, gpioModePushPull, 0);
+	GPIO_PinModeSet(NAND_nRE_Port, NAND_nRE_Pin, gpioModePushPull, 1);
+	GPIO_PinModeSet(NAND_nWE_Port, NAND_nWE_Pin, gpioModePushPull, 1);
 
-	// MSC IO pins
-	GPIO_PinModeSet(NAND_IO_Port, NAND_IO0_Pin, gpioModeWiredAnd, 0);
-	GPIO_PinModeSet(NAND_IO_Port, NAND_IO1_Pin, gpioModeWiredAnd, 0);
-	GPIO_PinModeSet(NAND_IO_Port, NAND_IO2_Pin, gpioModeWiredAnd, 0);
-	GPIO_PinModeSet(NAND_IO_Port, NAND_IO3_Pin, gpioModeWiredAnd, 0);
-	GPIO_PinModeSet(NAND_IO_Port, NAND_IO4_Pin, gpioModeWiredAnd, 0);
-	GPIO_PinModeSet(NAND_IO_Port, NAND_IO5_Pin, gpioModeWiredAnd, 0);
-	GPIO_PinModeSet(NAND_IO_Port, NAND_IO6_Pin, gpioModeWiredAnd, 0);
-	GPIO_PinModeSet(NAND_IO_Port, NAND_IO7_Pin, gpioModeWiredAnd, 0);
+	// EBI IO pins
+	GPIO_PinModeSet(NAND_IO_Port, NAND_IO0_Pin, gpioModePushPull, 0);
+	GPIO_PinModeSet(NAND_IO_Port, NAND_IO1_Pin, gpioModePushPull, 0);
+	GPIO_PinModeSet(NAND_IO_Port, NAND_IO2_Pin, gpioModePushPull, 0);
+	GPIO_PinModeSet(NAND_IO_Port, NAND_IO3_Pin, gpioModePushPull, 0);
+	GPIO_PinModeSet(NAND_IO_Port, NAND_IO4_Pin, gpioModePushPull, 0);
+	GPIO_PinModeSet(NAND_IO_Port, NAND_IO5_Pin, gpioModePushPull, 0);
+	GPIO_PinModeSet(NAND_IO_Port, NAND_IO6_Pin, gpioModePushPull, 0);
+	GPIO_PinModeSet(NAND_IO_Port, NAND_IO7_Pin, gpioModePushPull, 0);
 
-	// Initialze the MSC
-	MSC_Init();
+	CMU_ClockEnable(cmuClock_EBI, true);
 
-	// Set read mode for 0 wait state, because we're running below 16MHz
-	MSC->READCTRL &= ~MSC_READCTRL_MODE_WS0;
+	ebiInit.mode = ebiModeD8A8;
+	ebiInit.ardyPolarity = ebiActiveLow;
+	ebiInit.alePolarity = ebiActiveLow;
+	ebiInit.wePolarity = ebiActiveLow;
+	ebiInit.csPolarity = ebiActiveLow;
+	ebiInit.blPolarity = ebiActiveLow;
+	ebiInit.blEnable = false;
+	ebiInit.noIdle = true;
+	ebiInit.ardyEnable = false;
+	ebiInit.ardyDisableTimeout = true;
+	ebiInit.banks = EBI_BANK0;
+	ebiInit.csLines = 0;
+	ebiInit.addrSetupCycles = 0;
+	ebiInit.addrHoldCycles = 0;
+	ebiInit.addrHalfALE = false;
+	ebiInit.readSetupCycles = 0;
+	ebiInit.readStrobeCycles = 2;
+	ebiInit.readHoldCycles = 1;
+	ebiInit.readPageMode = false;
+	ebiInit.readPrefetch = false;
+	ebiInit.readHalfRE = false;
+	ebiInit.writeSetupCycles = 0;
+	ebiInit.writeStrobeCycles = 2;
+	ebiInit.writeHoldCycles = 1;
+	ebiInit.writeBufferDisable = false;
+	ebiInit.writeHalfWE = false;
+	ebiInit.aLow = ebiALowA24;
+	ebiInit.aHigh = ebiAHighA26;
+	ebiInit.location = ebiLocation1;
+	ebiInit.enable = true;
 
-	// Enable writes/erases
-	MSC->WRITECTRL |= MSC_WRITECTRL_WREN;
+	EBI_Init(&ebiInit);
+	EBI->NANDCTRL |= EBI_NANDCTRL_BANKSEL_BANK0 | EBI_NANDCTRL_EN;
 
-	// Initialize EEPROM emulation
-	EE_Init(DEFAULT_NUMBER_OF_PAGES);
+	// Initialize the NAND flash driver using DMA
+	NANDFLASH_Init(NANDFLASH_DMA_CH);
+
 }
 
 /**************************************************************************//**
@@ -134,6 +176,19 @@ void Flash_Enable(bool enabled)
 		GPIO_PinOutSet(NAND_PWR_EN_Port, NAND_PWR_EN_Pin);
 	else
 		GPIO_PinOutClear(NAND_PWR_EN_Port, NAND_PWR_EN_Pin);
+}
+
+/**************************************************************************//**
+ * @brief Enables or disables the external NAND flash write protect. When true,
+ * the NAND flash will protected and cannot be written to.
+ * @verbatim Flash_Enable(bool); @endverbatim
+ *****************************************************************************/
+void Flash_Write_Protect(bool protect)
+{
+	if (protect)
+		GPIO_PinOutClear(NAND_nWP_Port, NAND_nWP_Pin);
+	else
+		GPIO_PinOutSet(NAND_nWP_Port, NAND_nWP_Pin);
 }
 
 // The following code is from Silicon Labs AN0019
@@ -153,6 +208,7 @@ static EE_Page_TypeDef pages[DEFAULT_NUMBER_OF_PAGES];
 static int16_t         numberOfVariablesDeclared = 0;
 static int16_t         numberOfActiveVariables = 0;
 static int16_t         numberOfPagesAllocated;
+static int16_t 		   numberOfBlocks = NAND256W3A_NUMBLOCKS;
 
 
 /*******************************************************************************
@@ -176,20 +232,19 @@ static int16_t         numberOfPagesAllocated;
 *******************************************************************************/
 static bool EE_validateIfErased(EE_Page_TypeDef *page)
 {
-  uint32_t *address = page->startAddress;
+	uint8_t pageBuffer[NAND256W3A_PAGESIZE];
+	uint32_t i = 0;
 
-  /* Iterate through all the words of the page, and validate that all bits are set. */
-  while (address <= page->endAddress)
-  {
-    if (*address != 0xFFFFFFFF)
-    {
-      /* 0 bit detected */
-      return false;
-    }
-    address++;
-  }
-  /* All bits are 1's. */
-  return true;
+	NANDFLASH_ReadPage(*page->startAddress, pageBuffer);
+
+	while (i < NAND256W3A_PAGESIZE) {
+		if (pageBuffer[i] != 0xFF)
+			return false;
+		else
+			i++;
+	}
+
+	return true;
 }
 
 
@@ -226,7 +281,7 @@ static bool EE_WriteToPage(EE_Page_TypeDef *page, uint16_t virtualAddress, uint1
       virtualAddressAndData = ((uint32_t)(virtualAddress << 16) & 0xFFFF0000) | (uint32_t)(writeData);
 
       /* Make sure that the write to flash is a success. */
-      if (MSC_WriteWord(address, &virtualAddressAndData, SIZE_OF_VARIABLE) != mscReturnOk)
+      if (MSC_WriteWord(address, &virtualAddressAndData, SIZE_OF_VARIABLE) != eeReturnOk)
       {
         /* Write failed. Halt for debug trace, if enabled. */
         EFM_ASSERT(0);
@@ -244,43 +299,36 @@ static bool EE_WriteToPage(EE_Page_TypeDef *page, uint16_t virtualAddress, uint1
   return false;
 }
 
-
 /***************************************************************************//**
  * @brief
- *   Erase all pages allocated to the eeprom emulator, and force page 0 to be
- *   the active page.
+ *   Erase all blocks in the NAND flash and starts over from page 0.
  *
  * @return
  *   Returns true if the format was successful.
  ******************************************************************************/
-bool EE_Format(uint32_t numberOfPages)
+bool EE_Format(void)
 {
-  uint32_t eraseCount = 0xFF000001;
-  int i;
-  msc_Return_TypeDef retStatus;
-
-  /* Make the number of pages allocated accessible throughout the file. */
-  numberOfPagesAllocated = numberOfPages;
-
-  /* Initialize the address of each page */
-  for (i = 0; i < numberOfPagesAllocated; i++)
-  {
-    pages[i].startAddress = (uint32_t *)(NAND_FLASH_SIZE - i * PAGE_SIZE - PAGE_SIZE);
-    pages[i].endAddress   = (uint32_t *)(NAND_FLASH_SIZE - i * PAGE_SIZE - 4);
-  }
+  int i, j = 0;
+  bool blockEmpty = true;
+  NANDFLASH_Status_TypeDef retStatus;
+  EE_Page_TypeDef page;
 
   /* Erase all pages allocated to the eeprom emulator*/
-  for (i = numberOfPagesAllocated - 1; i >= 0; i--)
+  for (i = 0; i < numberOfBlocks; i++)
   {
-    /* Validate if the page is already erased, and erase it if not. */
-    if (!EE_validateIfErased(&pages[i]))
-    {
-      /* Erase the page, and return the status if the erase operation is unsuccessful. */
-      retStatus = MSC_ErasePage(pages[i].startAddress);
-      if (retStatus != mscReturnOk) {
-        return false;
-      }
-    }
+	  page.startAddress = i * NAND256W3A_BLOCKSIZE;
+	  page.endAddress = (i + 1) * NAND256W3A_BLOCKSIZE;
+
+	  // Check if the block is already erased
+	  while (j++ < (NAND256W3A_BLOCKSIZE / NAND256W3A_PAGESIZE) && blockEmpty) {
+		  blockEmpty |= EE_validateIfErased(&page);
+	  }
+
+	  if (!blockEmpty)
+		  NANDFLASH_EraseBlock(i);
+
+	  blockEmpty = true;
+	  j = 0;
   }
 
   /* Page 0 is the active page. */
@@ -289,17 +337,8 @@ bool EE_Format(uint32_t numberOfPages)
   /* There should be no receiving page. */
   receivingPageNumber = -1;
 
-  /* Write erase count of 1 to the page 0 head. */
-  retStatus = MSC_WriteWord(pages[activePageNumber].startAddress, &eraseCount, 4);
-  if (retStatus != mscReturnOk) {
-    return false;
-  }
-
   /* Set page status active to page 0. */
   retStatus = EE_setPageStatusActive(&pages[activePageNumber]);
-  if ( retStatus != mscReturnOk ) {
-    return false;
-  }
 
   /** Successfully formatted pages */
   return true;
@@ -323,9 +362,9 @@ bool EE_Format(uint32_t numberOfPages)
  * @return
  *   Returns the status of the last flash operation.
  ******************************************************************************/
-static msc_Return_TypeDef EE_TransferPage(EE_Variable_TypeDef *var, uint16_t writeData)
+static EE_Status_TypeDef EE_TransferPage(EE_Variable_TypeDef *var, uint16_t writeData)
 {
-  msc_Return_TypeDef retStatus;
+  EE_Status_TypeDef retStatus;
   uint32_t           *activeAddress;
   uint32_t           *receivingAddress;
   bool               newVariable;
@@ -346,7 +385,7 @@ static msc_Return_TypeDef EE_TransferPage(EE_Variable_TypeDef *var, uint16_t wri
       /* If this page is not truly erased, it means that it has been written to
        * from outside this API, this could be an address conflict. */
       EFM_ASSERT(0);
-      MSC_ErasePage(pages[receivingPageNumber].startAddress);
+      NANDFLASH_EraseBlock(*pages[receivingPageNumber].startAddress / NAND256W3A_BLOCKSIZE);
     }
   }
 
@@ -422,27 +461,27 @@ static msc_Return_TypeDef EE_TransferPage(EE_Variable_TypeDef *var, uint16_t wri
   eraseCount = eraseCount | 0xFF000000;
 
   /* Write the erase count obtained to the active page head. */
-  retStatus = MSC_WriteWord(pages[receivingPageNumber].startAddress, &eraseCount, 4);
-  if (retStatus != mscReturnOk) {
+  //retStatus = MSC_WriteWord(pages[receivingPageNumber].startAddress, &eraseCount, 4);
+  if (retStatus != eeReturnOk) {
     return retStatus;
   }
 
   /* Erase the old active page. */
-  retStatus = MSC_ErasePage(pages[activePageNumber].startAddress);
-  if (retStatus != mscReturnOk) {
+  //retStatus = MSC_ErasePage(pages[activePageNumber].startAddress);
+  if (retStatus != eeReturnOk) {
     return retStatus;
   }
 
   /* Set the receiving page to be the new active page. */
   retStatus = EE_setPageStatusActive(&pages[receivingPageNumber]);
-  if (retStatus != mscReturnOk) {
+  if (retStatus != eeReturnOk) {
     return retStatus;
   }
 
   activePageNumber    = receivingPageNumber;
   receivingPageNumber = -1;
 
-  return mscReturnOk;
+  return eeReturnOk;
 }
 
 

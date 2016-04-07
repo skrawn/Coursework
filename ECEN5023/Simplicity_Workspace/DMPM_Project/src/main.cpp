@@ -137,8 +137,8 @@ void Clock_Setup(void)
 	CMU_ClockSelectSet(cmuClock_HFPER, cmuSelect_HFRCO);
 
 	// Enable the AUXHFRCO clock and set it to 7MHz
-	CMU_ClockEnable(cmuClock_AUX, true);
-	CMU_AUXHFRCOBandSet(cmuAUXHFRCOBand_7MHz);
+	//CMU_ClockEnable(cmuClock_AUX, true);
+	//CMU_AUXHFRCOBandSet(cmuAUXHFRCOBand_7MHz);
 
 	// Turn on the LFXO
 	CMU_OscillatorEnable(cmuOsc_LFXO, true, true);
