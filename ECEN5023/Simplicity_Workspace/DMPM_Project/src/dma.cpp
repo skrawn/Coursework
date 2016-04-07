@@ -34,7 +34,7 @@
 #include "config.h"
 #include "dma.h"
 #include "em_dma.h"
-#include "dmactrl.h"
+#include "dma_api_HAL.h"
 
 /**************************************************************************//**
  * @brief Initializes DMA

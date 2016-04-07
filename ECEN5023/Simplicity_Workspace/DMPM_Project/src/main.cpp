@@ -49,6 +49,9 @@
 #include "mbed.h"
 #include "sleepmodes.h"
 
+#define VECTOR_SIZE (16+30)
+uint32_t vectorTable[VECTOR_SIZE] __attribute__ ((aligned(256)));
+
 // Bluefruit CTS pins
 #define BluefruitCTSPort	gpioPortD
 #define BluefruitCTSPin		15
@@ -103,6 +106,7 @@ Serial pc(USBTX, USBRX);
 #endif
 
 void GPIO_Initialize(void);
+void moveInterruptVectorToRam(void);
 void LETIMER_Initialize(void);
 void BSP_TraceSwoSetup(void);
 
@@ -137,8 +141,8 @@ void Clock_Setup(void)
 	CMU_ClockSelectSet(cmuClock_HFPER, cmuSelect_HFRCO);
 
 	// Enable the AUXHFRCO clock and set it to 7MHz
-	//CMU_ClockEnable(cmuClock_AUX, true);
-	//CMU_AUXHFRCOBandSet(cmuAUXHFRCOBand_7MHz);
+	CMU_ClockEnable(cmuClock_AUX, true);
+	CMU_AUXHFRCOBandSet(cmuAUXHFRCOBand_7MHz);
 
 	// Turn on the LFXO
 	CMU_OscillatorEnable(cmuOsc_LFXO, true, true);
@@ -149,6 +153,16 @@ void Clock_Setup(void)
 
 	// Enable the low energy core clock
 	CMU_ClockEnable(cmuClock_CORELE, true);
+}
+
+/**************************************************************************//**
+ * @brief Moves the interrupt vector table to RAM
+ * @verbatim moveInterruptVectorToRam(void); @endverbatim
+ *****************************************************************************/
+void moveInterruptVectorToRam(void)
+{
+  memcpy(vectorTable, (uint32_t*)SCB->VTOR, sizeof(uint32_t) * VECTOR_SIZE);
+  SCB->VTOR = (uint32_t)vectorTable;
 }
 
 /**************************************************************************//**
@@ -311,6 +325,7 @@ int main(void)
 #endif
 
 	Clock_Setup();
+	moveInterruptVectorToRam();
 	GPIO_Initialize();
 	LETIMER_Initialize();
 	DMA_Initialize();
@@ -320,12 +335,6 @@ int main(void)
 	I2C_Initialize();
 	BME280_Init();
 	Flash_Init();
-
-	EE_Variable_TypeDef var1;
-	uint32_t read_val;
-	EE_DeclareVariable(&var1);
-	EE_Write(&var1, 0xDEADBEEF);
-	EE_Read(&var1, &read_val);
 
 #if BLE_Program
 	// Disable the RX DMA channel

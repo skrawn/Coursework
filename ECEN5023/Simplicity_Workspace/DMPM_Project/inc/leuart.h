@@ -36,6 +36,7 @@
 #define LEUART_RX_DMA_CH		0
 #define LEUART_TX_DMA_CH		1
 
+#define LUEART_NUM_TX_BUF		2
 #define LEUART_TX_DMA_PRI		0
 #define LEUART_TX_DMA_ARB		dmaArbitrate1
 #define LEUART_TX_DMA_BUF_SIZE	64

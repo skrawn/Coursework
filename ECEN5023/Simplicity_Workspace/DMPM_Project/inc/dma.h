@@ -35,7 +35,7 @@
 #define DMA_H_
 
 // DMA Channel Allocation
-#define NANDFLASH_DMA_CH		11
+#define FLASH_DMA_CH		11
 
 void DMA_Initialize(void);
 uint16_t DMA_Get_Transfers_Remaining(uint8_t ch);
