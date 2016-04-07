@@ -36,6 +36,32 @@
 
 #include "mbed.h"
 
+typedef struct {
+	int16_t XAxisAlarm;
+	int16_t YAxisAlarm;
+	int16_t ZAxisAlarm;
+
+	int16_t UpperTempAlarm;
+	int16_t LowerTempAlarm;
+
+	uint16_t UpperPressureAlarm;
+	uint16_t LowerPressureAlarm;
+
+	uint16_t UpperHumidityAlarm;
+	uint16_t LowerHumidityAlarm;
+} EEPROM_Data_t;
+
+extern EEPROM_Data_t EEPROM_Data;
+
 void Flash_Init(void);
+void Flash_Update_XAxisAlarm(int16_t new_val);
+void Flash_Update_YAxisAlarm(int16_t new_val);
+void Flash_Update_ZAxisAlarm(int16_t new_val);
+void Flash_Update_UpperTempAlarm(int16_t new_val);
+void Flash_Update_LowerTempAlarm(int16_t new_val);
+void Flash_Update_UpperPresAlarm(uint16_t new_val);
+void Flash_Update_LowerPresAlarm(uint16_t new_val);
+void Flash_Update_UpperHumAlarm(uint16_t new_val);
+void Flash_Update_LowerHumAlarm(uint16_t new_val);
 
 #endif /* FLASH_H_ */

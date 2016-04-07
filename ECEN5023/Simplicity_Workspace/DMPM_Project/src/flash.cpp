@@ -37,12 +37,25 @@
 #include "eeprom_emulation.h"
 
 EE_Variable_TypeDef FirstInit, XAxisAlarm, YAxisAlarm, ZAxisAlarm, UpperTempAlarm, LowerTempAlarm,
-	UpperPressureAlarm, LowerPressureAlarm, UpperHumidityAlarm, LowerHumidityAlarm,
-	CurrentMode;
+	UpperPressureAlarm, LowerPressureAlarm, UpperHumidityAlarm, LowerHumidityAlarm;
 
 #define FIRST_INIT_VAL		0xBEEF
 #define NUM_EEPROM_PAGES	4	// Uses approximately 2kB of flash
 
+#define DEFAULT_XAXISALARM			500	//5.00g
+#define DEFAULT_YAXISALARM			500	//5.00g
+#define DEFAULT_ZAXISALARM			500	//5.00g
+
+#define DEFAULT_UPPERTEMPALARM		500		// 50.0C
+#define DEFAULT_LOWERTEMPALARM		-400	// -40.0C
+
+#define DEFAULT_UPPERPRESALARM		3248	// 32.48 inHg
+#define DEFAULT_LOWERPRESALARM		886		// 8.86 inHg
+
+#define DEFAULT_UPPERHUMALARM		100		// % RH
+#define DEFAULT_LOWERHUMALARM		0		// % RH
+
+EEPROM_Data_t EEPROM_Data;
 
 void Flash_Init(void)
 {
@@ -62,20 +75,108 @@ void Flash_Init(void)
 	EE_DeclareVariable(&LowerPressureAlarm);
 	EE_DeclareVariable(&UpperHumidityAlarm);
 	EE_DeclareVariable(&LowerHumidityAlarm);
-	EE_DeclareVariable(&CurrentMode);
 
 	// Check if anything has been initialized yet
 	EE_Read(&FirstInit, &first_init);
 	if (first_init == FIRST_INIT_VAL)
 	{
+		// Restore the old configuration parameters
+		EE_Read(&XAxisAlarm, (uint16_t *) &EEPROM_Data.XAxisAlarm);
+		EE_Read(&YAxisAlarm, (uint16_t *) &EEPROM_Data.YAxisAlarm);
+		EE_Read(&ZAxisAlarm, (uint16_t *) &EEPROM_Data.ZAxisAlarm);
 
+		EE_Read(&UpperTempAlarm, (uint16_t *) &EEPROM_Data.UpperTempAlarm);
+		EE_Read(&LowerTempAlarm, (uint16_t *) &EEPROM_Data.LowerTempAlarm);
+
+		EE_Read(&UpperPressureAlarm, &EEPROM_Data.UpperPressureAlarm);
+		EE_Read(&LowerPressureAlarm, &EEPROM_Data.LowerPressureAlarm);
+
+		EE_Read(&UpperHumidityAlarm, &EEPROM_Data.UpperHumidityAlarm);
+		EE_Read(&LowerHumidityAlarm, &EEPROM_Data.LowerHumidityAlarm);
 	}
 	else
 	{
 		EE_Write(&FirstInit, FIRST_INIT_VAL);
 
 		// Write the default values to EEPROM
+		EEPROM_Data.XAxisAlarm = DEFAULT_XAXISALARM;
+		EEPROM_Data.YAxisAlarm = DEFAULT_YAXISALARM;
+		EEPROM_Data.ZAxisAlarm = DEFAULT_ZAXISALARM;
 
+		EEPROM_Data.UpperTempAlarm = DEFAULT_UPPERTEMPALARM;
+		EEPROM_Data.LowerTempAlarm = DEFAULT_LOWERTEMPALARM;
+
+		EEPROM_Data.UpperPressureAlarm = DEFAULT_UPPERPRESALARM;
+		EEPROM_Data.LowerPressureAlarm = DEFAULT_LOWERPRESALARM;
+
+		EEPROM_Data.UpperHumidityAlarm = DEFAULT_UPPERHUMALARM;
+		EEPROM_Data.LowerHumidityAlarm = DEFAULT_LOWERHUMALARM;
+
+		EE_Write(&XAxisAlarm, (uint16_t) EEPROM_Data.XAxisAlarm);
+		EE_Write(&YAxisAlarm, (uint16_t) EEPROM_Data.YAxisAlarm);
+		EE_Write(&ZAxisAlarm, (uint16_t) EEPROM_Data.ZAxisAlarm);
+
+		EE_Write(&UpperTempAlarm, (uint16_t) EEPROM_Data.UpperTempAlarm);
+		EE_Write(&LowerTempAlarm, (uint16_t) EEPROM_Data.LowerTempAlarm);
+
+		EE_Write(&UpperPressureAlarm, EEPROM_Data.UpperPressureAlarm);
+		EE_Write(&LowerPressureAlarm, EEPROM_Data.LowerPressureAlarm);
+
+		EE_Write(&UpperHumidityAlarm, EEPROM_Data.UpperHumidityAlarm);
+		EE_Write(&LowerHumidityAlarm, EEPROM_Data.LowerHumidityAlarm);
 	}
 }
 
+void Flash_Update_XAxisAlarm(int16_t new_val)
+{
+	EEPROM_Data.XAxisAlarm = new_val;
+	EE_Write(&XAxisAlarm, (uint16_t) EEPROM_Data.XAxisAlarm);
+}
+
+void Flash_Update_YAxisAlarm(int16_t new_val)
+{
+	EEPROM_Data.YAxisAlarm = new_val;
+	EE_Write(&YAxisAlarm, (uint16_t) EEPROM_Data.YAxisAlarm);
+}
+
+void Flash_Update_ZAxisAlarm(int16_t new_val)
+{
+	EEPROM_Data.ZAxisAlarm = new_val;
+	EE_Write(&ZAxisAlarm, (uint16_t) EEPROM_Data.ZAxisAlarm);
+}
+
+void Flash_Update_UpperTempAlarm(int16_t new_val)
+{
+	EEPROM_Data.UpperTempAlarm = new_val;
+	EE_Write(&UpperTempAlarm, (uint16_t) EEPROM_Data.UpperTempAlarm);
+}
+
+void Flash_Update_LowerTempAlarm(int16_t new_val)
+{
+	EEPROM_Data.LowerTempAlarm = new_val;
+	EE_Write(&LowerTempAlarm, (uint16_t) EEPROM_Data.LowerTempAlarm);
+}
+
+void Flash_Update_UpperPresAlarm(uint16_t new_val)
+{
+	EEPROM_Data.UpperPressureAlarm = new_val;
+	EE_Write(&UpperPressureAlarm, (uint16_t) EEPROM_Data.UpperPressureAlarm);
+}
+
+void Flash_Update_LowerPresAlarm(uint16_t new_val)
+{
+	EEPROM_Data.LowerPressureAlarm = new_val;
+	EE_Write(&LowerPressureAlarm, (uint16_t) EEPROM_Data.LowerPressureAlarm);
+}
+
+void Flash_Update_UpperHumAlarm(uint16_t new_val)
+{
+	EEPROM_Data.UpperHumidityAlarm = new_val;
+	EE_Write(&UpperHumidityAlarm, (uint16_t) EEPROM_Data.UpperHumidityAlarm);
+}
+
+void Flash_Update_LowerHumAlarm(uint16_t new_val)
+{
+	EEPROM_Data.LowerHumidityAlarm = new_val;
+	EE_Write(&LowerHumidityAlarm, (uint16_t) EEPROM_Data.LowerHumidityAlarm);
+}

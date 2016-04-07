@@ -80,6 +80,7 @@ typedef struct {
 // Commands
 const BT_Cmd_t CMD_TABLE[] = {
 	{"RetTemp\0", returnTemperature},
+	{"RetHum\0", 0},
 	{'\0', 0}
 };
 
