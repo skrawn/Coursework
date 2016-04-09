@@ -76,6 +76,8 @@ const uint8_t REG_CALIB[42] = {0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F, 0
 #define Q22_10_TO_RH		1024
 #define PA_TO_INHG_NUM		295
 #define PA_TO_INHG_DEN		10000
+#define HUM_TO_PER_NUM		10
+#define HUM_TO_PER_DEN		1024
 
 int32_t temp_degC;		// Temperature in 0.01C
 uint32_t pres_inHg;		// Pressure in 0.01 inHg
@@ -211,7 +213,7 @@ void BME280_Read_All(void)
 	// Compensate the ADC values
 	temp_degC = BME280_Compensate_Temp(temp_raw);
 	pres_inHg = (BME280_Compensate_Pres(pres_raw) / Q24_8_TO_PA) * PA_TO_INHG_NUM / PA_TO_INHG_DEN;
-	rel_humidity = BME280_Compensate_Humidity(hum_raw);
+	rel_humidity = BME280_Compensate_Humidity(hum_raw) * HUM_TO_PER_NUM / HUM_TO_PER_DEN;
 }
 
 void BME280_Convert_And_Read_All(void)

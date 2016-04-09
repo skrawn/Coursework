@@ -147,11 +147,11 @@ void moveInterruptVectorToRam(void)
  *****************************************************************************/
 void printData(void)
 {
-	uint8_t tx_buf[50] = {0};
+	uint8_t tx_buf[80] = {0};
 	uint32_t tx_size = 0;
 
 	// BME280 data
-	tx_size = sprintf((char *) tx_buf, "Temperature: %d.%d C\r\nPressure: %d.%d inHg\r\nHumidity: %d.%d \%\r\n",
+	tx_size = sprintf((char *) tx_buf, "Temperature: %d.%d C\r\nPressure: %d.%d inHg\r\nHumidity: %d.%d %%\r\n",
 			BME280_Get_Temp() / 100, abs(BME280_Get_Temp() % 100), BME280_Get_Pres() / 100, BME280_Get_Pres() % 100,
 			BME280_Get_Humidity() / 10, BME280_Get_Humidity() % 10);
 	LEUART_Put_TX_Buffer(tx_buf, tx_size);
