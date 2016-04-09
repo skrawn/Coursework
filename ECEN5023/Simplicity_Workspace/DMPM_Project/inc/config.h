@@ -56,6 +56,6 @@
 #define N_DMA_CH_IN_USE		3
 
 float convertToCelsius(int16_t adcSample);
-void returnTemperature(void);
+void wait_ticks(uint32_t ticks);
 
 #endif /* CONFIG_H_ */

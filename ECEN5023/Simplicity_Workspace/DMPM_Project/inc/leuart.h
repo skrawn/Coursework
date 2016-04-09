@@ -39,7 +39,7 @@
 #define LUEART_NUM_TX_BUF		2
 #define LEUART_TX_DMA_PRI		0
 #define LEUART_TX_DMA_ARB		dmaArbitrate1
-#define LEUART_TX_DMA_BUF_SIZE	64
+#define LEUART_TX_DMA_BUF_SIZE	1024
 #define LEUART_TX_DMA_N_XFERS	LEUART_TX_DMA_BUF_SIZE - 1
 
 #define LEUART_RX_DMA_PRI		1
@@ -55,6 +55,7 @@ void LEUART_DMA_Init(void);
 void LEUART_TX_DMA_Done_CB(unsigned int channel, bool primary, void *user);
 void LEUART_TX_Buffer(void);
 void LEUART_TX_Wait(uint16_t tx_length);
+bool LEUART_TX_Active(void);
 void LEUART_Put_TX_Buffer(uint8_t *data, uint32_t length);
 void LEUART_Reset_RX_Buffer(void);
 void LEUART_RX_DMA_Done_CB(unsigned int channel, bool primary, void *user);

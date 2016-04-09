@@ -169,6 +169,9 @@ void BME280_Init(void)
 
 	osr = (BME280_OVS_X1 << 5) | (BME280_OVS_X1 << 2);
 	I2C_Write_Polling(BME280_SLAVE_ADDR, REG_CTRL_MEAS, 1, &osr, 1);
+
+	// Start the first transaction
+	BME280_Set_Mode(BME280_MODE_FORCED);
 }
 
 /**************************************************************************//**
@@ -187,18 +190,9 @@ void BME280_Set_Mode(BME280_Mode_t mode)
 	I2C_Write_Polling(BME280_SLAVE_ADDR, REG_CTRL_MEAS, 1, &ctrl_meas_reg, 1);
 }
 
-void BME280_Convert_And_Read_All(void)
+void BME280_Read_All(void)
 {
-	uint8_t status;
 	int32_t pres_raw = 0, hum_raw = 0, temp_raw = 0;
-
-	// Force a conversion
-	BME280_Set_Mode(BME280_MODE_FORCED);
-
-	I2C_Read_Polling(BME280_SLAVE_ADDR, REG_CTRL_MEAS, 1, &status, 1);
-	while (status & 0x3) {
-		I2C_Read_Polling(BME280_SLAVE_ADDR, REG_CTRL_MEAS, 1, &status, 1);
-	}
 
 	// Read back the measured values
 	I2C_Read_Polling(BME280_SLAVE_ADDR, REG_PRESS_MSB, 1, (uint8_t *) &pres_raw, 2);
@@ -218,6 +212,21 @@ void BME280_Convert_And_Read_All(void)
 	temp_degC = BME280_Compensate_Temp(temp_raw);
 	pres_inHg = (BME280_Compensate_Pres(pres_raw) / Q24_8_TO_PA) * PA_TO_INHG_NUM / PA_TO_INHG_DEN;
 	rel_humidity = BME280_Compensate_Humidity(hum_raw);
+}
+
+void BME280_Convert_And_Read_All(void)
+{
+	uint8_t status;
+
+	// Force a conversion
+	BME280_Set_Mode(BME280_MODE_FORCED);
+
+	I2C_Read_Polling(BME280_SLAVE_ADDR, REG_CTRL_MEAS, 1, &status, 1);
+	while (status & 0x3) {
+		I2C_Read_Polling(BME280_SLAVE_ADDR, REG_CTRL_MEAS, 1, &status, 1);
+	}
+
+	BME280_Read_All();
 }
 
 int32_t BME280_Get_Temp(void)

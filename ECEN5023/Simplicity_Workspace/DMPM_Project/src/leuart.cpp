@@ -32,13 +32,15 @@
  *******************************************************************************/
 
 #include <string.h>
+#include "bme280.h"
+#include "config.h"
 #include "dma.h"
-#include "leuart.h"
 #include "em_cmu.h"
 #include "em_dma.h"
 #include "em_gpio.h"
+#include "em_int.h"
 #include "em_leuart.h"
-#include "config.h"
+#include "leuart.h"
 #include "mbed.h"
 #include "sleepmodes.h"
 
@@ -70,12 +72,17 @@ DMA_CB_TypeDef LEUART_TX_Done_CB;
 DMA_CB_TypeDef LEUART_RX_Done_CB;
 
 uint8_t LEUART_RX_Buf[LEUART_RX_DMA_BUF_SIZE] __attribute__((aligned(256)));
-uint8_t LEUART_TX_Buf[LEUART_TX_DMA_BUF_SIZE] __attribute__((aligned(256)));
+uint8_t LEUART_TX_Buf[LUEART_NUM_TX_BUF][LEUART_TX_DMA_BUF_SIZE] __attribute__((aligned(256)));
+
+uint8_t active_buf = 0;
+uint32_t active_buf_empty_idx = 0;
 
 typedef struct {
 	const char *str;
 	void (*cmd_func)(void);
 } BT_Cmd_t;
+
+static void returnTemperature(void);
 
 // Commands
 const BT_Cmd_t CMD_TABLE[] = {
@@ -221,7 +228,14 @@ void LEUART_TX_Buffer(void)
 	// in low frequency domain
 	while (LEUART0->SYNCBUSY & (LEUART_SYNCBUSY_TXDATA | LEUART_SYNCBUSY_CMD | LEUART_SYNCBUSY_CTRL));
 	DMA_ActivateBasic(LEUART_TX_DMA_CH, true, false, (void *) &LEUART0->TXDATA,
-			LEUART_TX_Buf, strlen((const char *) LEUART_TX_Buf) - 1);
+			LEUART_TX_Buf[active_buf], active_buf_empty_idx);
+
+	// Update the active buffer
+	if (active_buf)
+		active_buf = 0;
+	else
+		active_buf = 1;
+	active_buf_empty_idx = 0;
 }
 
 /**************************************************************************//**
@@ -229,7 +243,7 @@ void LEUART_TX_Buffer(void)
  * @verbatim LEUART_TX_Wait(void);
  * @endverbatim
  *****************************************************************************/
-void LEUART_TX_Wait(uint16_t tx_length)
+void LEUART_TX_Wait(void)
 {
 	uint16_t tx_idx = 0;
 
@@ -240,12 +254,14 @@ void LEUART_TX_Wait(uint16_t tx_length)
 	// in low frequency domain
 	while (LEUART0->SYNCBUSY & (LEUART_SYNCBUSY_TXDATA | LEUART_SYNCBUSY_CMD));
 
-	while (tx_idx < tx_length)
+	while (tx_idx < active_buf_empty_idx)
 	{
-		LEUART0->TXDATA = LEUART_TX_Buf[tx_idx++];
+		LEUART0->TXDATA = LEUART_TX_Buf[active_buf][tx_idx++];
 		while (LEUART0->SYNCBUSY & (LEUART_SYNCBUSY_TXDATA | LEUART_SYNCBUSY_CMD));
 		while (!(LEUART0->STATUS & LEUART_STATUS_TXC));
 	}
+
+	active_buf_empty_idx = 0;
 
 	// Disable the transmitter and clear the TX shift register
 	LEUART0->CMD |= LEUART_CMD_TXDIS | LEUART_CMD_CLEARTX;
@@ -256,13 +272,37 @@ void LEUART_TX_Wait(uint16_t tx_length)
 }
 
 /**************************************************************************//**
+ * @brief Checks if a TX is in progress
+ * @verbatim LEUART_TX_Active(void);
+ * @endverbatim
+ *****************************************************************************/
+bool LEUART_TX_Active(void)
+{
+	// First check to see if the DMA channel is active
+	if (DMA_ChannelEnabled(LEUART_TX_DMA_CH))
+		return true;
+
+	// Next check to see if the transmitter is still enabled
+	return (LEUART0->STATUS & LEUART_STATUS_TXENS);
+}
+
+/**************************************************************************//**
  * @brief Puts the specified data into the TX buffer.
  * @verbatim LEUART_Put_TX_Buffer(uint8_t *data, uint32_t length);
  * @endverbatim
  *****************************************************************************/
 void LEUART_Put_TX_Buffer(uint8_t *data, uint32_t length)
 {
-	memcpy(LEUART_TX_Buf, data, length);
+	// Truncate the buffer is there is not enough room
+	if (length > (LEUART_TX_DMA_BUF_SIZE - active_buf_empty_idx))
+		length = (LEUART_TX_DMA_BUF_SIZE - active_buf_empty_idx);
+
+	// Disable interrupts while buffering
+	INT_Disable();
+	memcpy(&LEUART_TX_Buf[active_buf][active_buf_empty_idx], data, length);
+	INT_Enable();
+
+	active_buf_empty_idx += length;
 }
 
 /**************************************************************************//**
@@ -298,6 +338,7 @@ void LEUART_RX_DMA_Done_CB(unsigned int channel, bool primary, void *user)
  *****************************************************************************/
 void LEUART0_IRQHandler(void)
 {
+	uint8_t tx_buf[40] = {0};
 	uint32_t intflags = LEUART_IntGet(LEUART0), i = 0, j = 0;
 	uint32_t str_length, transfer_size;
 	bool cmd_matched = false;
@@ -329,11 +370,9 @@ void LEUART0_IRQHandler(void)
 			}
 
 			if (!cmd_matched) {
-				//memset(LEUART_TX_Buf, 0, sizeof(LEUART_TX_Buf));
-				transfer_size = sprintf((char *) LEUART_TX_Buf, "%s ERROR: Not valid input!\n\r", (char *) &LEUART_RX_Buf[0]);
+				transfer_size = sprintf((char *) tx_buf, "%s ERROR: Not valid input!\n\r", (char *) &LEUART_RX_Buf[0]);
 
-				// Set the last item in the transmit buffer to a null char so it knows when to stop transmitting
-				LEUART_TX_Buf[transfer_size] = '\0';
+				LEUART_Put_TX_Buffer(tx_buf, transfer_size);
 
 				LEUART_TX_Buffer();
 			}
@@ -347,14 +386,31 @@ void LEUART0_IRQHandler(void)
 	}
 
 	if (intflags & LEUART_IF_TXC) {
-		// Disable the transmitter
-		LEUART0->CMD |= LEUART_CMD_TXDIS;
+		// Check if the other DMA buffer is ready for transmit
+		if (active_buf_empty_idx > 0)
+		{
+			LEUART_TX_Buffer();
+		}
+		else
+		{
+			// Disable the transmitter
+			LEUART0->CMD |= LEUART_CMD_TXDIS;
 
-		// Disable TXDMA wakeup
-		LEUART0->CTRL &= ~LEUART_CTRL_TXDMAWU;
+			// Disable TXDMA wakeup
+			LEUART0->CTRL &= ~LEUART_CTRL_TXDMAWU;
 
-		// Disable the TXC interrupt
-		LEUART_IntDisable(LEUART0, LEUART_IEN_TXC);
+			// Disable the TXC interrupt
+			LEUART_IntDisable(LEUART0, LEUART_IEN_TXC);
+		}
 	}
 }
 
+static void returnTemperature(void)
+{
+	uint8_t tx_buf[40] = {0};
+	uint32_t tx_size;
+
+	tx_size = sprintf((char *) tx_buf, "%d.%dC\r\n", BME280_Get_Temp() / 10, abs(BME280_Get_Temp() % 10));
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
+	LEUART_TX_Buffer();
+}

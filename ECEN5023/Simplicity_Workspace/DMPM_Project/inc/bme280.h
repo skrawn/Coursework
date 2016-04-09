@@ -73,6 +73,7 @@ typedef enum {
 
 void BME280_Init(void);
 void BME280_Set_Mode(BME280_Mode_t mode);
+void BME280_Read_All(void);
 void BME280_Convert_And_Read_All(void);
 void BME280_Read_Temp(void);
 void BME280_Read_Pres(void);

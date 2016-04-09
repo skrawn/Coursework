@@ -48,6 +48,8 @@
 
 #define I2C1_Bus_Freq	I2C_FREQ_FAST_MAX
 
+#define TIMEOUT_TICKS_COUNT		5000
+
 I2C_TransferReturn_TypeDef I2C_Status;
 
 /**************************************************************************//**
@@ -94,14 +96,15 @@ void I2C_Initialize(void)
 	I2C_Init(I2C1, &i2cInit);
 
 	// Enable interrupts
-	I2C_IntClear(I2C1, 0x1FFFF);
-	NVIC_EnableIRQ(I2C1_IRQn);
+	//I2C_IntClear(I2C1, 0x1FFFF);
+	//NVIC_EnableIRQ(I2C1_IRQn);
 }
 
 I2C_TransferReturn_TypeDef I2C_Write_Polling(uint8_t slave_addr, uint16_t reg_addr, uint8_t reg_len, uint8_t *tx_data, uint16_t len)
 {
 	I2C_TransferSeq_TypeDef seq;
 	uint8_t *reg_ptr;
+	uint32_t timeout_ticks = 0;
 
 	seq.addr = slave_addr;
 	seq.flags = I2C_FLAG_WRITE_WRITE;
@@ -120,7 +123,8 @@ I2C_TransferReturn_TypeDef I2C_Write_Polling(uint8_t slave_addr, uint16_t reg_ad
 
 	blockSleepMode(EM1);
 	while (I2C_Status == i2cTransferInProgress) {
-		sleep();
+		//sleep();
+		I2C_Status = I2C_Transfer(I2C1);
 	}
 	unblockSleepMode(EM1);
 
@@ -131,6 +135,7 @@ I2C_TransferReturn_TypeDef I2C_Read_Polling(uint8_t slave_addr, uint16_t reg_add
 {
 	I2C_TransferSeq_TypeDef seq;
 	uint8_t *reg_ptr;
+	uint32_t timeout_ticks = 0;
 
 	seq.addr = slave_addr;
 	seq.flags = I2C_FLAG_WRITE_READ;
@@ -150,8 +155,8 @@ I2C_TransferReturn_TypeDef I2C_Read_Polling(uint8_t slave_addr, uint16_t reg_add
 
 	blockSleepMode(EM1);
 	while (I2C_Status == i2cTransferInProgress) {
-		sleep();
-		//I2C_Status = I2C_Transfer(I2C1);
+		//sleep();
+		I2C_Status = I2C_Transfer(I2C1);
 	}
 	unblockSleepMode(EM1);
 

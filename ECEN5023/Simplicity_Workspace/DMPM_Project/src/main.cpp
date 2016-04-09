@@ -70,36 +70,11 @@ uint32_t vectorTable[VECTOR_SIZE] __attribute__ ((aligned(256)));
 
 //#define BLE_Command_1			"AT+BLEPOWERLEVEL?\r"
 
-// These are my settings obtained through steps 1 through 3 connecting
-// to an HTC One M8 running Android 6.0
-//#define BLE_Command_1			"AT+BLEPOWERLEVEL=-12\n"
-//#define BLE_Command_3			"AT+GAPINTERVALS=50,107,187,50\n"
-
 #define BLE_Command_2			"AT+HWMODELED=0\n"
-
-// These settings are for Steps 5 and 6.
 #define BLE_Command_1			"AT+BLEPOWERLEVEL=0\n"
-// Step 5
-//#define BLE_Command_3			"AT+GAPINTERVALS=20,150,100,30\n"
-// Step 6
 #define BLE_Command_3			"AT+GAPINTERVALS=20,100,250,30\n"
-
-// Min Conn Interval,Max Conn Interval,Adv Interval,Adv Timeout (in milliseconds)
-//#define BLE_Command_3			"AT+GAPINTERVALS=20,100,100,30\n"	// Default
-//#define BLE_Command_3			"AT+GAPINTERVALS?\r"
-
 #define BLE_Command_4			"AT+FACTORYRESET\n"
 
-// With my custom settings, the average current is 1.59mA when disconnected and 2.09mA
-// when connected.
-
-// The average current when the Max Conn Interval is 150ms is 1.59mA when disconnected
-// and 2.10mA when connected. My settings improve the average current by 0mA when
-// disconnected and by 0.01mA when connected.
-
-// The average current when the Max Adv Interval is 250ms is 1.79mA when disconnected
-// and 2.10mA when connected. My settings improve the average current by 0.20mA when
-// disconnected and by 0.01mA when connected.
 
 #if Debug
 Serial pc(USBTX, USBRX);
@@ -107,6 +82,7 @@ Serial pc(USBTX, USBRX);
 
 void GPIO_Initialize(void);
 void moveInterruptVectorToRam(void);
+void printData(void);
 void LETIMER_Initialize(void);
 void BSP_TraceSwoSetup(void);
 
@@ -166,6 +142,28 @@ void moveInterruptVectorToRam(void)
 }
 
 /**************************************************************************//**
+ * @brief Prepares the data transmit data for the LEUART
+ * @verbatim printData(void); @endverbatim
+ *****************************************************************************/
+void printData(void)
+{
+	uint8_t tx_buf[50] = {0};
+	uint32_t tx_size = 0;
+
+	// BME280 data
+	tx_size = sprintf((char *) tx_buf, "Temperature: %d.%d C\r\nPressure: %d.%d inHg\r\nHumidity: %d.%d \%\r\n",
+			BME280_Get_Temp() / 100, abs(BME280_Get_Temp() % 100), BME280_Get_Pres() / 100, BME280_Get_Pres() % 100,
+			BME280_Get_Humidity() / 10, BME280_Get_Humidity() % 10);
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
+
+	// Accelerometer data
+	// TODO
+
+	// Magnetometer data
+	// TODO
+}
+
+/**************************************************************************//**
  * @brief Initializes LETIMER to run off of the ULFRCO clock.
  * @verbatim LETIMER_Initialize(void); @endverbatim
  *****************************************************************************/
@@ -197,63 +195,32 @@ void LETIMER_Initialize(void)
 }
 
 /**************************************************************************//**
- * @brief Converts the Leopard Gecko internal temperature sensor ADC values into
- * degrees C.
- * @verbatim convertToCelsius(void); @endverbatim
- *****************************************************************************/
-float convertToCelsius(int16_t adcSample)
-{
-	float temp;
-	// Factory calibration temperature from device information page.
-	float cal_temp_0 = (float) ((DEVINFO->CAL & _DEVINFO_CAL_TEMP_MASK)
-			>> _DEVINFO_CAL_TEMP_SHIFT);
-	float cal_value_0 = (float) ((DEVINFO->ADC0CAL2 & _DEVINFO_ADC0CAL2_TEMP1V25_MASK)
-			>> _DEVINFO_ADC0CAL2_TEMP1V25_SHIFT);
-
-	// Temperature gradient (from datasheet)
-	float t_grad = -6.27;
-
-	temp = (cal_temp_0 - ((cal_value_0 - adcSample) / t_grad));
-	return temp;
-}
-
-/**************************************************************************//**
- * @brief Prints the last measured temperature to serial.
- * @verbatim returnTemperature(void); @endverbatim
- *****************************************************************************/
-void returnTemperature(void)
-{
-	uint8_t temp_buf[15];
-	uint32_t transfer_size = sprintf((char *) temp_buf, "%d.%dC\n\r", current_temp / DEG_C_TO_TENTHS_C, abs(current_temp % DEG_C_TO_TENTHS_C));
-
-	// Set the last item in the transmit buffer to a null char so it knows when to stop transmitting
-	temp_buf[transfer_size] = '\0';
-
-	LEUART_Put_TX_Buffer(temp_buf, transfer_size + 1);
-	LEUART_TX_Buffer();
-}
-
-/**************************************************************************//**
  * @brief LETIMER0 IRQ Handler
  * @verbatim LETIMER0_IRQHandler(void); @endverbatim
  *****************************************************************************/
 void LETIMER0_IRQHandler(void)
 {
 	uint32_t intflags = LETIMER_IntGet(LETIMER0);
-	static bool first_int = false;
+	static bool first_init = false;
 
 	LETIMER_IntClear(LETIMER0, intflags);
 	if (intflags & LETIMER_IF_UF) {
 		// Since there will be left-over data received from the LEUART after programming the
 		// Bluefruit, the RX channel needs to be reset. So, on the first interrupt, clear
 		// the RX DMA channel.
-		if (!first_int) {
+		if (!first_init) {
 			LEUART_Reset_RX_Buffer();
-			first_int = true;
+			first_init = true;
 		}
 
-		ADC_Restart();
-		blockSleepMode(EM1);
+		// Read the environmental data from the BME280
+		BME280_Read_All();
+
+		printData();
+		LEUART_TX_Buffer();
+
+		// Prepare for the next sample
+		BME280_Set_Mode(BME280_MODE_FORCED);
 	}
 }
 
@@ -310,6 +277,13 @@ void BSP_TraceSwoSetup(void)
 	ITM->TER |= (1UL << 0);
 }
 
+void wait_ticks(uint32_t ticks)
+{
+	uint32_t i = 0;
+	while (i++ <= ticks)
+	{ }
+}
+
 /**************************************************************************//**
  * @brief  Main function
  *****************************************************************************/
@@ -329,7 +303,7 @@ int main(void)
 	GPIO_Initialize();
 	LETIMER_Initialize();
 	DMA_Initialize();
-	ADC_Initialize();
+	//ADC_Initialize();
 	LEUART_Initialize();
 
 	I2C_Initialize();
@@ -343,12 +317,12 @@ int main(void)
 	// Place the device into CMD mode
 	// Subtract 1 to account for the null character the compiler places at the end of each string
 	LEUART_Put_TX_Buffer((uint8_t *) Bluefruit_Mode_Change, sizeof(Bluefruit_Mode_Change));
-	LEUART_TX_Wait(sizeof(Bluefruit_Mode_Change) - 1);
+	LEUART_TX_Wait();
 
 #if BLE_Factory_Reset
 	// For when you've jacked everything up
 	LEUART_Put_TX_Buffer((uint8_t *) BLE_Command_4, sizeof(BLE_Command_4));
-	LEUART_TX_Wait(sizeof(BLE_Command_4) - 1);
+	LEUART_TX_Wait();
 #else
 	// Set the TX power
 	//LEUART_Put_TX_Buffer((uint8_t *) BLE_Command_1, sizeof(BLE_Command_1));
@@ -356,16 +330,16 @@ int main(void)
 
 	// Set the hardware LED state
 	LEUART_Put_TX_Buffer((uint8_t *) BLE_Command_2, sizeof(BLE_Command_2));
-	LEUART_TX_Wait(sizeof(BLE_Command_2) - 1);
+	LEUART_TX_Wait();
 
 	// Set the GAP intervals
 	//LEUART_Put_TX_Buffer((uint8_t *) BLE_Command_3, sizeof(BLE_Command_3));
-	//LEUART_TX_Wait(sizeof(BLE_Command_3) - 1);
+	//LEUART_TX_Wait();
 #endif
 
 	// Back to UART mode
 	LEUART_Put_TX_Buffer((uint8_t *) Bluefruit_Mode_Change, sizeof(Bluefruit_Mode_Change));
-	LEUART_TX_Wait(sizeof(Bluefruit_Mode_Change) - 1);
+	LEUART_TX_Wait();
 
 	LEUART_Reset_RX_Buffer();
 #endif
