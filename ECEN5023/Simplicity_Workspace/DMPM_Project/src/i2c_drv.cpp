@@ -104,7 +104,6 @@ I2C_TransferReturn_TypeDef I2C_Write_Polling(uint8_t slave_addr, uint16_t reg_ad
 {
 	I2C_TransferSeq_TypeDef seq;
 	uint8_t *reg_ptr;
-	uint32_t timeout_ticks = 0;
 
 	seq.addr = slave_addr;
 	seq.flags = I2C_FLAG_WRITE_WRITE;
@@ -135,11 +134,9 @@ I2C_TransferReturn_TypeDef I2C_Read_Polling(uint8_t slave_addr, uint16_t reg_add
 {
 	I2C_TransferSeq_TypeDef seq;
 	uint8_t *reg_ptr;
-	uint32_t timeout_ticks = 0;
 
 	seq.addr = slave_addr;
 	seq.flags = I2C_FLAG_WRITE_READ;
-	//seq.flags = I2C_FLAG_READ;
 
 	// Make sure the register address is set correctly, if it is a 16-bit or 8-bit register
 	reg_ptr = (uint8_t *) &reg_addr;

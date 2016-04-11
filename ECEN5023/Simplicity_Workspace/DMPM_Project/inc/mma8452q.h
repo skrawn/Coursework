@@ -1,6 +1,6 @@
 /**************************************************************************//**
- * @file flash.cpp
- * @brief Flash and EEPROM emulation driver
+ * @file mma8452q.h
+ * @brief Xtrinsic MMA8452Q 3-axis accelerometer driver
  * @author Sean Donohue
  ******************************************************************************
  * @section License
@@ -31,44 +31,11 @@
  *
  *******************************************************************************/
 
-#ifndef FLASH_H_
-#define FLASH_H_
 
-#include "mbed.h"
+#ifndef MMA8452Q_H_
+#define MMA8452Q_H_
 
-typedef struct {
-	int16_t XAxisAlarm;
-	int16_t YAxisAlarm;
-	int16_t ZAxisAlarm;
+void MMA8452Q_Init(void);
+void MMA8452Q_Realign(void);
 
-	int16_t UpperTempAlarm;
-	int16_t LowerTempAlarm;
-
-	uint16_t UpperPressureAlarm;
-	uint16_t LowerPressureAlarm;
-
-	uint16_t UpperHumidityAlarm;
-	uint16_t LowerHumidityAlarm;
-
-	int8_t XAxisOffset;
-	int8_t YAxisOffset;
-	int8_t ZAxisOffset;
-} EEPROM_Data_t;
-
-extern EEPROM_Data_t EEPROM_Data;
-
-void Flash_Init(void);
-void Flash_Update_XAxisAlarm(int16_t new_val);
-void Flash_Update_YAxisAlarm(int16_t new_val);
-void Flash_Update_ZAxisAlarm(int16_t new_val);
-void Flash_Update_UpperTempAlarm(int16_t new_val);
-void Flash_Update_LowerTempAlarm(int16_t new_val);
-void Flash_Update_UpperPresAlarm(uint16_t new_val);
-void Flash_Update_LowerPresAlarm(uint16_t new_val);
-void Flash_Update_UpperHumAlarm(uint16_t new_val);
-void Flash_Update_LowerHumAlarm(uint16_t new_val);
-void Flash_Update_XAxisOffset(int8_t new_val);
-void Flash_Update_YAxisOffset(int8_t new_val);
-void Flash_Update_ZAxisOffset(int8_t new_val);
-
-#endif /* FLASH_H_ */
+#endif /* MMA8452Q_H_ */

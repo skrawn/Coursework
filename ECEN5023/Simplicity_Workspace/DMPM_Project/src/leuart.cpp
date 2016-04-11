@@ -130,6 +130,7 @@ void LEUART_Initialize(void)
 
 	// Finally, enable LEUART0
 	LEUART_Init(LEUART0, &LEUART_InitVal);
+	LEUART0->CMD |= LEUART_CMD_TXDIS;
 
 	// Allow RXs to wake the DMA controller up when in EM2
 	LEUART0->CTRL |= LEUART_CTRL_RXDMAWU;
@@ -218,24 +219,30 @@ void LEUART_TX_DMA_Done_CB(unsigned int channel, bool primary, void *user)
  *****************************************************************************/
 void LEUART_TX_Buffer(void)
 {
-	// Enable the transmitter
-	LEUART0->CMD |= LEUART_CMD_TXEN;
+	// If a transfer is already active, do not do anything. DMA or the LEUART
+	// interrupt handler will automatically transmit the active buffer when the
+	// transfer buffer finishes.
+	if (!LEUART_TX_Active())
+	{
+		// Enable the transmitter
+		LEUART0->CMD |= LEUART_CMD_TXEN;
 
-	// Enable TX DMA wakeup
-	LEUART0->CTRL |= LEUART_CTRL_TXDMAWU;
+		// Enable TX DMA wakeup
+		LEUART0->CTRL |= LEUART_CTRL_TXDMAWU;
 
-	// Wait for any pending previous write operation to have been completed
-	// in low frequency domain
-	while (LEUART0->SYNCBUSY & (LEUART_SYNCBUSY_TXDATA | LEUART_SYNCBUSY_CMD | LEUART_SYNCBUSY_CTRL));
-	DMA_ActivateBasic(LEUART_TX_DMA_CH, true, false, (void *) &LEUART0->TXDATA,
-			LEUART_TX_Buf[active_buf], active_buf_empty_idx);
+		// Wait for any pending previous write operation to have been completed
+		// in low frequency domain
+		while (LEUART0->SYNCBUSY & (LEUART_SYNCBUSY_TXDATA | LEUART_SYNCBUSY_CMD | LEUART_SYNCBUSY_CTRL));
+		DMA_ActivateBasic(LEUART_TX_DMA_CH, true, false, (void *) &LEUART0->TXDATA,
+				LEUART_TX_Buf[active_buf], active_buf_empty_idx);
 
-	// Update the active buffer
-	if (active_buf)
-		active_buf = 0;
-	else
-		active_buf = 1;
-	active_buf_empty_idx = 0;
+		// Update the active buffer
+		if (active_buf)
+			active_buf = 0;
+		else
+			active_buf = 1;
+		active_buf_empty_idx = 0;
+	}
 }
 
 /**************************************************************************//**

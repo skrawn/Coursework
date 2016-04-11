@@ -47,6 +47,7 @@
 #include "i2c_drv.h"
 #include "leuart.h"
 #include "mbed.h"
+#include "mma8452q.h"
 #include "sleepmodes.h"
 
 #define VECTOR_SIZE (16+30)
@@ -171,24 +172,22 @@ void LETIMER_Initialize(void)
 {
 	LETIMER_Init_TypeDef LETIMER_InitValues = LETIMER_INIT_DEFAULT;
 
-	// Turn on ULFRCO clock and set it as the source of the LFA branch
-	CMU_OscillatorEnable(cmuOsc_ULFRCO, true, true);
-	CMU_ClockSelectSet(cmuClock_LFA, cmuSelect_ULFRCO);
-
 	// Enable the clock to the LETIMER0
 	CMU_ClockEnable(cmuClock_LETIMER0, true);
 
 	// Initialize LETIMER
 	LETIMER_InitValues.enable = false;
 	LETIMER_InitValues.comp0Top = true;
+	LETIMER_InitValues.repMode = letimerRepeatOneshot;
 
-	LETIMER_CompareSet(LETIMER0, 0, (SAMPLE_TIMER_PERIOD * ULFRCO_FREQ) / 1000);
+	LETIMER_CompareSet(LETIMER0, 0, (SAMPLE_TIMER_PERIOD * LFXO_FREQ) / 3000);
+	LETIMER_RepeatSet(LETIMER0, 0, 3);
 
 	// Pre-load CNT
 	LETIMER0->CNT = LETIMER_CompareGet(LETIMER0, 0);
 
 	// Enable underflow interrupt
-	LETIMER_IntEnable(LETIMER0, LETIMER_IEN_UF);
+	LETIMER_IntEnable(LETIMER0, LETIMER_IEN_REP0);
 	NVIC_EnableIRQ(LETIMER0_IRQn);
 
 	LETIMER_Init(LETIMER0, &LETIMER_InitValues);
@@ -204,7 +203,12 @@ void LETIMER0_IRQHandler(void)
 	static bool first_init = false;
 
 	LETIMER_IntClear(LETIMER0, intflags);
-	if (intflags & LETIMER_IF_UF) {
+	//if (intflags & LETIMER_IF_UF) {
+	if (intflags & LETIMER_IF_REP0) {
+		// Reload the REP0 register and restart the timer
+		LETIMER_RepeatSet(LETIMER0, 0, 3);
+		LETIMER_Enable(LETIMER0, true);
+
 		// Since there will be left-over data received from the LEUART after programming the
 		// Bluefruit, the RX channel needs to be reset. So, on the first interrupt, clear
 		// the RX DMA channel.
@@ -303,12 +307,12 @@ int main(void)
 	GPIO_Initialize();
 	LETIMER_Initialize();
 	DMA_Initialize();
-	//ADC_Initialize();
 	LEUART_Initialize();
+	Flash_Init();
 
 	I2C_Initialize();
 	BME280_Init();
-	Flash_Init();
+	MMA8452Q_Init();
 
 #if BLE_Program
 	// Disable the RX DMA channel
