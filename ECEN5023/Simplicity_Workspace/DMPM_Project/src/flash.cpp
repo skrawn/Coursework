@@ -43,9 +43,9 @@ EE_Variable_TypeDef FirstInit, XAxisAlarm, YAxisAlarm, ZAxisAlarm, UpperTempAlar
 #define FIRST_INIT_VAL		0xBEEF
 #define NUM_EEPROM_PAGES	4	// Uses approximately 2kB of flash
 
-#define DEFAULT_XAXISALARM			500	//5.00g
-#define DEFAULT_YAXISALARM			500	//5.00g
-#define DEFAULT_ZAXISALARM			500	//5.00g
+#define DEFAULT_XAXISALARM			200		//2.00g
+#define DEFAULT_YAXISALARM			200		//2.00g
+#define DEFAULT_ZAXISALARM			200		//2.00g
 
 #define DEFAULT_XAXISOFFSET			0
 #define DEFAULT_YAXISOFFSET			0

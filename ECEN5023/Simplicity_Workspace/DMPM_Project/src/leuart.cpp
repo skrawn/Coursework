@@ -234,7 +234,7 @@ void LEUART_TX_Buffer(void)
 		// in low frequency domain
 		while (LEUART0->SYNCBUSY & (LEUART_SYNCBUSY_TXDATA | LEUART_SYNCBUSY_CMD | LEUART_SYNCBUSY_CTRL));
 		DMA_ActivateBasic(LEUART_TX_DMA_CH, true, false, (void *) &LEUART0->TXDATA,
-				LEUART_TX_Buf[active_buf], active_buf_empty_idx);
+				LEUART_TX_Buf[active_buf], active_buf_empty_idx - 1);
 
 		// Update the active buffer
 		if (active_buf)
