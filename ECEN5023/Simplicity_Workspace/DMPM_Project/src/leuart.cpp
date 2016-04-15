@@ -293,6 +293,11 @@ bool LEUART_TX_Active(void)
 	return (LEUART0->STATUS & LEUART_STATUS_TXENS);
 }
 
+uint8_t LEUART_GetActiveBuffer(void)
+{
+	return active_buf;
+}
+
 /**************************************************************************//**
  * @brief Puts the specified data into the TX buffer.
  * @verbatim LEUART_Put_TX_Buffer(uint8_t *data, uint32_t length);

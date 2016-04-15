@@ -36,6 +36,11 @@
 #define MMA8452Q_H_
 
 void MMA8452Q_Init(void);
+void MMA8452Q_ReadAll(void);
+int16_t MMA8452Q_GetXData(void);
+int16_t MMA8452Q_GetYData(void);
+int16_t MMA8452Q_GetZData(void);
+uint8_t MMA8452Q_GetPulseIntStatus(void);
 void MMA8452Q_Realign(void);
 
 #endif /* MMA8452Q_H_ */

@@ -108,6 +108,9 @@
 #define PULSE_THS_CONV_NUM		10		// Converts the user data in 0.01g units
 #define PULSE_THS_CONV_DEN		63		// to the threshold register units of 0.063g
 
+#define REG_TO_READ_NUM			1		// Converts the 0.002g units to 0.01g units
+#define REG_TO_READ_DEN			5
+
 #define PULSE_SRC_AXZ			0x40
 #define PULSE_SRC_AXY			0x20
 #define PULSE_SRC_AXX			0x10
@@ -118,6 +121,10 @@
 uint8_t offset_x = 0;
 uint8_t offset_y = 0;
 uint8_t offset_z = 0;
+
+int16_t x_axis_data = 0;
+int16_t y_axis_data = 0;
+int16_t z_axis_data = 0;
 
 void MMA8452Q_Init(void)
 {
@@ -132,6 +139,19 @@ void MMA8452Q_Init(void)
 
 	// Check the device ID first
 	I2C_Read_Polling(MMA8452Q_SLAVE_ADDR, REG_WHO_AM_I, 1, &reg, 1);
+
+	// Not sure why, but sometime I can't talk to the accelerometer on the first
+	// try. Just keep trying.
+	if (reg != 0x2A) {
+		while (reg != 0x2A) {
+			I2C_Read_Polling(MMA8452Q_SLAVE_ADDR, REG_WHO_AM_I, 1, &reg, 1);
+		}
+	}
+
+	// Place device into standby mode
+	I2C_Read_Polling(MMA8452Q_SLAVE_ADDR, REG_CTRL_REG1, 1, &reg, 1);
+	reg &= ~(0x1);
+	I2C_Write_Polling(MMA8452Q_SLAVE_ADDR, REG_CTRL_REG1, 1, &reg, 1);
 
 	// Setup for 12.5Hz ODR, Low Noise = 1, OSR = 4, 4g mode gives a current
 	// draw of 8uA (from Freescale AN4075)
@@ -191,8 +211,10 @@ void MMA8452Q_Init(void)
 
 	reg = 0x00 |
 			(0 << 5) |	// Bypass HPF for the pulse processing
-			(1 << 4) |	// Low pass filtered enable for pulse processing
+			//(1 << 4) |	// Low pass filtered enable for pulse processing
+			(0 << 4) |	// Low pass filtered enable for pulse processing
 			(0);		// High pass filter cutoff = 0.5Hz
+	I2C_Write_Polling(MMA8452Q_SLAVE_ADDR, REG_HP_FILTER_CUTOFF, 1, &reg, 1);
 
 	// Pulse window time: in LPLN mode with ODR = 12.5Hz, each count is 80ms. Set the
 	// window for 240ms?
@@ -219,10 +241,14 @@ void MMA8452Q_Init(void)
 			(1); 		// Enable X axis single pulse detection
 	I2C_Write_Polling(MMA8452Q_SLAVE_ADDR, REG_PULSE_CFG, 1, &reg, 1);
 
+	MMA8452Q_GetPulseIntStatus();
+
 	// Set the data rate and put the accelerometer into active mode
 	reg = 0x00 |
 			(1 << 6) |	// Autosleep data rate = 12.5Hz
+			//(0 << 6) |	// Autosleep data rate = 50Hz
 			(5 << 3) |	// Output data rate = 12.5Hz
+			//(0 << 3) |	// Output data rate = 800Hz
 			(1 << 2) |	// Low noise mode enabled
 			(0 << 1) |	// Normal read mode
 			(1);		// Active mode
@@ -230,7 +256,64 @@ void MMA8452Q_Init(void)
 
 	// Enable GPIO interrupts
 	GPIO_IntEnable(MMA8452Q_INT1_Pin | MMA8452Q_INT2_Pin);
+	NVIC_EnableIRQ(GPIO_ODD_IRQn);
+	NVIC_EnableIRQ(GPIO_EVEN_IRQn);
+}
 
+void MMA8452Q_ReadAll(void)
+{
+	uint8_t xyz_data[6] = {0};
+	int16_t x_data = 0, y_data = 0, z_data = 0;
+
+	I2C_Read_Polling(MMA8452Q_SLAVE_ADDR, REG_OUT_X_MSB, 1, xyz_data, 6);
+	x_data = (((int16_t) xyz_data[0]) << 4) | (((int16_t) (xyz_data[1] & 0xF0)) >> 4);
+	y_data = (((int16_t) xyz_data[2]) << 4) | (((int16_t) (xyz_data[3] & 0xF0)) >> 4);
+	z_data = (((int16_t) xyz_data[4]) << 4) | (((int16_t) (xyz_data[5] & 0xF0)) >> 4);
+
+	// Get the sign right
+	if (xyz_data[0] > 0x7F)
+		x_data -= 0x1000;
+
+	if (xyz_data[2] > 0x7F)
+		y_data -= 0x1000;
+
+	if (xyz_data[4] > 0x7F)
+		z_data -= 0x1000;
+
+	// Adjust data for the project
+	x_data = x_data * REG_TO_READ_NUM / REG_TO_READ_DEN;
+	y_data = y_data * REG_TO_READ_NUM / REG_TO_READ_DEN;
+	z_data = z_data * REG_TO_READ_NUM / REG_TO_READ_DEN;
+
+	// Positive board x-axis = -y-axis
+	// Positive board y-axis = x-axis
+	x_axis_data = -y_data;
+	y_axis_data = x_data;
+	z_axis_data = z_data;
+}
+
+int16_t MMA8452Q_GetXData(void)
+{
+	return x_axis_data;
+}
+
+int16_t MMA8452Q_GetYData(void)
+{
+	return y_axis_data;
+}
+
+int16_t MMA8452Q_GetZData(void)
+{
+	return z_axis_data;
+}
+
+uint8_t MMA8452Q_GetPulseIntStatus(void)
+{
+	uint8_t reg;
+
+	I2C_Read_Polling(MMA8452Q_SLAVE_ADDR, REG_PULSE_SRC, 1, &reg, 1);
+
+	return reg;
 }
 
 void MMA8452Q_Realign(void)
@@ -243,6 +326,7 @@ void MMA8452Q_Realign(void)
 	I2C_Read_Polling(MMA8452Q_SLAVE_ADDR, REG_STATUS, 1, &status, 1);
 	while ((status & 0x7) != 0x7)
 	{
+
 		I2C_Read_Polling(MMA8452Q_SLAVE_ADDR, REG_STATUS, 1, &status, 1);
 	}
 
@@ -254,6 +338,16 @@ void MMA8452Q_Realign(void)
 	x_data = (((int16_t) xyz_data[0]) << 4) | (((int16_t) (xyz_data[1] & 0xF0)) >> 4);
 	y_data = (((int16_t) xyz_data[2]) << 4) | (((int16_t) (xyz_data[3] & 0xF0)) >> 4);
 	z_data = (((int16_t) xyz_data[4]) << 4) | (((int16_t) (xyz_data[5] & 0xF0)) >> 4);
+
+	// Get the sign right
+	if (xyz_data[0] > 0x7F)
+		x_data -= 0x1000;
+
+	if (xyz_data[2] > 0x7F)
+		y_data -= 0x1000;
+
+	if (xyz_data[4] > 0x7F)
+		z_data -= 0x1000;
 
 	// Switch back to standby
 	I2C_Read_Polling(MMA8452Q_SLAVE_ADDR, REG_CTRL_REG1, 1, &status, 1);
@@ -294,7 +388,7 @@ void GPIO_IRQHandler(void)
 	{
 		// Pulse detected
 		// Read the pulse source register
-		I2C_Read_Polling(MMA8452Q_SLAVE_ADDR, REG_PULSE_SRC, 1, &reg, 1);
+		reg = MMA8452Q_GetPulseIntStatus();
 
 		if (reg & PULSE_SRC_AXZ)
 		{

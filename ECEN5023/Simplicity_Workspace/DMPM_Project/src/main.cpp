@@ -152,13 +152,16 @@ void printData(void)
 	uint32_t tx_size = 0;
 
 	// BME280 data
-	tx_size = sprintf((char *) tx_buf, "Temperature: %d.%d C\r\nPressure: %d.%d inHg\r\nHumidity: %d.%d %%\r\n",
+	/*tx_size = sprintf((char *) tx_buf, "Temperature: %d.%d C\r\nPressure: %d.%d inHg\r\nHumidity: %d.%d %%\r\n",
 			BME280_Get_Temp() / 100, abs(BME280_Get_Temp() % 100), BME280_Get_Pres() / 100, BME280_Get_Pres() % 100,
 			BME280_Get_Humidity() / 10, BME280_Get_Humidity() % 10);
-	LEUART_Put_TX_Buffer(tx_buf, tx_size);
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);*/
 
 	// Accelerometer data
-	// TODO
+	tx_size = sprintf((char *) tx_buf, "X: %d.%02dg Y: %d.%02dg Z: %d.%02dg\r\n",
+				MMA8452Q_GetXData() / 100, abs(MMA8452Q_GetXData() % 100), MMA8452Q_GetYData() / 100, abs(MMA8452Q_GetYData() % 100),
+				MMA8452Q_GetZData() / 100, (MMA8452Q_GetZData() % 100));
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 
 	// Magnetometer data
 	// TODO
@@ -219,6 +222,13 @@ void LETIMER0_IRQHandler(void)
 
 		// Read the environmental data from the BME280
 		BME280_Read_All();
+
+		// Check the interrupt registers of the MMA8452Q
+		uint8_t reg = MMA8452Q_GetPulseIntStatus();
+		if (reg != 0)
+		{
+			while(1) {}
+		}
 
 		printData();
 		LEUART_TX_Buffer();
@@ -314,6 +324,8 @@ int main(void)
 	BME280_Init();
 	MMA8452Q_Init();
 
+	MMA8452Q_Realign();
+
 #if BLE_Program
 	// Disable the RX DMA channel
 	DMA_ChannelEnable(LEUART_RX_DMA_CH, false);
@@ -349,10 +361,34 @@ int main(void)
 #endif
 
 	// Start the LETIMER
-	LETIMER_Enable(LETIMER0, true);
+	//LETIMER_Enable(LETIMER0, true);
 
 	/* Infinite loop */
+	bool race_mode = true;
+	uint8_t active_buffer;
 	while (1) {
+		while (race_mode)
+		{
+			// See what the current active buffer is
+			active_buffer = LEUART_GetActiveBuffer();
+
+			MMA8452Q_ReadAll();
+			printData();
+
+			LEUART_TX_Wait();
+
+			// If the DMA channel is not active, transmit now
+			/*if (!LEUART_TX_Active())
+				LEUART_TX_Buffer();
+			else
+			{
+				// If the DMA channel is active, wait for the LEUART driver
+				// to start using the active buffer before continuing the
+				// loop.
+				while (LEUART_GetActiveBuffer() == active_buffer)
+				{}
+			}*/
+		}
 		sleep();
 	}
 }
