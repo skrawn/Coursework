@@ -1,6 +1,6 @@
 /**************************************************************************//**
- * @file i2c_drv.h
- * @brief I2C Driver
+ * @file hmc5883l.h
+ * @brief Honeywell 3-axis Digital Compass Driver
  * @author Sean Donohue
  ******************************************************************************
  * @section License
@@ -31,23 +31,15 @@
  *
  *******************************************************************************/
 
-#ifndef I2C_DRV_H_
-#define I2C_DRV_H_
+#ifndef HMC5883L_H_
+#define HMC5883L_H_
 
-#include "em_i2c.h"
-#include "mbed.h"
+void HMC5883L_Init(void);
+void HMC5883L_ReadAll(void);
+int16_t HMC5883L_GetXData(void);
+int16_t HMC5883L_GetYData(void);
+int16_t HMC5883L_GetZData(void);
+bool HMC5883L_SelfTest(void);
+bool HMC5883L_DataReady(void);
 
-#define I2C_DESC_BUF_LEN	4
-
-typedef struct {
-	I2C_TransferSeq_TypeDef seq;
-	uint16_t turn_around_time_ms;
-	void (*transfer_done_cb)(void);
-} I2C_Desc_t;
-
-void I2C_Initialize(void);
-I2C_TransferReturn_TypeDef I2C_Write_Polling(uint8_t slave_addr, uint16_t reg_addr, uint8_t reg_len, uint8_t *tx_data, uint16_t len);
-I2C_TransferReturn_TypeDef I2C_Read_Polling(uint8_t slave_addr, uint16_t reg_addr, uint8_t reg_len, uint8_t *rx_data, uint16_t len);
-I2C_TransferReturn_TypeDef I2C_Read_Reg_Polling(uint8_t slave_addr, uint8_t *reg_addr, uint8_t reg_len, uint8_t *rx_data, uint16_t len);
-
-#endif /* I2C_DRV_H_ */
+#endif /* HMC5883L_H_ */

@@ -160,6 +160,31 @@ I2C_TransferReturn_TypeDef I2C_Read_Polling(uint8_t slave_addr, uint16_t reg_add
 	return I2C_Status;
 }
 
+I2C_TransferReturn_TypeDef I2C_Read_Reg_Polling(uint8_t slave_addr, uint8_t *reg_addr, uint8_t reg_len, uint8_t *rx_data, uint16_t len)
+{
+	I2C_TransferSeq_TypeDef seq;
+	uint8_t *reg_ptr;
+
+	seq.addr = slave_addr;
+	seq.flags = I2C_FLAG_READ;
+
+	seq.buf[0].data = reg_addr;
+	seq.buf[0].len = reg_len;
+
+	seq.buf[1].len = 0;
+
+	I2C_Status = I2C_TransferInit(I2C1, &seq);
+
+	blockSleepMode(EM1);
+	while (I2C_Status == i2cTransferInProgress) {
+		//sleep();
+		I2C_Status = I2C_Transfer(I2C1);
+	}
+	unblockSleepMode(EM1);
+
+	return I2C_Status;
+}
+
 void I2C1_IRQHandler(void)
 {
 	uint32_t active_ints = I2C_IntGet(I2C1);

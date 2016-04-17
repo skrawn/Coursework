@@ -44,6 +44,7 @@
 #include "em_prs.h"
 #include "em_letimer.h"
 #include "flash.h"
+#include "hmc5883l.h"
 #include "i2c_drv.h"
 #include "leuart.h"
 #include "mbed.h"
@@ -158,13 +159,16 @@ void printData(void)
 	LEUART_Put_TX_Buffer(tx_buf, tx_size);*/
 
 	// Accelerometer data
-	tx_size = sprintf((char *) tx_buf, "X: %d.%02dg Y: %d.%02dg Z: %d.%02dg\r\n",
+	/*tx_size = sprintf((char *) tx_buf, "X: %d.%02dg Y: %d.%02dg Z: %d.%02dg\r\n",
 				MMA8452Q_GetXData() / 100, abs(MMA8452Q_GetXData() % 100), MMA8452Q_GetYData() / 100, abs(MMA8452Q_GetYData() % 100),
 				MMA8452Q_GetZData() / 100, (MMA8452Q_GetZData() % 100));
-	LEUART_Put_TX_Buffer(tx_buf, tx_size);
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);*/
 
 	// Magnetometer data
-	// TODO
+	tx_size = sprintf((char *) tx_buf, "X: %d.%03d G Y: %d.%03d G Z: %d.%03d G\r\n", HMC5883L_GetXData() / 1000,
+			abs(HMC5883L_GetXData() % 1000), HMC5883L_GetYData() / 1000, abs(HMC5883L_GetYData() % 1000),
+			HMC5883L_GetZData() / 1000, abs(HMC5883L_GetZData() % 1000));
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 }
 
 /**************************************************************************//**
@@ -321,10 +325,11 @@ int main(void)
 	Flash_Init();
 
 	I2C_Initialize();
-	BME280_Init();
-	MMA8452Q_Init();
+	//BME280_Init();
+	//MMA8452Q_Init();
+	HMC5883L_Init();
 
-	MMA8452Q_Realign();
+	//MMA8452Q_Realign();
 
 #if BLE_Program
 	// Disable the RX DMA channel
@@ -370,9 +375,11 @@ int main(void)
 		while (race_mode)
 		{
 			// See what the current active buffer is
-			active_buffer = LEUART_GetActiveBuffer();
+			//active_buffer = LEUART_GetActiveBuffer();
 
-			MMA8452Q_ReadAll();
+			//MMA8452Q_ReadAll();
+			while (!HMC5883L_DataReady()) {}
+			HMC5883L_ReadAll();
 			printData();
 
 			LEUART_TX_Wait();

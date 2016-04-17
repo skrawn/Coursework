@@ -243,6 +243,7 @@ void MMA8452Q_Init(void)
 
 	MMA8452Q_GetPulseIntStatus();
 
+	// TODO - Data rates above 50Hz are "overkill"
 	// Set the data rate and put the accelerometer into active mode
 	reg = 0x00 |
 			(1 << 6) |	// Autosleep data rate = 12.5Hz
