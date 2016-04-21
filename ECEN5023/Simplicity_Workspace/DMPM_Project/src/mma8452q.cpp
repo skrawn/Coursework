@@ -261,6 +261,14 @@ void MMA8452Q_Init(void)
 	NVIC_EnableIRQ(GPIO_EVEN_IRQn);
 }
 
+void MMA8452Q_Enable(bool enable)
+{
+	if (enable)
+		GPIO_PinModeSet(MMA8452Q_VCC_Port, MMA8452Q_VCC_Pin, MMA8452Q_VCC_Mode, 1);
+	else
+		GPIO_PinModeSet(MMA8452Q_VCC_Port, MMA8452Q_VCC_Pin, MMA8452Q_VCC_Mode, 0);
+}
+
 void MMA8452Q_ReadAll(void)
 {
 	uint8_t xyz_data[6] = {0};
@@ -373,17 +381,12 @@ void MMA8452Q_Realign(void)
 	Flash_Update_ZAxisOffset(z_offset);
 }
 
-void GPIO_IRQHandler(void)
+/* TODO - Use GPIO IRQ API to implement handlers
+ * void GPIO_ODD_IRQHandler(void)
 {
 	uint32_t intflags = GPIO_IntGet(), tx_size = 0;
 	uint8_t reg = 0, tx_buf[40];
 	GPIO_IntClear(intflags);
-
-	// Check the source of the interrupt
-	if (intflags & MMA8452Q_INT1_Pin)
-	{
-		// Transient detected
-	}
 
 	if (intflags & MMA8452Q_INT2_Pin)
 	{
@@ -430,3 +433,15 @@ void GPIO_IRQHandler(void)
 		LEUART_TX_Buffer();
 	}
 }
+
+void GPIO_EVEN_IRQHandler(void)
+{
+	uint32_t intflags = GPIO_IntGet();
+	GPIO_IntClear(intflags);
+
+	// Check the source of the interrupt
+	if (intflags & MMA8452Q_INT1_Pin)
+	{
+		// Transient detected
+	}
+}*/

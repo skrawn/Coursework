@@ -1,6 +1,6 @@
 /**************************************************************************//**
- * @file hmc5883l.h
- * @brief Honeywell 3-axis Digital Compass Driver
+ * @file capsense.h
+ * @brief LESENSE Capacitive Touch Sense Driver
  * @author Sean Donohue
  ******************************************************************************
  * @section License
@@ -31,17 +31,9 @@
  *
  *******************************************************************************/
 
-#ifndef HMC5883L_H_
-#define HMC5883L_H_
+#ifndef CAPSENSE_H_
+#define CAPSENSE_H_
 
-void HMC5883L_Init(void);
-void HMC5883L_Enable(bool enable);
-void HMC5883L_ReadAll(void);
-int16_t HMC5883L_GetXData(void);
-int16_t HMC5883L_GetYData(void);
-int16_t HMC5883L_GetZData(void);
-uint16_t HMC5883L_GetHeading(void);
-bool HMC5883L_SelfTest(void);
-bool HMC5883L_DataReady(void);
+void Capsense_Init(void);
 
-#endif /* HMC5883L_H_ */
+#endif /* CAPSENSE_H_ */

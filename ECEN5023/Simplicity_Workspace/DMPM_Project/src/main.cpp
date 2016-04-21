@@ -36,6 +36,7 @@
 #include <math.h>
 #include "adc.h"
 #include "bme280.h"
+#include "capsense.h"
 #include "config.h"
 #include "dma.h"
 #include "em_chip.h"
@@ -50,6 +51,8 @@
 #include "mbed.h"
 #include "mma8452q.h"
 #include "sleepmodes.h"
+
+#define Debug	(0)
 
 #define VECTOR_SIZE (16+30)
 uint32_t vectorTable[VECTOR_SIZE] __attribute__ ((aligned(256)));
@@ -77,11 +80,6 @@ uint32_t vectorTable[VECTOR_SIZE] __attribute__ ((aligned(256)));
 #define BLE_Command_3			"AT+GAPINTERVALS=20,100,250,30\n"
 #define BLE_Command_4			"AT+FACTORYRESET\n"
 
-
-#if Debug
-Serial pc(USBTX, USBRX);
-#endif
-
 void GPIO_Initialize(void);
 void moveInterruptVectorToRam(void);
 void printData(void);
@@ -98,7 +96,7 @@ void GPIO_Initialize(void)
 	CMU_ClockEnable(cmuClock_GPIO, true);
 
 	// Drive the Bluefruit CTS pin low
-	GPIO_DriveModeSet(BluefruitCTSPort, BluefruitCTSDrive);
+	//GPIO_DriveModeSet(BluefruitCTSPort, BluefruitCTSDrive);
 	GPIO_PinModeSet(BluefruitCTSPort, BluefruitCTSPin, BluefruitCTSMode, 0);
 }
 
@@ -165,9 +163,10 @@ void printData(void)
 	LEUART_Put_TX_Buffer(tx_buf, tx_size);*/
 
 	// Magnetometer data
-	tx_size = sprintf((char *) tx_buf, "X: %d.%03d G Y: %d.%03d G Z: %d.%03d G\r\n", HMC5883L_GetXData() / 1000,
+	/*tx_size = sprintf((char *) tx_buf, "X: %d.%03d G Y: %d.%03d G Z: %d.%03d G\r\n", HMC5883L_GetXData() / 1000,
 			abs(HMC5883L_GetXData() % 1000), HMC5883L_GetYData() / 1000, abs(HMC5883L_GetYData() % 1000),
-			HMC5883L_GetZData() / 1000, abs(HMC5883L_GetZData() % 1000));
+			HMC5883L_GetZData() / 1000, abs(HMC5883L_GetZData() % 1000));*/
+	tx_size = sprintf((char *) tx_buf, "Heading: %d\r\n", HMC5883L_GetHeading());
 	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 }
 
@@ -295,10 +294,19 @@ void BSP_TraceSwoSetup(void)
 	ITM->TER |= (1UL << 0);
 }
 
-void wait_ticks(uint32_t ticks)
+void wait_ms(uint32_t time_ms)
 {
-	uint32_t i = 0;
-	while (i++ <= ticks)
+	// 1 millisecond is approximately 500 ticks.
+	// 8,589,934 is the largest number that can be used here (2^32/500)
+	volatile uint32_t i = 0;
+	uint32_t n_ticks;
+
+	if (time_ms > 8589934)
+		n_ticks = 8589934 * 500;
+	else
+		n_ticks = time_ms*500;
+
+	while (i++ <= n_ticks)
 	{ }
 }
 
@@ -319,10 +327,20 @@ int main(void)
 	Clock_Setup();
 	moveInterruptVectorToRam();
 	GPIO_Initialize();
+
 	LETIMER_Initialize();
 	DMA_Initialize();
 	LEUART_Initialize();
 	Flash_Init();
+	Capsense_Init();
+
+	// Enable the I2C devices before initializes the I2C bus. Wait 300ms for all
+	// 3 devices to finish initialization.
+	HMC5883L_Enable(true);
+	MMA8452Q_Enable(true);
+	BME280_Enable(true);
+
+	wait_ms(300);
 
 	I2C_Initialize();
 	//BME280_Init();
@@ -366,11 +384,10 @@ int main(void)
 #endif
 
 	// Start the LETIMER
-	//LETIMER_Enable(LETIMER0, true);
+	LETIMER_Enable(LETIMER0, true);
 
 	/* Infinite loop */
 	bool race_mode = true;
-	uint8_t active_buffer;
 	while (1) {
 		while (race_mode)
 		{
@@ -383,6 +400,7 @@ int main(void)
 			printData();
 
 			LEUART_TX_Wait();
+			wait_ms(200);
 
 			// If the DMA channel is not active, transmit now
 			/*if (!LEUART_TX_Active())

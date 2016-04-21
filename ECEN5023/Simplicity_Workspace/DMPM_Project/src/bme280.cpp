@@ -63,7 +63,7 @@ const uint8_t REG_CALIB[42] = {0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F, 0
 	0xF0};
 
 #define BME280_Enable_Port	gpioPortC
-#define BME280_Enable_Pin	1
+#define BME280_Enable_Pin	0
 #define BME280_Enable_Mode	gpioModePushPullDrive
 #define BME280_Enable_Drive	gpioDriveModeStandard
 
@@ -120,10 +120,6 @@ void BME280_Init(void)
 {
 	uint8_t osr;
 	uint16_t temp;
-
-	// Setup the pin for VCC
-	GPIO_DriveModeSet(BME280_Enable_Port, BME280_Enable_Drive);
-	GPIO_PinModeSet(BME280_Enable_Port, BME280_Enable_Pin, BME280_Enable_Mode, 1);
 
 	// Data ready input
 	GPIO_PinModeSet(BME280_DRDY_Port, BME280_DRDY_Pin, BME280_DRDY_Mode, 0);
@@ -252,10 +248,11 @@ uint32_t BME280_Get_Humidity(void)
  *****************************************************************************/
 void BME280_Enable(bool enable)
 {
+	// Setup the pin for VCC
 	if (enable)
-		GPIO_PinOutSet(BME280_Enable_Port, BME280_Enable_Pin);
+		GPIO_PinModeSet(BME280_Enable_Port, BME280_Enable_Pin, BME280_Enable_Mode, 1);
 	else
-		GPIO_PinOutClear(BME280_Enable_Port, BME280_Enable_Pin);
+		GPIO_PinModeSet(BME280_Enable_Port, BME280_Enable_Pin, BME280_Enable_Mode, 0);
 }
 
 /**************************************************************************//**
