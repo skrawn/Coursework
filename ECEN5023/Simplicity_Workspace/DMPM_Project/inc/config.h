@@ -55,7 +55,14 @@
 
 #define N_DMA_CH_IN_USE		3
 
+typedef enum {
+	DMPM_Mode_Low_Power = 0,
+	DMPM_Mode_Race
+} DMPM_Mode_t;
+
 float convertToCelsius(int16_t adcSample);
 void wait_ms(uint32_t time_ms);
+void setMode(DMPM_Mode_t new_mode);
+DMPM_Mode_t getMode(void);
 
 #endif /* CONFIG_H_ */

@@ -80,6 +80,8 @@ uint32_t vectorTable[VECTOR_SIZE] __attribute__ ((aligned(256)));
 #define BLE_Command_3			"AT+GAPINTERVALS=20,100,250,30\n"
 #define BLE_Command_4			"AT+FACTORYRESET\n"
 
+DMPM_Mode_t active_mode;
+
 void GPIO_Initialize(void);
 void moveInterruptVectorToRam(void);
 void printData(void);
@@ -151,16 +153,16 @@ void printData(void)
 	uint32_t tx_size = 0;
 
 	// BME280 data
-	/*tx_size = sprintf((char *) tx_buf, "Temperature: %d.%d C\r\nPressure: %d.%d inHg\r\nHumidity: %d.%d %%\r\n",
+	tx_size = sprintf((char *) tx_buf, "Temperature: %d.%d C\r\nPressure: %d.%d inHg\r\nHumidity: %d.%d %%\r\n",
 			BME280_Get_Temp() / 100, abs(BME280_Get_Temp() % 100), BME280_Get_Pres() / 100, BME280_Get_Pres() % 100,
 			BME280_Get_Humidity() / 10, BME280_Get_Humidity() % 10);
-	LEUART_Put_TX_Buffer(tx_buf, tx_size);*/
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 
 	// Accelerometer data
-	/*tx_size = sprintf((char *) tx_buf, "X: %d.%02dg Y: %d.%02dg Z: %d.%02dg\r\n",
+	tx_size = sprintf((char *) tx_buf, "X: %d.%02dg Y: %d.%02dg Z: %d.%02dg\r\n",
 				MMA8452Q_GetXData() / 100, abs(MMA8452Q_GetXData() % 100), MMA8452Q_GetYData() / 100, abs(MMA8452Q_GetYData() % 100),
 				MMA8452Q_GetZData() / 100, (MMA8452Q_GetZData() % 100));
-	LEUART_Put_TX_Buffer(tx_buf, tx_size);*/
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 
 	// Magnetometer data
 	/*tx_size = sprintf((char *) tx_buf, "X: %d.%03d G Y: %d.%03d G Z: %d.%03d G\r\n", HMC5883L_GetXData() / 1000,
@@ -223,15 +225,10 @@ void LETIMER0_IRQHandler(void)
 			first_init = true;
 		}
 
-		// Read the environmental data from the BME280
+		// Read all of the I2C sensors
 		BME280_Read_All();
-
-		// Check the interrupt registers of the MMA8452Q
-		uint8_t reg = MMA8452Q_GetPulseIntStatus();
-		if (reg != 0)
-		{
-			while(1) {}
-		}
+		HMC5883L_ReadAll();
+		MMA8452Q_ReadAll();
 
 		printData();
 		LEUART_TX_Buffer();
@@ -310,6 +307,16 @@ void wait_ms(uint32_t time_ms)
 	{ }
 }
 
+void setMode(DMPM_Mode_t new_mode)
+{
+	active_mode = new_mode;
+}
+
+DMPM_Mode_t getMode(void)
+{
+	return active_mode;
+}
+
 /**************************************************************************//**
  * @brief  Main function
  *****************************************************************************/
@@ -343,11 +350,13 @@ int main(void)
 	wait_ms(300);
 
 	I2C_Initialize();
-	//BME280_Init();
-	//MMA8452Q_Init();
+	BME280_Init();
+	MMA8452Q_Init();
 	HMC5883L_Init();
 
-	//MMA8452Q_Realign();
+	MMA8452Q_Realign();
+
+	active_mode = DMPM_Mode_Low_Power;
 
 #if BLE_Program
 	// Disable the RX DMA channel
@@ -387,9 +396,8 @@ int main(void)
 	LETIMER_Enable(LETIMER0, true);
 
 	/* Infinite loop */
-	bool race_mode = true;
 	while (1) {
-		while (race_mode)
+		while (active_mode == DMPM_Mode_Race)
 		{
 			// See what the current active buffer is
 			//active_buffer = LEUART_GetActiveBuffer();
@@ -400,7 +408,13 @@ int main(void)
 			printData();
 
 			LEUART_TX_Wait();
-			wait_ms(200);
+
+			// Delay is actually necessary. The ADAfruit app can't relay data
+			// as quickly to the app as it can be transmitted so there's no
+			// point in continuously printing the data if it's a second or two
+			// out of date. With the wait, the freshest data is sent and it
+			// is much more readable to the user.
+			wait_ms(500);
 
 			// If the DMA channel is not active, transmit now
 			/*if (!LEUART_TX_Active())

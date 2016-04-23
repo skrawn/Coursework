@@ -298,6 +298,15 @@ uint8_t LEUART_GetActiveBuffer(void)
 	return active_buf;
 }
 
+bool LEUART_TX_Buffer_Full(void)
+{
+	bool buf_full = true;
+	INT_Disable();
+	buf_full = (active_buf_empty_idx >= (LEUART_TX_DMA_BUF_SIZE - 1));
+	INT_Enable();
+	return buf_full;
+}
+
 /**************************************************************************//**
  * @brief Puts the specified data into the TX buffer.
  * @verbatim LEUART_Put_TX_Buffer(uint8_t *data, uint32_t length);
@@ -305,16 +314,16 @@ uint8_t LEUART_GetActiveBuffer(void)
  *****************************************************************************/
 void LEUART_Put_TX_Buffer(uint8_t *data, uint32_t length)
 {
+	// Disable interrupts while buffering
+	INT_Disable();
+
 	// Truncate the buffer is there is not enough room
 	if (length > (LEUART_TX_DMA_BUF_SIZE - active_buf_empty_idx))
 		length = (LEUART_TX_DMA_BUF_SIZE - active_buf_empty_idx);
 
-	// Disable interrupts while buffering
-	INT_Disable();
 	memcpy(&LEUART_TX_Buf[active_buf][active_buf_empty_idx], data, length);
-	INT_Enable();
-
 	active_buf_empty_idx += length;
+	INT_Enable();
 }
 
 /**************************************************************************//**
@@ -422,7 +431,7 @@ static void returnTemperature(void)
 	uint8_t tx_buf[40] = {0};
 	uint32_t tx_size;
 
-	tx_size = sprintf((char *) tx_buf, "%d.%dC\r\n", BME280_Get_Temp() / 10, abs(BME280_Get_Temp() % 10));
+	tx_size = sprintf((char *) tx_buf, "%l.%lC\r\n", BME280_Get_Temp() / 10, abs(BME280_Get_Temp() % 10));
 	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 	LEUART_TX_Buffer();
 }

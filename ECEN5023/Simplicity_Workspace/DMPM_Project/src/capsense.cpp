@@ -33,11 +33,13 @@
 
 
 #include "capsense.h"
+#include "config.h"
 #include "em_acmp.h"
 #include "em_cmu.h"
 #include "em_gpio.h"
 #include "em_lesense.h"
 #include "em_int.h"
+#include "leuart.h"
 
 #define Cap_Button_Port		gpioPortC
 #define Cap_Button_Mode 	gpioModeDisabled
@@ -175,14 +177,53 @@ void Capsense_Init(void)
 	}
 
 	// Set the calibration values
-	LESENSE_ChannelThresSet(Cap_Button_0_Pin, CAPSENSE_ACMP_VDD_SCALE, capsenseCalValues[0]);
-	LESENSE_ChannelThresSet(Cap_Button_1_Pin, CAPSENSE_ACMP_VDD_SCALE, capsenseCalValues[1]);
-	LESENSE_ChannelThresSet(Cap_Button_2_Pin, CAPSENSE_ACMP_VDD_SCALE, capsenseCalValues[2]);
-	LESENSE_ChannelThresSet(Cap_Button_3_Pin, CAPSENSE_ACMP_VDD_SCALE, capsenseCalValues[3]);
+	LESENSE_ChannelThresSet(Cap_Button_0_Pin, CAPSENSE_ACMP_VDD_SCALE, (capsenseCalValues[0] - 10));
+	LESENSE_ChannelThresSet(Cap_Button_1_Pin, CAPSENSE_ACMP_VDD_SCALE, (capsenseCalValues[1] - 10));
+	LESENSE_ChannelThresSet(Cap_Button_2_Pin, CAPSENSE_ACMP_VDD_SCALE, (capsenseCalValues[2] - 10));
+	LESENSE_ChannelThresSet(Cap_Button_3_Pin, CAPSENSE_ACMP_VDD_SCALE, (capsenseCalValues[3] - 10));
+
+	// Enable the interrupt handler - start in low power mode, so interrupt when the finger hits button 4.
+	LESENSE_IntEnable(LESENSE_IEN_CH11);
+	NVIC_EnableIRQ(LESENSE_IRQn);
 
 }
 
 void LESENSE_IRQHandler(void)
 {
+	// Clear the interrupt
+	uint32_t intflags = LESENSE_IntGet(), i, tx_size;
+	uint8_t mode_str[40];
+	LESENSE_IntClear(intflags);
 
+	// Read the results registers
+	for (i = 0; i < 4; i++)
+	{
+		capsenseCalValues[i] = LESENSE_ScanResultDataBufferGet(i) - CAPSENSE_SENSITIVITY_OFFSET;
+	}
+
+	if (getMode() == DMPM_Mode_Low_Power)
+	{
+		// In low power mode - find a swipe to the right ending at Button 3 and touching at least
+		// button 0, 1, or 2.
+		if ((intflags & LESENSE_IEN_CH11) && (intflags & (LESENSE_IEN_CH8 | LESENSE_IEN_CH9 | LESENSE_IEN_CH10)))
+		{
+			LESENSE_IntDisable(LESENSE_IEN_CH11);
+			LESENSE_IntEnable(LESENSE_IEN_CH8);
+			tx_size = sprintf((char *) mode_str, "\r\nSwitching to race mode!\r\n");
+			LEUART_Put_TX_Buffer(mode_str, tx_size);
+			setMode(DMPM_Mode_Race);
+		}
+	}
+	else
+	{
+		// In race mode - find a swipe to the left
+		if ((intflags & LESENSE_IEN_CH8) && (intflags & (LESENSE_IEN_CH11 | LESENSE_IEN_CH9 | LESENSE_IEN_CH10)))
+		{
+			LESENSE_IntDisable(LESENSE_IEN_CH8);
+			LESENSE_IntEnable(LESENSE_IEN_CH11);
+			tx_size = sprintf((char *) mode_str, "\r\nSwitching to low power mode!\r\n");
+			LEUART_Put_TX_Buffer(mode_str, tx_size);
+			setMode(DMPM_Mode_Low_Power);
+		}
+	}
 }

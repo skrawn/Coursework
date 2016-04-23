@@ -135,15 +135,6 @@ void HMC5883L_ReadAll(void)
 	int16_t x_data = 0, y_data = 0, z_data = 0;
 
 	I2C_Read_Polling(HMC5883L_SLAVE_ADDR, REG_DATA_X_MSB, 1, &xyz_data[0], 6);
-	/*I2C_Read_Polling(HMC5883L_SLAVE_ADDR, REG_DATA_X_MSB, 1, &xyz_data[0], 1);
-	I2C_Read_Polling(HMC5883L_SLAVE_ADDR, REG_DATA_X_LSB, 1, &xyz_data[1], 1);
-	I2C_Read_Polling(HMC5883L_SLAVE_ADDR, REG_DATA_Y_MSB, 1, &xyz_data[2], 1);
-	I2C_Read_Polling(HMC5883L_SLAVE_ADDR, REG_DATA_Y_LSB, 1, &xyz_data[3], 1);
-	I2C_Read_Polling(HMC5883L_SLAVE_ADDR, REG_DATA_Z_MSB, 1, &xyz_data[4], 1);
-	I2C_Read_Polling(HMC5883L_SLAVE_ADDR, REG_DATA_Z_LSB, 1, &xyz_data[5], 1);*/
-	//I2C_Read_Reg_Polling(HMC5883L_SLAVE_ADDR, xyz_data, 6, xyz_data, 0);
-	//I2C_Read_Reg_Polling(HMC5883L_SLAVE_ADDR, xyz_data, 6, xyz_data, 0);
-	//I2C_Read_Polling(HMC5883L_SLAVE_ADDR, xyz_data, 6, xyz_data, 0);
 
 	x_data = (((int16_t) xyz_data[0]) << 8) | ((int16_t) xyz_data[1]);
 	z_data = (((int16_t) xyz_data[2]) << 8) | ((int16_t) xyz_data[3]);

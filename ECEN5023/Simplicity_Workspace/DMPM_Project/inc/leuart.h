@@ -57,6 +57,7 @@ void LEUART_TX_Buffer(void);
 void LEUART_TX_Wait(void);
 bool LEUART_TX_Active(void);
 uint8_t LEUART_GetActiveBuffer(void);
+bool LEUART_TX_Buffer_Full(void);
 void LEUART_Put_TX_Buffer(uint8_t *data, uint32_t length);
 void LEUART_Reset_RX_Buffer(void);
 void LEUART_RX_DMA_Done_CB(unsigned int channel, bool primary, void *user);
