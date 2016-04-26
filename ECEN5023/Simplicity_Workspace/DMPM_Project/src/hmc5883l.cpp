@@ -102,8 +102,8 @@ void HMC5883L_Init(void)
 	reg = 0x00 |
 			//(0 << 5);	// Gain = 1370 LSB/Gauss - Resolution = 0.73 mG/LSB
 			//(5 << 5);	// Gain = 390 LSB/Gauss - Resolution = 2.56 mG/LSB
-			//(1 << 5);	// Gain = 1090 LSB/Gauss - Resolution = 0.92 mG/LSB
-			(4 << 5);	// Gain = 440 LSB/Gauss - Resolution = 2.27 mG/LSB
+			(1 << 5);	// Gain = 1090 LSB/Gauss - Resolution = 0.92 mG/LSB
+			//(4 << 5);	// Gain = 440 LSB/Gauss - Resolution = 2.27 mG/LSB
 			//(6 << 5);	// Gain = 330 LSB/Gauss - Resolution = 3.03 mG/LSB
 			//(7 << 5);	// Gain = 230 LSB/Gauss - Resolution = 4.35 mG/LSB
 	I2C_Write_Polling(HMC5883L_SLAVE_ADDR, REG_CONFIG_B, 1, &reg, 1);
@@ -156,8 +156,10 @@ void HMC5883L_ReadAll(void)
 	//x_compass_data = x_data * CONV_MG_NUM / CONV_MG_DEN;
 	//y_compass_data = y_data * CONV_MG_NUM / CONV_MG_DEN;
 	//z_compass_data = z_data * CONV_MG_NUM / CONV_MG_DEN;
-	x_double_data = ((double) x_data) * 2.27;
-	y_double_data = ((double) y_data) * 2.27;
+	//x_double_data = ((double) x_data) * 2.27;
+	//y_double_data = ((double) y_data) * 2.27;
+	x_double_data = ((double) x_data) * 0.92;
+	y_double_data = ((double) y_data) * 0.92;
 }
 
 int16_t HMC5883L_GetXData(void)
@@ -178,6 +180,8 @@ int16_t HMC5883L_GetZData(void)
 uint16_t HMC5883L_GetHeading(void)
 {
 	double heading = atan2((double) y_double_data, (double) x_double_data);
+	uint16_t heading_deg;
+
 	heading += declinationAngle;
 
 	// Correct for heading < 0 degrees and > 360 degrees
@@ -192,7 +196,15 @@ uint16_t HMC5883L_GetHeading(void)
 	}
 
 	// Convert to degrees
-	return (uint16_t) (heading * 180.0/M_PI);
+	heading_deg = (uint16_t) (heading * 180.0/M_PI);
+
+	// Correction: heading is always about 45 degrees off
+	if (heading_deg < 45)
+		heading_deg = 360 - (45 - heading_deg);
+	else
+		heading_deg -= 45;
+
+	return heading_deg;
 }
 
 bool HMC5883L_SelfTest(void)
@@ -254,8 +266,5 @@ bool HMC5883L_DataReady(void)
 {
 	uint8_t reg;
 
-	//I2C_Read_Polling(HMC5883L_SLAVE_ADDR, REG_DATA_STATUS, 1, &reg, 1);
-
 	return (bool) GPIO_PinInGet(HMC5883L_DRDY_Port, HMC5883L_DRDY_Pin);
-	//return (bool) (reg & 0x1);
 }

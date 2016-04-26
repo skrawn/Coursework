@@ -71,4 +71,49 @@ void Flash_Update_XAxisOffset(int8_t new_val);
 void Flash_Update_YAxisOffset(int8_t new_val);
 void Flash_Update_ZAxisOffset(int8_t new_val);
 
+__STATIC_INLINE int16_t Flash_Get_XAxisAlarm(void)
+{
+	return EEPROM_Data.XAxisAlarm;
+}
+
+__STATIC_INLINE int16_t Flash_Get_YAxisAlarm(void)
+{
+	return EEPROM_Data.YAxisAlarm;
+}
+
+__STATIC_INLINE int16_t Flash_Get_ZAxisAlarm(void)
+{
+	return EEPROM_Data.ZAxisAlarm;
+}
+
+__STATIC_INLINE int16_t Flash_Get_UpperTempAlarm(void)
+{
+	return EEPROM_Data.UpperTempAlarm;
+}
+
+__STATIC_INLINE int16_t Flash_Get_LowerTempAlarm(void)
+{
+	return EEPROM_Data.LowerTempAlarm;
+}
+
+__STATIC_INLINE uint16_t Flash_Get_UpperPressureAlarm(void)
+{
+	return EEPROM_Data.UpperPressureAlarm;
+}
+
+__STATIC_INLINE uint16_t Flash_Get_LowerPressureAlarm(void)
+{
+	return EEPROM_Data.LowerPressureAlarm;
+}
+
+__STATIC_INLINE uint16_t Flash_Get_UpperHumidityAlarm(void)
+{
+	return EEPROM_Data.UpperHumidityAlarm;
+}
+
+__STATIC_INLINE uint16_t Flash_Get_LowerHumidityAlarm(void)
+{
+	return EEPROM_Data.LowerHumidityAlarm;
+}
+
 #endif /* FLASH_H_ */

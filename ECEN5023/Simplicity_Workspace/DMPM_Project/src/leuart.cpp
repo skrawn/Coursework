@@ -40,8 +40,11 @@
 #include "em_gpio.h"
 #include "em_int.h"
 #include "em_leuart.h"
+#include "flash.h"
+#include "hmc5883l.h"
 #include "leuart.h"
 #include "mbed.h"
+#include "mma8452q.h"
 #include "sleepmodes.h"
 
 #define LEUART_LOOPBACK		false
@@ -83,11 +86,45 @@ typedef struct {
 } BT_Cmd_t;
 
 static void returnTemperature(void);
+static void returnHumidity(void);
+static void returnPressure(void);
+static void returnDirection(void);
+static void returnMaxX(void);
+static void returnMaxY(void);
+static void returnMaxZ(void);
+static void setXAlarm(void);
+static void setYAlarm(void);
+static void setZAlarm(void);
+static void setUTemp(void);
+static void setLTemp(void);
+static void setUPres(void);
+static void setLPres(void);
+static void setUHum(void);
+static void setLHum(void);
+static void changeMode(void);
+
+static uint16_t parse_float_string(void);
 
 // Commands
 const BT_Cmd_t CMD_TABLE[] = {
 	{"RetTemp\0", returnTemperature},
-	{"RetHum\0", 0},
+	{"RetHum\0", returnHumidity},
+	{"RetPres\0", returnPressure},
+	{"RetDir\0", returnDirection},
+	{"RetDir\0", returnDirection},
+	{"RetMaxX\0", returnMaxX},
+	{"RetMaxY\0", returnMaxY},
+	{"RetMaxZ\0", returnMaxZ},
+	{"SetXAlarm\0", setXAlarm},
+	{"SetYAlarm\0", setYAlarm},
+	{"SetZAlarm\0", setZAlarm},
+	{"SetUTemp\0", setUTemp},
+	{"SetLTemp\0", setLTemp},
+	{"SetUPres\0", setUPres},
+	{"SetLPres\0", setLPres},
+	{"SetUHum\0", setUHum},
+	{"SetLHum\0", setLHum},
+	{"ChMode\0", changeMode},
 	{'\0', 0}
 };
 
@@ -130,7 +167,7 @@ void LEUART_Initialize(void)
 
 	// Finally, enable LEUART0
 	LEUART_Init(LEUART0, &LEUART_InitVal);
-	LEUART0->CMD |= LEUART_CMD_TXDIS;
+	LEUART0->CMD |= LEUART_CMD_TXDIS | LEUART_CMD_RXEN;
 
 	// Allow RXs to wake the DMA controller up when in EM2
 	LEUART0->CTRL |= LEUART_CTRL_RXDMAWU;
@@ -222,7 +259,7 @@ void LEUART_TX_Buffer(void)
 	// If a transfer is already active, do not do anything. DMA or the LEUART
 	// interrupt handler will automatically transmit the active buffer when the
 	// transfer buffer finishes.
-	if (!LEUART_TX_Active())
+	if (!LEUART_TX_Active() && active_buf_empty_idx > 0)
 	{
 		// Enable the transmitter
 		LEUART0->CMD |= LEUART_CMD_TXEN;
@@ -360,7 +397,7 @@ void LEUART_RX_DMA_Done_CB(unsigned int channel, bool primary, void *user)
 void LEUART0_IRQHandler(void)
 {
 	uint8_t tx_buf[40] = {0};
-	uint32_t intflags = LEUART_IntGet(LEUART0), i = 0, j = 0;
+	uint32_t intflags = LEUART_IntGet(LEUART0), i = 0, j = 0, k = 0;
 	uint32_t str_length, transfer_size;
 	bool cmd_matched = false;
 
@@ -375,11 +412,23 @@ void LEUART0_IRQHandler(void)
 			i++;
 		}
 
+		// Find an equal sign, if it exists
+		while (LEUART_RX_Buf[k] != '=' && k < i) {
+			k++;
+		}
+
 		if (i < (LEUART_RX_DMA_BUF_SIZE - END_OF_CMD_DELIM_SIZE)) {
+
+			// k >= i means no equals sign was found, so this is a get command
+			if (k >= i)
+				k = 0;
+			else
+				k = i-k;
+
 			// Check for a valid command
 			while (CMD_TABLE[j].str != '\0' && !cmd_matched) {
 				str_length = strlen(CMD_TABLE[j].str);
-				if (memcmp(CMD_TABLE[j].str, &LEUART_RX_Buf[i - str_length], str_length) == 0) {
+				if (memcmp(CMD_TABLE[j].str, &LEUART_RX_Buf[i - k - str_length], str_length) == 0) {
 					cmd_matched = true;
 					if (CMD_TABLE[j].cmd_func != NULL)
 						CMD_TABLE[j].cmd_func();
@@ -431,7 +480,233 @@ static void returnTemperature(void)
 	uint8_t tx_buf[40] = {0};
 	uint32_t tx_size;
 
-	tx_size = sprintf((char *) tx_buf, "%l.%lC\r\n", BME280_Get_Temp() / 10, abs(BME280_Get_Temp() % 10));
+	tx_size = sprintf((char *) tx_buf, "%li.%lu C\r\n", BME280_Get_Temp() / 100, abs(BME280_Get_Temp() % 100));
 	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 	LEUART_TX_Buffer();
 }
+
+static void returnHumidity(void)
+{
+	uint8_t tx_buf[40] = {0};
+	uint32_t tx_size;
+
+	tx_size = sprintf((char *) tx_buf, "Humidity: %lu.%lu %%\r\n", BME280_Get_Humidity() / 10, BME280_Get_Humidity() % 10);
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
+	LEUART_TX_Buffer();
+}
+
+static void returnPressure(void)
+{
+	uint8_t tx_buf[40] = {0};
+	uint32_t tx_size;
+
+	tx_size = sprintf((char *) tx_buf, "Pressure: %lu.%lu inHg\r\n", BME280_Get_Pres() / 100, BME280_Get_Pres() % 100);
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
+	LEUART_TX_Buffer();
+}
+
+static void returnDirection(void)
+{
+	uint8_t tx_buf[40] = {0};
+	uint32_t tx_size;
+	uint16_t heading;
+
+	heading = HMC5883L_GetHeading();
+	if (heading >= 45 && heading < 135)
+		tx_size = sprintf((char *) tx_buf, "Heading: WEST\r\n");
+	else if (heading >= 135 && heading < 225)
+		tx_size = sprintf((char *) tx_buf, "Heading: SOUTH\r\n");
+	else if (heading >= 225 && heading < 315)
+		tx_size = sprintf((char *) tx_buf, "Heading: EAST\r\n");
+	else
+		tx_size = sprintf((char *) tx_buf, "Heading: NORTH\r\n");
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
+	LEUART_TX_Buffer();
+}
+
+static void returnMaxX(void)
+{
+	uint8_t tx_buf[40] = {0};
+	uint32_t tx_size;
+
+	tx_size = sprintf((char *) tx_buf, "Max X-Axis Force: %d.%02dg\r\n", MMA8452Q_GetMaxX() / 100,
+			abs(MMA8452Q_GetMaxX() % 100));
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
+	LEUART_TX_Buffer();
+}
+
+static void returnMaxY(void)
+{
+	uint8_t tx_buf[40] = {0};
+	uint32_t tx_size;
+
+	tx_size = sprintf((char *) tx_buf, "Max Y-Axis Force: %d.%02dg\r\n", MMA8452Q_GetMaxY() / 100,
+			abs(MMA8452Q_GetMaxY() % 100));
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
+	LEUART_TX_Buffer();
+}
+
+static void returnMaxZ(void)
+{
+	uint8_t tx_buf[40] = {0};
+	uint32_t tx_size;
+
+	tx_size = sprintf((char *) tx_buf, "Max Z-Axis Force: %d.%02dg\r\n", MMA8452Q_GetMaxZ() / 100,
+			abs(MMA8452Q_GetMaxZ() % 100));
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
+	LEUART_TX_Buffer();
+}
+
+static void setXAlarm(void)
+{
+	uint8_t tx_buf[40] = {0};
+	uint32_t tx_size;
+	uint16_t alarm_val = parse_float_string();
+
+	// Range checking
+	if (alarm_val <= 200)
+	{
+		MMA8452Q_SetXAlarm(alarm_val);
+		Flash_Update_XAxisAlarm(alarm_val);
+		tx_size = sprintf((char *) tx_buf, "X-axis alarm value set to %d.%02dg\r\n", Flash_Get_XAxisAlarm() / 100,
+				Flash_Get_XAxisAlarm() % 100);
+	}
+	else
+	{
+		tx_size = sprintf((char *) tx_buf, "Invalid X-axis alarm value entered!\r\n");
+	}
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
+}
+
+static void setYAlarm(void)
+{
+	uint8_t tx_buf[40] = {0};
+	uint32_t tx_size;
+	uint16_t alarm_val = parse_float_string();
+
+	// Range checking
+	if (alarm_val <= 200)
+	{
+		MMA8452Q_SetYAlarm(alarm_val);
+		Flash_Update_YAxisAlarm(alarm_val);
+		tx_size = sprintf((char *) tx_buf, "Y-axis alarm value set to %d.%02dg\r\n", Flash_Get_YAxisAlarm() / 100,
+				Flash_Get_YAxisAlarm() % 100);
+	}
+	else
+	{
+		tx_size = sprintf((char *) tx_buf, "Invalid Y-axis alarm value entered!\r\n");
+	}
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
+}
+
+static void setZAlarm(void)
+{
+	uint8_t tx_buf[40] = {0};
+	uint32_t tx_size;
+	uint16_t alarm_val = parse_float_string();
+
+	// Range checking
+	if (alarm_val <= 200)
+	{
+		MMA8452Q_SetZAlarm(alarm_val);
+		Flash_Update_ZAxisAlarm(alarm_val);
+		tx_size = sprintf((char *) tx_buf, "Z-axis alarm value set to %d.%02dg\r\n", Flash_Get_ZAxisAlarm() / 100,
+				Flash_Get_ZAxisAlarm() % 100);
+	}
+	else
+	{
+		tx_size = sprintf((char *) tx_buf, "Invalid Z-axis alarm value entered!\r\n");
+	}
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
+}
+
+static void setUTemp(void)
+{
+
+}
+
+static void setLTemp(void)
+{
+
+}
+
+static void setUPres(void)
+{
+
+}
+
+static void setLPres(void)
+{
+
+}
+
+static void setUHum(void)
+{
+
+}
+
+static void setLHum(void)
+{
+
+}
+
+static void changeMode(void)
+{
+	uint8_t tx_buf[40] = {0};
+	uint32_t tx_size;
+
+	if (getMode() == DMPM_Mode_Race)
+	{
+		setMode(DMPM_Mode_Low_Power);
+		tx_size = sprintf((char *) tx_buf, "\r\nSwitching to low power mode!\r\n");
+	}
+	else
+	{
+		setMode(DMPM_Mode_Low_Power);
+		tx_size = sprintf((char *) tx_buf, "\r\nSwitching to race mode!\r\n");
+	}
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
+	LEUART_TX_Buffer();
+}
+
+static uint16_t parse_float_string(void)
+{
+	uint8_t alarm_str[8] = {0};
+	uint8_t *number_str;
+	uint16_t number;
+	uint32_t tx_size, i = 0, k = 0;
+
+	// Index to the end of command delimiter '!'
+	while (LEUART_RX_Buf[i] != END_OF_CMD_DELIMITER && i < LEUART_RX_DMA_N_XFERS) {
+		i++;
+	}
+
+	// Now count back to the = sign
+	k = i;
+	while (LEUART_RX_Buf[k] != '=' && k != 0) {
+		k--;
+	}
+	if (k == 0)
+		return 0xFFFF;
+
+	// Copy the data to another string.
+	memcpy(alarm_str, &LEUART_RX_Buf[k+1], i - k - 1);
+
+	// Remove the decimal point, if there is one
+	number_str = (uint8_t *) strstr((char *) &alarm_str[0], ".");
+	if (number_str == NULL)
+	{
+		// It's an integer, no decimal point
+		number = atoi((char *) alarm_str);
+	}
+	else
+	{
+		i = number_str - alarm_str;
+
+		// Shift the numbers behind the decimal point over
+		strcpy((char *) &alarm_str[i], (char *) &alarm_str[i+1]);
+		number = atoi((char *) alarm_str);
+	}
+	return number;
+}
+

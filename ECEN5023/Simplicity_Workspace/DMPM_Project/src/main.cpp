@@ -52,8 +52,6 @@
 #include "mma8452q.h"
 #include "sleepmodes.h"
 
-#define Debug	(0)
-
 #define VECTOR_SIZE (16+30)
 uint32_t vectorTable[VECTOR_SIZE] __attribute__ ((aligned(256)));
 
@@ -151,9 +149,10 @@ void printData(void)
 {
 	uint8_t tx_buf[80] = {0};
 	uint32_t tx_size = 0;
+	uint16_t heading;
 
 	// BME280 data
-	tx_size = sprintf((char *) tx_buf, "Temperature: %d.%d C\r\nPressure: %d.%d inHg\r\nHumidity: %d.%d %%\r\n",
+	tx_size = sprintf((char *) tx_buf, "Temperature: %d.%d C\r\nPressure: %d.%d inHg\r\nHumidity: %l.%l %%\r\n",
 			BME280_Get_Temp() / 100, abs(BME280_Get_Temp() % 100), BME280_Get_Pres() / 100, BME280_Get_Pres() % 100,
 			BME280_Get_Humidity() / 10, BME280_Get_Humidity() % 10);
 	LEUART_Put_TX_Buffer(tx_buf, tx_size);
@@ -168,7 +167,16 @@ void printData(void)
 	/*tx_size = sprintf((char *) tx_buf, "X: %d.%03d G Y: %d.%03d G Z: %d.%03d G\r\n", HMC5883L_GetXData() / 1000,
 			abs(HMC5883L_GetXData() % 1000), HMC5883L_GetYData() / 1000, abs(HMC5883L_GetYData() % 1000),
 			HMC5883L_GetZData() / 1000, abs(HMC5883L_GetZData() % 1000));*/
-	tx_size = sprintf((char *) tx_buf, "Heading: %d\r\n", HMC5883L_GetHeading());
+	//tx_size = sprintf((char *) tx_buf, "Heading: %d\r\n", HMC5883L_GetHeading());
+	heading = HMC5883L_GetHeading();
+	if (heading > 45 && heading < 135)
+		tx_size = sprintf((char *) tx_buf, "Heading: WEST\r\n");
+	else if (heading > 135 && heading < 225)
+		tx_size = sprintf((char *) tx_buf, "Heading: SOUTH\r\n");
+	else if (heading > 225 && heading < 315)
+		tx_size = sprintf((char *) tx_buf, "Heading: EAST\r\n");
+	else
+		tx_size = sprintf((char *) tx_buf, "Heading: NORTH\r\n");
 	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 }
 
@@ -207,11 +215,11 @@ void LETIMER_Initialize(void)
  *****************************************************************************/
 void LETIMER0_IRQHandler(void)
 {
-	uint32_t intflags = LETIMER_IntGet(LETIMER0);
+	uint32_t intflags = LETIMER_IntGet(LETIMER0), tx_size;
+	uint8_t tx_buf[40] = {0};
 	static bool first_init = false;
 
 	LETIMER_IntClear(LETIMER0, intflags);
-	//if (intflags & LETIMER_IF_UF) {
 	if (intflags & LETIMER_IF_REP0) {
 		// Reload the REP0 register and restart the timer
 		LETIMER_RepeatSet(LETIMER0, 0, 3);
@@ -226,11 +234,55 @@ void LETIMER0_IRQHandler(void)
 		}
 
 		// Read all of the I2C sensors
-		BME280_Read_All();
+		BME280_ReadAll();
 		HMC5883L_ReadAll();
 		MMA8452Q_ReadAll();
 
-		printData();
+		//printData();
+
+		// Perform limit checking
+		if (BME280_Get_Temp()/10 > Flash_Get_UpperTempAlarm())
+		{
+			tx_size = sprintf((char *) tx_buf, "\r\nTemperature ABOVE alarm setpoint = %li.%lu C\r\n",
+					BME280_Get_Temp() / 100, abs(BME280_Get_Temp() % 100));
+			LEUART_Put_TX_Buffer(tx_buf, tx_size);
+		}
+
+		if (BME280_Get_Temp()/10 < Flash_Get_LowerTempAlarm())
+		{
+			tx_size = sprintf((char *) tx_buf, "\r\nTemperature BELOW alarm setpoint = %li.%lu C\r\n",
+					BME280_Get_Temp() / 100, abs(BME280_Get_Temp() % 100));
+			LEUART_Put_TX_Buffer(tx_buf, tx_size);
+		}
+
+		if (BME280_Get_Pres() > Flash_Get_UpperPressureAlarm())
+		{
+			tx_size = sprintf((char *) tx_buf, "\r\nPressure ABOVE alarm setpoint = %li.%02lu inHg\r\n",
+					BME280_Get_Pres() / 100, BME280_Get_Pres() % 100);
+			LEUART_Put_TX_Buffer(tx_buf, tx_size);
+		}
+
+		if (BME280_Get_Pres() < Flash_Get_LowerPressureAlarm())
+		{
+			tx_size = sprintf((char *) tx_buf, "\r\nPressure BELOW alarm setpoint = %lu.%02lu inHg\r\n",
+					BME280_Get_Pres() / 100, BME280_Get_Pres() % 100);
+			LEUART_Put_TX_Buffer(tx_buf, tx_size);
+		}
+
+		if (BME280_Get_Humidity()/10 > Flash_Get_UpperHumidityAlarm())
+		{
+			tx_size = sprintf((char *) tx_buf, "\r\nHumidity ABOVE alarm setpoint = %lu.%lu %%\r\n",
+					BME280_Get_Humidity() / 10, BME280_Get_Humidity() % 10);
+			LEUART_Put_TX_Buffer(tx_buf, tx_size);
+		}
+
+		if (BME280_Get_Humidity() < Flash_Get_LowerHumidityAlarm())
+		{
+			tx_size = sprintf((char *) tx_buf, "\r\nHumidity BELOW alarm setpoint = %lu.%lu %%\r\n",
+					BME280_Get_Humidity() / 10, BME280_Get_Humidity() % 10);
+			LEUART_Put_TX_Buffer(tx_buf, tx_size);
+		}
+
 		LEUART_TX_Buffer();
 
 		// Prepare for the next sample
@@ -299,7 +351,7 @@ void wait_ms(uint32_t time_ms)
 	uint32_t n_ticks;
 
 	if (time_ms > 8589934)
-		n_ticks = 8589934 * 500;
+		n_ticks = 8589934 * 499;
 	else
 		n_ticks = time_ms*500;
 
@@ -402,10 +454,10 @@ int main(void)
 			// See what the current active buffer is
 			//active_buffer = LEUART_GetActiveBuffer();
 
-			//MMA8452Q_ReadAll();
-			while (!HMC5883L_DataReady()) {}
+			MMA8452Q_ReadAll();
 			HMC5883L_ReadAll();
-			printData();
+			BME280_ReadAll();
+			//printData();
 
 			LEUART_TX_Wait();
 
@@ -415,18 +467,6 @@ int main(void)
 			// out of date. With the wait, the freshest data is sent and it
 			// is much more readable to the user.
 			wait_ms(500);
-
-			// If the DMA channel is not active, transmit now
-			/*if (!LEUART_TX_Active())
-				LEUART_TX_Buffer();
-			else
-			{
-				// If the DMA channel is active, wait for the LEUART driver
-				// to start using the active buffer before continuing the
-				// loop.
-				while (LEUART_GetActiveBuffer() == active_buffer)
-				{}
-			}*/
 		}
 		sleep();
 	}

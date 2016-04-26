@@ -48,6 +48,8 @@ c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/.
                               c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libstdc++_s.a(new_op.o) (abort)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-abs.o)
                               ./src/adc.o (abs)
+c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-atoi.o)
+                              ./src/leuart.o (atoi)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-cxa_atexit.o)
                               c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libstdc++_s.a(atexit_arm.o) (__cxa_atexit)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-errno.o)
@@ -126,12 +128,18 @@ c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/.
                               c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o) (__sread)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strcmp.o)
                               ./mbed/common/retarget.o (strcmp)
+c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strcpy.o)
+                              ./src/leuart.o (strcpy)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strlen.o)
                               ./mbed/common/FileBase.o (strlen)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strncmp.o)
                               ./mbed/common/FileBase.o (strncmp)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strncpy.o)
                               ./mbed/common/FileSystemLike.o (strncpy)
+c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strstr.o)
+                              ./src/leuart.o (strstr)
+c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
+                              c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-atoi.o) (_strtol_r)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfprintf.o)
                               c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sprintf.o) (_svfprintf_r)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfscanf.o)
@@ -159,7 +167,7 @@ c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/.
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-closer.o)
                               c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-stdio.o) (_close_r)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-ctype_.o)
-                              c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfscanf.o) (__ctype_ptr__)
+                              c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o) (__ctype_ptr__)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-flags.o)
                               c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fopen.o) (__sflags)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fstatr.o)
@@ -176,8 +184,6 @@ c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/.
                               c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-stdio.o) (_read_r)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sccl.o)
                               c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfscanf.o) (__sccl)
-c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
-                              c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfscanf_i.o) (_strtol_r)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtoul.o)
                               c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfscanf_i.o) (_strtoul_r)
 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-msizer.o)
@@ -3019,12 +3025,6 @@ Discarded input sections
                 0x00000000        0x4 ./src/flash.o
  .data._ZL24pageStatusReceivingValue
                 0x00000000        0x4 ./src/flash.o
- .text._Z23Flash_Update_XAxisAlarms
-                0x00000000       0x3c ./src/flash.o
- .text._Z23Flash_Update_YAxisAlarms
-                0x00000000       0x3c ./src/flash.o
- .text._Z23Flash_Update_ZAxisAlarms
-                0x00000000       0x3c ./src/flash.o
  .text._Z27Flash_Update_UpperTempAlarms
                 0x00000000       0x3c ./src/flash.o
  .text._Z27Flash_Update_LowerTempAlarms
@@ -3054,6 +3054,8 @@ Discarded input sections
                 0x00000000       0x10 ./src/hmc5883l.o
  .text._Z17HMC5883L_SelfTestv
                 0x00000000      0x168 ./src/hmc5883l.o
+ .text._Z18HMC5883L_DataReadyv
+                0x00000000       0x1c ./src/hmc5883l.o
  .rodata._ZL16declinationAngle
                 0x00000000        0x8 ./src/hmc5883l.o
  .text          0x00000000        0x0 ./src/i2c_drv.o
@@ -3061,6 +3063,7 @@ Discarded input sections
  .bss           0x00000000        0x0 ./src/i2c_drv.o
  .text._Z20I2C_Read_Reg_PollinghPhhS_t
                 0x00000000       0x88 ./src/i2c_drv.o
+ .group         0x00000000        0x8 ./src/leuart.o
  .group         0x00000000        0x8 ./src/leuart.o
  .text          0x00000000        0x0 ./src/leuart.o
  .data          0x00000000        0x0 ./src/leuart.o
@@ -3075,6 +3078,8 @@ Discarded input sections
  .bss           0x00000000        0x0 ./src/main.o
  .text._ZSt3absl
                 0x00000000       0x14 ./src/main.o
+ .text._Z9printDatav
+                0x00000000      0x23c ./src/main.o
  .text._Z17BSP_TraceSwoSetupv
                 0x00000000       0xec ./src/main.o
  .text._Z7wait_msm
@@ -3085,6 +3090,14 @@ Discarded input sections
  .bss.offset_x  0x00000000        0x1 ./src/mma8452q.o
  .bss.offset_y  0x00000000        0x1 ./src/mma8452q.o
  .bss.offset_z  0x00000000        0x1 ./src/mma8452q.o
+ .text._Z17MMA8452Q_GetXDatav
+                0x00000000       0x10 ./src/mma8452q.o
+ .text._Z17MMA8452Q_GetYDatav
+                0x00000000       0x10 ./src/mma8452q.o
+ .text._Z17MMA8452Q_GetZDatav
+                0x00000000       0x10 ./src/mma8452q.o
+ .text._Z17MMA8452Q_ResetMaxv
+                0x00000000       0x20 ./src/mma8452q.o
  .text          0x00000000        0x0 ./src/rtc.o
  .data          0x00000000        0x0 ./src/rtc.o
  .bss           0x00000000        0x0 ./src/rtc.o
@@ -3124,6 +3137,10 @@ Discarded input sections
  .text          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-abs.o)
  .data          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-abs.o)
  .bss           0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-abs.o)
+ .text          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-atoi.o)
+ .data          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-atoi.o)
+ .bss           0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-atoi.o)
+ .text._atoi_r  0x00000000        0x8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-atoi.o)
  .text          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-cxa_atexit.o)
  .data          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-cxa_atexit.o)
  .bss           0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-cxa_atexit.o)
@@ -3383,6 +3400,9 @@ Discarded input sections
  .bss           0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strcmp.o)
  .ARM.attributes
                 0x00000000       0x1b c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strcmp.o)
+ .text          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strcpy.o)
+ .data          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strcpy.o)
+ .bss           0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strcpy.o)
  .text          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strlen.o)
  .data          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strlen.o)
  .bss           0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strlen.o)
@@ -3400,6 +3420,12 @@ Discarded input sections
  .ARM.attributes
                 0x00000000       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strncpy.o)
  .debug_frame   0x00000000       0x28 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strncpy.o)
+ .text          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strstr.o)
+ .data          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strstr.o)
+ .bss           0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strstr.o)
+ .text          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
+ .data          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
+ .bss           0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
  .text          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfprintf.o)
  .data          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfprintf.o)
  .bss           0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfprintf.o)
@@ -3502,12 +3528,6 @@ Discarded input sections
  .text          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-ctype_.o)
  .data          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-ctype_.o)
  .bss           0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-ctype_.o)
- .data.__ctype_ptr__
-                0x00000000        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-ctype_.o)
- .rodata._ctype_
-                0x00000000      0x101 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-ctype_.o)
- .ARM.attributes
-                0x00000000       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-ctype_.o)
  .text          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-flags.o)
  .data          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-flags.o)
  .bss           0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-flags.o)
@@ -3546,15 +3566,6 @@ Discarded input sections
  .ARM.attributes
                 0x00000000       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sccl.o)
  .debug_frame   0x00000000       0x30 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sccl.o)
- .text          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
- .data          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
- .bss           0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
- .text._strtol_r
-                0x00000000      0x104 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
- .text.strtol   0x00000000       0x1c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
- .ARM.attributes
-                0x00000000       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
- .debug_frame   0x00000000       0x54 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
  .text          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtoul.o)
  .data          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtoul.o)
  .bss           0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtoul.o)
@@ -3749,7 +3760,7 @@ LOAD c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/
 LOAD c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtn.o
                 0x000000e0                __vector_size = 0xe0
 
-.text           0x00000000     0xb27c
+.text           0x00000000     0xc4d4
  *(.isr_vector)
  .isr_vector    0x00000000      0x100 ./mbed/targets/cmsis/TARGET_Silicon_Labs/TARGET_EFM32/TARGET_EFM32LG_STK3600/TOOLCHAIN_GCC_ARM/startup_efm32lg.o
                 0x00000000                __isr_vector
@@ -4330,9 +4341,9 @@ LOAD c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/
  .text._Z15BME280_Set_Mode13BME280_Mode_t
                 0x00005b88       0x50 ./src/bme280.o
                 0x00005b88                BME280_Set_Mode(BME280_Mode_t)
- .text._Z15BME280_Read_Allv
+ .text._Z14BME280_ReadAllv
                 0x00005bd8       0xcc ./src/bme280.o
-                0x00005bd8                BME280_Read_All()
+                0x00005bd8                BME280_ReadAll()
  .text._Z15BME280_Get_Tempv
                 0x00005ca4        0xc ./src/bme280.o
                 0x00005ca4                BME280_Get_Temp()
@@ -4369,393 +4380,469 @@ LOAD c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/
                 0x00006274      0x338 ./src/capsense.o
                 0x00006274                Capsense_Init()
  .text.LESENSE_IRQHandler
-                0x000065ac       0xe4 ./src/capsense.o
+                0x000065ac       0xec ./src/capsense.o
                 0x000065ac                LESENSE_IRQHandler
  .text.NVIC_EnableIRQ
-                0x00006690       0x2c ./src/dma.o
+                0x00006698       0x2c ./src/dma.o
  .text._Z14DMA_Initializev
-                0x000066bc       0x28 ./src/dma.o
-                0x000066bc                DMA_Initialize()
+                0x000066c4       0x28 ./src/dma.o
+                0x000066c4                DMA_Initialize()
  .text._Z27DMA_Get_Transfers_Remainingh
-                0x000066e4       0x2c ./src/dma.o
-                0x000066e4                DMA_Get_Transfers_Remaining(unsigned char)
+                0x000066ec       0x2c ./src/dma.o
+                0x000066ec                DMA_Get_Transfers_Remaining(unsigned char)
  .text.EE_getPageStatus
-                0x00006710       0x14 ./src/eeprom_emulation.o
+                0x00006718       0x14 ./src/eeprom_emulation.o
  .text.EE_setPageStatusActive
-                0x00006724       0x24 ./src/eeprom_emulation.o
+                0x0000672c       0x24 ./src/eeprom_emulation.o
  .text.EE_setPageStatusReceiving
-                0x00006748       0x24 ./src/eeprom_emulation.o
+                0x00006750       0x24 ./src/eeprom_emulation.o
  .text.EE_validateIfErased
-                0x0000676c       0x34 ./src/eeprom_emulation.o
+                0x00006774       0x34 ./src/eeprom_emulation.o
  .text.EE_WriteToPage
-                0x000067a0       0x6c ./src/eeprom_emulation.o
+                0x000067a8       0x6c ./src/eeprom_emulation.o
  .text.EE_TransferPage
-                0x0000680c      0x240 ./src/eeprom_emulation.o
- .text.EE_Init  0x00006a4c      0x178 ./src/eeprom_emulation.o
-                0x00006a4c                EE_Init
- .text.EE_Read  0x00006bc4       0x74 ./src/eeprom_emulation.o
-                0x00006bc4                EE_Read
+                0x00006814      0x240 ./src/eeprom_emulation.o
+ .text.EE_Init  0x00006a54      0x178 ./src/eeprom_emulation.o
+                0x00006a54                EE_Init
+ .text.EE_Read  0x00006bcc       0x74 ./src/eeprom_emulation.o
+                0x00006bcc                EE_Read
  .text.EE_Write
-                0x00006c38       0x6c ./src/eeprom_emulation.o
-                0x00006c38                EE_Write
+                0x00006c40       0x6c ./src/eeprom_emulation.o
+                0x00006c40                EE_Write
  .text.EE_DeclareVariable
-                0x00006ca4       0x48 ./src/eeprom_emulation.o
-                0x00006ca4                EE_DeclareVariable
+                0x00006cac       0x48 ./src/eeprom_emulation.o
+                0x00006cac                EE_DeclareVariable
  .text.EE_GetEraseCount
-                0x00006cec       0x34 ./src/eeprom_emulation.o
-                0x00006cec                EE_GetEraseCount
+                0x00006cf4       0x34 ./src/eeprom_emulation.o
+                0x00006cf4                EE_GetEraseCount
  .text._Z10Flash_Initv
-                0x00006d20      0x23c ./src/flash.o
-                0x00006d20                Flash_Init()
+                0x00006d28      0x190 ./src/flash.o
+                0x00006d28                Flash_Init()
+ .text._Z23Flash_Update_XAxisAlarms
+                0x00006eb8       0x3c ./src/flash.o
+                0x00006eb8                Flash_Update_XAxisAlarm(short)
+ .text._Z23Flash_Update_YAxisAlarms
+                0x00006ef4       0x3c ./src/flash.o
+                0x00006ef4                Flash_Update_YAxisAlarm(short)
+ .text._Z23Flash_Update_ZAxisAlarms
+                0x00006f30       0x3c ./src/flash.o
+                0x00006f30                Flash_Update_ZAxisAlarm(short)
  .text._Z24Flash_Update_XAxisOffseta
-                0x00006f5c       0x40 ./src/flash.o
-                0x00006f5c                Flash_Update_XAxisOffset(signed char)
+                0x00006f6c       0x40 ./src/flash.o
+                0x00006f6c                Flash_Update_XAxisOffset(signed char)
  .text._Z24Flash_Update_YAxisOffseta
-                0x00006f9c       0x40 ./src/flash.o
-                0x00006f9c                Flash_Update_YAxisOffset(signed char)
+                0x00006fac       0x40 ./src/flash.o
+                0x00006fac                Flash_Update_YAxisOffset(signed char)
  .text._Z24Flash_Update_ZAxisOffseta
-                0x00006fdc       0x40 ./src/flash.o
-                0x00006fdc                Flash_Update_ZAxisOffset(signed char)
+                0x00006fec       0x40 ./src/flash.o
+                0x00006fec                Flash_Update_ZAxisOffset(signed char)
  .text.GPIO_PinInGet
-                0x0000701c       0x34 ./src/hmc5883l.o
+                0x0000702c       0x34 ./src/hmc5883l.o
  .text.GPIO_PinOutSet
-                0x00007050       0x30 ./src/hmc5883l.o
+                0x00007060       0x30 ./src/hmc5883l.o
  .text._Z13HMC5883L_Initv
-                0x00007080       0xd8 ./src/hmc5883l.o
-                0x00007080                HMC5883L_Init()
+                0x00007090       0xd8 ./src/hmc5883l.o
+                0x00007090                HMC5883L_Init()
  .text._Z15HMC5883L_Enableb
-                0x00007158       0x3c ./src/hmc5883l.o
-                0x00007158                HMC5883L_Enable(bool)
- *fill*         0x00007194        0x4 
+                0x00007168       0x3c ./src/hmc5883l.o
+                0x00007168                HMC5883L_Enable(bool)
+ *fill*         0x000071a4        0x4 
  .text._Z16HMC5883L_ReadAllv
-                0x00007198      0x118 ./src/hmc5883l.o
-                0x00007198                HMC5883L_ReadAll()
+                0x000071a8      0x118 ./src/hmc5883l.o
+                0x000071a8                HMC5883L_ReadAll()
  .text._Z19HMC5883L_GetHeadingv
-                0x000072b0       0xe8 ./src/hmc5883l.o
-                0x000072b0                HMC5883L_GetHeading()
- .text._Z18HMC5883L_DataReadyv
-                0x00007398       0x1c ./src/hmc5883l.o
-                0x00007398                HMC5883L_DataReady()
+                0x000072c0      0x110 ./src/hmc5883l.o
+                0x000072c0                HMC5883L_GetHeading()
  .text.I2C_IntClear
-                0x000073b4       0x10 ./src/i2c_drv.o
+                0x000073d0       0x10 ./src/i2c_drv.o
  .text.I2C_IntGet
-                0x000073c4       0x10 ./src/i2c_drv.o
+                0x000073e0       0x10 ./src/i2c_drv.o
  .text._Z14I2C_Initializev
-                0x000073d4       0x94 ./src/i2c_drv.o
-                0x000073d4                I2C_Initialize()
+                0x000073f0       0x94 ./src/i2c_drv.o
+                0x000073f0                I2C_Initialize()
  .text._Z17I2C_Write_PollinghthPht
-                0x00007468       0xa4 ./src/i2c_drv.o
-                0x00007468                I2C_Write_Polling(unsigned char, unsigned short, unsigned char, unsigned char*, unsigned short)
+                0x00007484       0xa4 ./src/i2c_drv.o
+                0x00007484                I2C_Write_Polling(unsigned char, unsigned short, unsigned char, unsigned char*, unsigned short)
  .text._Z16I2C_Read_PollinghthPht
-                0x0000750c       0xa4 ./src/i2c_drv.o
-                0x0000750c                I2C_Read_Polling(unsigned char, unsigned short, unsigned char, unsigned char*, unsigned short)
+                0x00007528       0xa4 ./src/i2c_drv.o
+                0x00007528                I2C_Read_Polling(unsigned char, unsigned short, unsigned char, unsigned char*, unsigned short)
  .text.I2C1_IRQHandler
-                0x000075b0       0x30 ./src/i2c_drv.o
-                0x000075b0                I2C1_IRQHandler
+                0x000075cc       0x30 ./src/i2c_drv.o
+                0x000075cc                I2C1_IRQHandler
  .text.NVIC_EnableIRQ
-                0x000075e0       0x2c ./src/leuart.o
+                0x000075fc       0x2c ./src/leuart.o
  .text._ZSt3absl
-                0x0000760c       0x14 ./src/leuart.o
-                0x0000760c                std::abs(long)
+                0x00007628       0x14 ./src/leuart.o
+                0x00007628                std::abs(long)
+ .text._ZSt6strstrPcPKc
+                0x0000763c       0x1c ./src/leuart.o
+                0x0000763c                std::strstr(char*, char const*)
  .text.INT_Disable
-                0x00007620       0x24 ./src/leuart.o
+                0x00007658       0x24 ./src/leuart.o
  .text.INT_Enable
-                0x00007644       0x34 ./src/leuart.o
+                0x0000767c       0x34 ./src/leuart.o
  .text.LEUART_IntClear
-                0x00007678       0x10 ./src/leuart.o
+                0x000076b0       0x10 ./src/leuart.o
  .text.LEUART_IntDisable
-                0x00007688       0x18 ./src/leuart.o
+                0x000076c0       0x18 ./src/leuart.o
  .text.LEUART_IntEnable
-                0x000076a0       0x18 ./src/leuart.o
+                0x000076d8       0x18 ./src/leuart.o
  .text.LEUART_IntGet
-                0x000076b8       0x10 ./src/leuart.o
+                0x000076f0       0x10 ./src/leuart.o
+ .text._ZL20Flash_Get_XAxisAlarmv
+                0x00007700       0x10 ./src/leuart.o
+ .text._ZL20Flash_Get_YAxisAlarmv
+                0x00007710       0x10 ./src/leuart.o
+ .text._ZL20Flash_Get_ZAxisAlarmv
+                0x00007720       0x10 ./src/leuart.o
  .text._Z17LEUART_Initializev
-                0x000076c8       0xac ./src/leuart.o
-                0x000076c8                LEUART_Initialize()
+                0x00007730       0xac ./src/leuart.o
+                0x00007730                LEUART_Initialize()
  .text._Z15LEUART_DMA_Initv
-                0x00007774      0x11c ./src/leuart.o
-                0x00007774                LEUART_DMA_Init()
+                0x000077dc      0x11c ./src/leuart.o
+                0x000077dc                LEUART_DMA_Init()
  .text._Z21LEUART_TX_DMA_Done_CBjbPv
-                0x00007890       0x20 ./src/leuart.o
-                0x00007890                LEUART_TX_DMA_Done_CB(unsigned int, bool, void*)
+                0x000078f8       0x20 ./src/leuart.o
+                0x000078f8                LEUART_TX_DMA_Done_CB(unsigned int, bool, void*)
  .text._Z16LEUART_TX_Bufferv
-                0x000078b0       0x9c ./src/leuart.o
-                0x000078b0                LEUART_TX_Buffer()
+                0x00007918       0xac ./src/leuart.o
+                0x00007918                LEUART_TX_Buffer()
  .text._Z14LEUART_TX_Waitv
-                0x0000794c       0xd4 ./src/leuart.o
-                0x0000794c                LEUART_TX_Wait()
+                0x000079c4       0xd4 ./src/leuart.o
+                0x000079c4                LEUART_TX_Wait()
  .text._Z16LEUART_TX_Activev
-                0x00007a20       0x2c ./src/leuart.o
-                0x00007a20                LEUART_TX_Active()
+                0x00007a98       0x2c ./src/leuart.o
+                0x00007a98                LEUART_TX_Active()
  .text._Z20LEUART_Put_TX_BufferPhm
-                0x00007a4c       0x64 ./src/leuart.o
-                0x00007a4c                LEUART_Put_TX_Buffer(unsigned char*, unsigned long)
+                0x00007ac4       0x64 ./src/leuart.o
+                0x00007ac4                LEUART_Put_TX_Buffer(unsigned char*, unsigned long)
  .text._Z22LEUART_Reset_RX_Bufferv
-                0x00007ab0       0x3c ./src/leuart.o
-                0x00007ab0                LEUART_Reset_RX_Buffer()
+                0x00007b28       0x3c ./src/leuart.o
+                0x00007b28                LEUART_Reset_RX_Buffer()
  .text._Z21LEUART_RX_DMA_Done_CBjbPv
-                0x00007aec       0x40 ./src/leuart.o
-                0x00007aec                LEUART_RX_DMA_Done_CB(unsigned int, bool, void*)
+                0x00007b64       0x40 ./src/leuart.o
+                0x00007b64                LEUART_RX_DMA_Done_CB(unsigned int, bool, void*)
  .text.LEUART0_IRQHandler
-                0x00007b2c      0x1e4 ./src/leuart.o
-                0x00007b2c                LEUART0_IRQHandler
+                0x00007ba4      0x21c ./src/leuart.o
+                0x00007ba4                LEUART0_IRQHandler
  .text._ZL17returnTemperaturev
-                0x00007d10       0xa4 ./src/leuart.o
+                0x00007dc0       0xa0 ./src/leuart.o
+ .text._ZL14returnHumidityv
+                0x00007e60       0x94 ./src/leuart.o
+ .text._ZL14returnPressurev
+                0x00007ef4       0x90 ./src/leuart.o
+ .text._ZL15returnDirectionv
+                0x00007f84       0xe0 ./src/leuart.o
+ .text._ZL10returnMaxXv
+                0x00008064       0xa8 ./src/leuart.o
+ .text._ZL10returnMaxYv
+                0x0000810c       0xa8 ./src/leuart.o
+ .text._ZL10returnMaxZv
+                0x000081b4       0xa8 ./src/leuart.o
+ .text._ZL9setXAlarmv
+                0x0000825c       0xd8 ./src/leuart.o
+ .text._ZL9setYAlarmv
+                0x00008334       0xd8 ./src/leuart.o
+ .text._ZL9setZAlarmv
+                0x0000840c       0xd8 ./src/leuart.o
+ .text._ZL8setUTempv
+                0x000084e4        0x4 ./src/leuart.o
+ .text._ZL8setLTempv
+                0x000084e8        0x4 ./src/leuart.o
+ .text._ZL8setUPresv
+                0x000084ec        0x4 ./src/leuart.o
+ .text._ZL8setLPresv
+                0x000084f0        0x4 ./src/leuart.o
+ .text._ZL7setUHumv
+                0x000084f4        0x4 ./src/leuart.o
+ .text._ZL7setLHumv
+                0x000084f8        0x4 ./src/leuart.o
+ .text._ZL10changeModev
+                0x000084fc       0x9c ./src/leuart.o
+ .text._ZL18parse_float_stringv
+                0x00008598       0xd8 ./src/leuart.o
  .text.NVIC_EnableIRQ
-                0x00007db4       0x2c ./src/main.o
+                0x00008670       0x2c ./src/main.o
  .text.CHIP_Init
-                0x00007de0       0x40 ./src/main.o
+                0x0000869c       0x40 ./src/main.o
  .text.LETIMER_IntClear
-                0x00007e20       0x10 ./src/main.o
+                0x000086dc       0x10 ./src/main.o
  .text.LETIMER_IntEnable
-                0x00007e30       0x18 ./src/main.o
+                0x000086ec       0x18 ./src/main.o
  .text.LETIMER_IntGet
-                0x00007e48       0x10 ./src/main.o
+                0x00008704       0x10 ./src/main.o
+ .text._ZL24Flash_Get_UpperTempAlarmv
+                0x00008714       0x10 ./src/main.o
+ .text._ZL24Flash_Get_LowerTempAlarmv
+                0x00008724       0x10 ./src/main.o
+ .text._ZL28Flash_Get_UpperPressureAlarmv
+                0x00008734        0xc ./src/main.o
+ .text._ZL28Flash_Get_LowerPressureAlarmv
+                0x00008740        0xc ./src/main.o
+ .text._ZL28Flash_Get_UpperHumidityAlarmv
+                0x0000874c        0xc ./src/main.o
+ .text._ZL28Flash_Get_LowerHumidityAlarmv
+                0x00008758        0xc ./src/main.o
  .text._Z15GPIO_Initializev
-                0x00007e58       0x1c ./src/main.o
-                0x00007e58                GPIO_Initialize()
+                0x00008764       0x1c ./src/main.o
+                0x00008764                GPIO_Initialize()
  .text._Z11Clock_Setupv
-                0x00007e74       0x68 ./src/main.o
-                0x00007e74                Clock_Setup()
+                0x00008780       0x68 ./src/main.o
+                0x00008780                Clock_Setup()
  .text._Z24moveInterruptVectorToRamv
-                0x00007edc       0x24 ./src/main.o
-                0x00007edc                moveInterruptVectorToRam()
- .text._Z9printDatav
-                0x00007f00      0x1cc ./src/main.o
-                0x00007f00                printData()
+                0x000087e8       0x24 ./src/main.o
+                0x000087e8                moveInterruptVectorToRam()
  .text._Z18LETIMER_Initializev
-                0x000080cc       0xa8 ./src/main.o
-                0x000080cc                LETIMER_Initialize()
+                0x0000880c       0xa8 ./src/main.o
+                0x0000880c                LETIMER_Initialize()
  .text.LETIMER0_IRQHandler
-                0x00008174       0x70 ./src/main.o
-                0x00008174                LETIMER0_IRQHandler
+                0x000088b4      0x328 ./src/main.o
+                0x000088b4                LETIMER0_IRQHandler
  .text._Z7setMode11DMPM_Mode_t
-                0x000081e4       0x18 ./src/main.o
-                0x000081e4                setMode(DMPM_Mode_t)
+                0x00008bdc       0x18 ./src/main.o
+                0x00008bdc                setMode(DMPM_Mode_t)
  .text._Z7getModev
-                0x000081fc        0xc ./src/main.o
-                0x000081fc                getMode()
- .text.main     0x00008208       0xa8 ./src/main.o
-                0x00008208                main
+                0x00008bf4        0xc ./src/main.o
+                0x00008bf4                getMode()
+ .text.main     0x00008c00       0x9c ./src/main.o
+                0x00008c00                main
  .text.NVIC_EnableIRQ
-                0x000082b0       0x2c ./src/mma8452q.o
+                0x00008c9c       0x2c ./src/mma8452q.o
  .text.GPIO_IntEnable
-                0x000082dc       0x1c ./src/mma8452q.o
+                0x00008cc8       0x1c ./src/mma8452q.o
  .text._Z13MMA8452Q_Initv
-                0x000082f8      0x2b0 ./src/mma8452q.o
-                0x000082f8                MMA8452Q_Init()
+                0x00008ce4      0x2b0 ./src/mma8452q.o
+                0x00008ce4                MMA8452Q_Init()
  .text._Z15MMA8452Q_Enableb
-                0x000085a8       0x34 ./src/mma8452q.o
-                0x000085a8                MMA8452Q_Enable(bool)
+                0x00008f94       0x34 ./src/mma8452q.o
+                0x00008f94                MMA8452Q_Enable(bool)
  .text._Z16MMA8452Q_ReadAllv
-                0x000085dc      0x130 ./src/mma8452q.o
-                0x000085dc                MMA8452Q_ReadAll()
- .text._Z17MMA8452Q_GetXDatav
-                0x0000870c       0x10 ./src/mma8452q.o
-                0x0000870c                MMA8452Q_GetXData()
- .text._Z17MMA8452Q_GetYDatav
-                0x0000871c       0x10 ./src/mma8452q.o
-                0x0000871c                MMA8452Q_GetYData()
- .text._Z17MMA8452Q_GetZDatav
-                0x0000872c       0x10 ./src/mma8452q.o
-                0x0000872c                MMA8452Q_GetZData()
+                0x00008fc8      0x1bc ./src/mma8452q.o
+                0x00008fc8                MMA8452Q_ReadAll()
+ .text._Z16MMA8452Q_GetMaxXv
+                0x00009184       0x10 ./src/mma8452q.o
+                0x00009184                MMA8452Q_GetMaxX()
+ .text._Z16MMA8452Q_GetMaxYv
+                0x00009194       0x10 ./src/mma8452q.o
+                0x00009194                MMA8452Q_GetMaxY()
+ .text._Z16MMA8452Q_GetMaxZv
+                0x000091a4       0x10 ./src/mma8452q.o
+                0x000091a4                MMA8452Q_GetMaxZ()
+ .text._Z18MMA8452Q_SetXAlarmt
+                0x000091b4       0x48 ./src/mma8452q.o
+                0x000091b4                MMA8452Q_SetXAlarm(unsigned short)
+ .text._Z18MMA8452Q_SetYAlarmt
+                0x000091fc       0x48 ./src/mma8452q.o
+                0x000091fc                MMA8452Q_SetYAlarm(unsigned short)
+ .text._Z18MMA8452Q_SetZAlarmt
+                0x00009244       0x48 ./src/mma8452q.o
+                0x00009244                MMA8452Q_SetZAlarm(unsigned short)
  .text._Z26MMA8452Q_GetPulseIntStatusv
-                0x0000873c       0x24 ./src/mma8452q.o
-                0x0000873c                MMA8452Q_GetPulseIntStatus()
+                0x0000928c       0x24 ./src/mma8452q.o
+                0x0000928c                MMA8452Q_GetPulseIntStatus()
  .text._Z16MMA8452Q_Realignv
-                0x00008760      0x1ec ./src/mma8452q.o
-                0x00008760                MMA8452Q_Realign()
- .text          0x0000894c      0x370 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m\libgcc.a(_arm_addsubdf3.o)
-                0x0000894c                __aeabi_drsub
-                0x00008954                __aeabi_dsub
-                0x00008954                __subdf3
-                0x00008958                __aeabi_dadd
-                0x00008958                __adddf3
-                0x00008bd0                __floatunsidf
-                0x00008bd0                __aeabi_ui2d
-                0x00008bf0                __floatsidf
-                0x00008bf0                __aeabi_i2d
-                0x00008c14                __aeabi_f2d
-                0x00008c14                __extendsfdf2
-                0x00008c50                __floatundidf
-                0x00008c50                __aeabi_ul2d
-                0x00008c60                __floatdidf
-                0x00008c60                __aeabi_l2d
- .text          0x00008cbc      0x424 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m\libgcc.a(_arm_muldivdf3.o)
-                0x00008cbc                __aeabi_dmul
-                0x00008cbc                __muldf3
-                0x00008f10                __divdf3
-                0x00008f10                __aeabi_ddiv
- .text          0x000090e0      0x110 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m\libgcc.a(_arm_cmpdf2.o)
-                0x000090e0                __gtdf2
-                0x000090e0                __gedf2
-                0x000090e8                __ltdf2
-                0x000090e8                __ledf2
-                0x000090f0                __nedf2
-                0x000090f0                __eqdf2
-                0x000090f0                __cmpdf2
-                0x0000916c                __aeabi_cdrcmple
-                0x0000917c                __aeabi_cdcmpeq
-                0x0000917c                __aeabi_cdcmple
-                0x0000918c                __aeabi_dcmpeq
-                0x000091a0                __aeabi_dcmplt
-                0x000091b4                __aeabi_dcmple
-                0x000091c8                __aeabi_dcmpge
-                0x000091dc                __aeabi_dcmpgt
- .text          0x000091f0       0x40 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m\libgcc.a(_arm_fixunsdfsi.o)
-                0x000091f0                __aeabi_d2uiz
-                0x000091f0                __fixunsdfsi
- .text          0x00009230       0x38 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m\libgcc.a(_aeabi_ldivmod.o)
-                0x00009230                __aeabi_ldivmod
- .text.abs      0x00009268        0x8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-abs.o)
-                0x00009268                abs
+                0x000092b0      0x1ec ./src/mma8452q.o
+                0x000092b0                MMA8452Q_Realign()
+ .text          0x0000949c      0x370 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m\libgcc.a(_arm_addsubdf3.o)
+                0x0000949c                __aeabi_drsub
+                0x000094a4                __aeabi_dsub
+                0x000094a4                __subdf3
+                0x000094a8                __aeabi_dadd
+                0x000094a8                __adddf3
+                0x00009720                __floatunsidf
+                0x00009720                __aeabi_ui2d
+                0x00009740                __floatsidf
+                0x00009740                __aeabi_i2d
+                0x00009764                __aeabi_f2d
+                0x00009764                __extendsfdf2
+                0x000097a0                __floatundidf
+                0x000097a0                __aeabi_ul2d
+                0x000097b0                __floatdidf
+                0x000097b0                __aeabi_l2d
+ .text          0x0000980c      0x424 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m\libgcc.a(_arm_muldivdf3.o)
+                0x0000980c                __aeabi_dmul
+                0x0000980c                __muldf3
+                0x00009a60                __divdf3
+                0x00009a60                __aeabi_ddiv
+ .text          0x00009c30      0x110 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m\libgcc.a(_arm_cmpdf2.o)
+                0x00009c30                __gtdf2
+                0x00009c30                __gedf2
+                0x00009c38                __ltdf2
+                0x00009c38                __ledf2
+                0x00009c40                __nedf2
+                0x00009c40                __eqdf2
+                0x00009c40                __cmpdf2
+                0x00009cbc                __aeabi_cdrcmple
+                0x00009ccc                __aeabi_cdcmpeq
+                0x00009ccc                __aeabi_cdcmple
+                0x00009cdc                __aeabi_dcmpeq
+                0x00009cf0                __aeabi_dcmplt
+                0x00009d04                __aeabi_dcmple
+                0x00009d18                __aeabi_dcmpge
+                0x00009d2c                __aeabi_dcmpgt
+ .text          0x00009d40       0x40 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m\libgcc.a(_arm_fixunsdfsi.o)
+                0x00009d40                __aeabi_d2uiz
+                0x00009d40                __fixunsdfsi
+ .text          0x00009d80       0x38 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m\libgcc.a(_aeabi_ldivmod.o)
+                0x00009d80                __aeabi_ldivmod
+ .text.abs      0x00009db8        0x8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-abs.o)
+                0x00009db8                abs
+ .text.atoi     0x00009dc0        0x8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-atoi.o)
+                0x00009dc0                atoi
  .text.__cxa_atexit
-                0x00009270       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-cxa_atexit.o)
-                0x00009270                __cxa_atexit
- .text.__errno  0x00009290        0xc c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-errno.o)
-                0x00009290                __errno
- .text.exit     0x0000929c       0x28 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-exit.o)
-                0x0000929c                exit
+                0x00009dc8       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-cxa_atexit.o)
+                0x00009dc8                __cxa_atexit
+ .text.__errno  0x00009de8        0xc c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-errno.o)
+                0x00009de8                __errno
+ .text.exit     0x00009df4       0x28 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-exit.o)
+                0x00009df4                exit
  .text.__sflush_r
-                0x000092c4      0x106 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fflush.o)
-                0x000092c4                __sflush_r
- *fill*         0x000093ca        0x2 
+                0x00009e1c      0x106 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fflush.o)
+                0x00009e1c                __sflush_r
+ *fill*         0x00009f22        0x2 
  .text._fflush_r
-                0x000093cc       0x54 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fflush.o)
-                0x000093cc                _fflush_r
- .text.fflush   0x00009420       0x24 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fflush.o)
-                0x00009420                fflush
+                0x00009f24       0x54 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fflush.o)
+                0x00009f24                _fflush_r
+ .text.fflush   0x00009f78       0x24 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fflush.o)
+                0x00009f78                fflush
  .text._cleanup_r
-                0x00009444       0x32 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
-                0x00009444                _cleanup_r
- *fill*         0x00009476        0x2 
+                0x00009f9c       0x32 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
+                0x00009f9c                _cleanup_r
+ *fill*         0x00009fce        0x2 
  .text.std.isra.0
-                0x00009478       0x48 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
+                0x00009fd0       0x48 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
  .text.__sfmoreglue
-                0x000094c0       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
-                0x000094c0                __sfmoreglue
- .text.__sinit  0x000094ec       0x60 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
-                0x000094ec                __sinit
- .text.__sfp    0x0000954c       0x74 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
-                0x0000954c                __sfp
+                0x0000a018       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
+                0x0000a018                __sfmoreglue
+ .text.__sinit  0x0000a044       0x60 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
+                0x0000a044                __sinit
+ .text.__sfp    0x0000a0a4       0x74 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
+                0x0000a0a4                __sfp
  .text._fwalk_reent
-                0x000095c0       0x3c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fwalk.o)
-                0x000095c0                _fwalk_reent
+                0x0000a118       0x3c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fwalk.o)
+                0x0000a118                _fwalk_reent
  .text.__libc_init_array
-                0x000095fc       0x4c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-init.o)
-                0x000095fc                __libc_init_array
+                0x0000a154       0x4c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-init.o)
+                0x0000a154                __libc_init_array
  .text.__smakebuf_r
-                0x00009648       0x98 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-makebuf.o)
-                0x00009648                __smakebuf_r
- .text.memchr   0x000096e0       0x1c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memchr-stub.o)
-                0x000096e0                memchr
- .text.memcmp   0x000096fc       0x1e c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memcmp.o)
-                0x000096fc                memcmp
- .text.memcpy   0x0000971a       0x12 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memcpy-stub.o)
-                0x0000971a                memcpy
- .text.memmove  0x0000972c       0x36 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memmove.o)
-                0x0000972c                memmove
- .text.memset   0x00009762       0x10 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memset.o)
-                0x00009762                memset
- *fill*         0x00009772        0x2 
- .text._free_r  0x00009774       0x88 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-freer.o)
-                0x00009774                _free_r
+                0x0000a1a0       0x98 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-makebuf.o)
+                0x0000a1a0                __smakebuf_r
+ .text.memchr   0x0000a238       0x1c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memchr-stub.o)
+                0x0000a238                memchr
+ .text.memcmp   0x0000a254       0x1e c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memcmp.o)
+                0x0000a254                memcmp
+ .text.memcpy   0x0000a272       0x12 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memcpy-stub.o)
+                0x0000a272                memcpy
+ .text.memmove  0x0000a284       0x36 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memmove.o)
+                0x0000a284                memmove
+ .text.memset   0x0000a2ba       0x10 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memset.o)
+                0x0000a2ba                memset
+ *fill*         0x0000a2ca        0x2 
+ .text._free_r  0x0000a2cc       0x88 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-freer.o)
+                0x0000a2cc                _free_r
  .text._malloc_r
-                0x000097fc       0xa8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-mallocr.o)
-                0x000097fc                _malloc_r
- .text._sbrk_r  0x000098a4       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sbrkr.o)
-                0x000098a4                _sbrk_r
- .text.sprintf  0x000098c4       0x48 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sprintf.o)
-                0x000098c4                siprintf
-                0x000098c4                sprintf
- .text.__sread  0x0000990c       0x22 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-stdio.o)
-                0x0000990c                __sread
+                0x0000a354       0xa8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-mallocr.o)
+                0x0000a354                _malloc_r
+ .text._sbrk_r  0x0000a3fc       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sbrkr.o)
+                0x0000a3fc                _sbrk_r
+ .text.sprintf  0x0000a41c       0x48 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sprintf.o)
+                0x0000a41c                siprintf
+                0x0000a41c                sprintf
+ .text.__sread  0x0000a464       0x22 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-stdio.o)
+                0x0000a464                __sread
  .text.__swrite
-                0x0000992e       0x38 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-stdio.o)
-                0x0000992e                __swrite
- .text.__sseek  0x00009966       0x24 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-stdio.o)
-                0x00009966                __sseek
+                0x0000a486       0x38 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-stdio.o)
+                0x0000a486                __swrite
+ .text.__sseek  0x0000a4be       0x24 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-stdio.o)
+                0x0000a4be                __sseek
  .text.__sclose
-                0x0000998a        0x8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-stdio.o)
-                0x0000998a                __sclose
- .text.strlen   0x00009992       0x10 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strlen.o)
-                0x00009992                strlen
+                0x0000a4e2        0x8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-stdio.o)
+                0x0000a4e2                __sclose
+ .text.strcpy   0x0000a4ea       0x10 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strcpy.o)
+                0x0000a4ea                strcpy
+ .text.strlen   0x0000a4fa       0x10 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strlen.o)
+                0x0000a4fa                strlen
+ .text.strstr   0x0000a50a       0x2e c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strstr.o)
+                0x0000a50a                strstr
+ .text._strtol_r
+                0x0000a538      0x104 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
+                0x0000a538                _strtol_r
+ .text.strtol   0x0000a63c       0x1c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
+                0x0000a63c                strtol
  .text.__ssputs_r
-                0x000099a2       0xb8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfprintf.o)
-                0x000099a2                __ssputs_r
- *fill*         0x00009a5a        0x2 
+                0x0000a658       0xb8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfprintf.o)
+                0x0000a658                __ssputs_r
  .text._svfprintf_r
-                0x00009a5c      0x1d8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfprintf.o)
-                0x00009a5c                _svfiprintf_r
-                0x00009a5c                _svfprintf_r
+                0x0000a710      0x1d8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfprintf.o)
+                0x0000a710                _svfiprintf_r
+                0x0000a710                _svfprintf_r
  .text.__sfputc_r
-                0x00009c34       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf.o)
+                0x0000a8e8       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf.o)
  .text.__sfputs_r
-                0x00009c60       0x24 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf.o)
-                0x00009c60                __sfputs_r
+                0x0000a914       0x24 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf.o)
+                0x0000a914                __sfputs_r
  .text._vfprintf_r
-                0x00009c84      0x208 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf.o)
-                0x00009c84                _vfprintf_r
-                0x00009c84                _vfiprintf_r
+                0x0000a938      0x208 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf.o)
+                0x0000a938                _vfprintf_r
+                0x0000a938                _vfiprintf_r
  .text.vfprintf
-                0x00009e8c       0x1c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf.o)
-                0x00009e8c                vfprintf
-                0x00009e8c                vfiprintf
+                0x0000ab40       0x1c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf.o)
+                0x0000ab40                vfprintf
+                0x0000ab40                vfiprintf
  .text._printf_common
-                0x00009ea8       0xe4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf_i.o)
-                0x00009ea8                _printf_common
+                0x0000ab5c       0xe4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf_i.o)
+                0x0000ab5c                _printf_common
  .text._printf_i
-                0x00009f8c      0x228 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf_i.o)
-                0x00009f8c                _printf_i
+                0x0000ac40      0x228 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf_i.o)
+                0x0000ac40                _printf_i
  .text.__swbuf_r
-                0x0000a1b4       0xa8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-wbuf.o)
-                0x0000a1b4                __swbuf_r
+                0x0000ae68       0xa8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-wbuf.o)
+                0x0000ae68                __swbuf_r
  .text._write_r
-                0x0000a25c       0x24 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-writer.o)
-                0x0000a25c                _write_r
+                0x0000af10       0x24 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-writer.o)
+                0x0000af10                _write_r
  .text.__swsetup_r
-                0x0000a280       0xdc c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-wsetup.o)
-                0x0000a280                __swsetup_r
+                0x0000af34       0xdc c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-wsetup.o)
+                0x0000af34                __swsetup_r
  .text._close_r
-                0x0000a35c       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-closer.o)
-                0x0000a35c                _close_r
+                0x0000b010       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-closer.o)
+                0x0000b010                _close_r
  .text._fstat_r
-                0x0000a37c       0x24 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fstatr.o)
-                0x0000a37c                _fstat_r
+                0x0000b030       0x24 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fstatr.o)
+                0x0000b030                _fstat_r
  .text._isatty_r
-                0x0000a3a0       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-isattyr.o)
-                0x0000a3a0                _isatty_r
+                0x0000b054       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-isattyr.o)
+                0x0000b054                _isatty_r
  .text._lseek_r
-                0x0000a3c0       0x24 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-lseekr.o)
-                0x0000a3c0                _lseek_r
+                0x0000b074       0x24 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-lseekr.o)
+                0x0000b074                _lseek_r
  .text._realloc_r
-                0x0000a3e4       0x4c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-reallocr.o)
-                0x0000a3e4                _realloc_r
- .text._read_r  0x0000a430       0x24 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-readr.o)
-                0x0000a430                _read_r
+                0x0000b098       0x4c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-reallocr.o)
+                0x0000b098                _realloc_r
+ .text._read_r  0x0000b0e4       0x24 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-readr.o)
+                0x0000b0e4                _read_r
  .text._malloc_usable_size_r
-                0x0000a454       0x12 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-msizer.o)
-                0x0000a454                _malloc_usable_size_r
- *fill*         0x0000a466        0x2 
- .text.atan2    0x0000a468        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-w_atan2.o)
-                0x0000a468                atan2
- *fill*         0x0000a46c        0x4 
+                0x0000b108       0x12 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-msizer.o)
+                0x0000b108                _malloc_usable_size_r
+ *fill*         0x0000b11a        0x2 
+ .text.atan2    0x0000b11c        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-w_atan2.o)
+                0x0000b11c                atan2
  .text.__ieee754_atan2
-                0x0000a470      0x1f0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-e_atan2.o)
-                0x0000a470                __ieee754_atan2
- .text.atan     0x0000a660      0x350 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_atan.o)
-                0x0000a660                atan
- .text.fabs     0x0000a9b0        0x8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_fabs.o)
-                0x0000a9b0                fabs
+                0x0000b120      0x1f0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-e_atan2.o)
+                0x0000b120                __ieee754_atan2
+ .text.atan     0x0000b310      0x350 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_atan.o)
+                0x0000b310                atan
+ .text.fabs     0x0000b660        0x8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_fabs.o)
+                0x0000b660                fabs
  *(.init)
- .init          0x0000a9b8        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crti.o
-                0x0000a9b8                _init
- .init          0x0000a9bc        0x8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtn.o
+ .init          0x0000b668        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crti.o
+                0x0000b668                _init
+ .init          0x0000b66c        0x8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtn.o
  *(.fini)
- .fini          0x0000a9c4        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crti.o
-                0x0000a9c4                _fini
- .fini          0x0000a9c8        0x8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtn.o
- .fini.__stub   0x0000a9d0       0x20 linker stubs
+ .fini          0x0000b674        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crti.o
+                0x0000b674                _fini
+ .fini          0x0000b678        0x8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtn.o
+ .fini.__stub   0x0000b680       0x20 linker stubs
  *crtbegin.o(.ctors)
  *crtbegin?.o(.ctors)
  *(EXCLUDE_FILE(*crtend.o *crtend?.o) .ctors)
@@ -4768,93 +4855,96 @@ LOAD c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/
  *(.dtors)
  *(.rodata*)
  .rodata.i2cNSum
-                0x0000a9f0        0x4 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_i2c.o
+                0x0000b6a0        0x4 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_i2c.o
  .rodata.PinMap_UART_TX
-                0x0000a9f4      0x114 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/TARGET_EFM32LG_STK3600/PeripheralPins.o
-                0x0000a9f4                PinMap_UART_TX
+                0x0000b6a4      0x114 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/TARGET_EFM32LG_STK3600/PeripheralPins.o
+                0x0000b6a4                PinMap_UART_TX
  .rodata.PinMap_UART_RX
-                0x0000ab08      0x114 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/TARGET_EFM32LG_STK3600/PeripheralPins.o
-                0x0000ab08                PinMap_UART_RX
- .rodata        0x0000ac1c       0x8c ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/gpio_api.o
- .rodata        0x0000aca8       0x94 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/pinmap.o
- .rodata        0x0000ad3c       0x1c ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/pinmap_function.o
- .rodata        0x0000ad58      0x1c4 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/serial_api.o
- .rodata        0x0000af1c       0x94 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/us_ticker.o
- .rodata        0x0000afb0       0x34 ./mbed/common/assert.o
- .rodata        0x0000afe4       0x68 ./mbed/common/pinmap_common.o
+                0x0000b7b8      0x114 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/TARGET_EFM32LG_STK3600/PeripheralPins.o
+                0x0000b7b8                PinMap_UART_RX
+ .rodata        0x0000b8cc       0x8c ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/gpio_api.o
+ .rodata        0x0000b958       0x94 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/pinmap.o
+ .rodata        0x0000b9ec       0x1c ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/pinmap_function.o
+ .rodata        0x0000ba08      0x1c4 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/serial_api.o
+ .rodata        0x0000bbcc       0x94 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/us_ticker.o
+ .rodata        0x0000bc60       0x34 ./mbed/common/assert.o
+ .rodata        0x0000bc94       0x68 ./mbed/common/pinmap_common.o
  .rodata.us_interface
-                0x0000b04c       0x14 ./mbed/common/us_ticker_api.o
+                0x0000bcfc       0x14 ./mbed/common/us_ticker_api.o
  .rodata.us_data
-                0x0000b060        0x8 ./mbed/common/us_ticker_api.o
- .rodata        0x0000b068       0x40 ./src/capsense.o
- .rodata        0x0000b0a8       0x10 ./src/i2c_drv.o
- .rodata        0x0000b0b8       0x50 ./src/leuart.o
+                0x0000bd10        0x8 ./mbed/common/us_ticker_api.o
+ .rodata        0x0000bd18       0x40 ./src/capsense.o
+ .rodata        0x0000bd58       0x10 ./src/i2c_drv.o
+ .rodata        0x0000bd68      0x30c ./src/leuart.o
  .rodata._ZL9CMD_TABLE
-                0x0000b108       0x18 ./src/leuart.o
- .rodata        0x0000b120       0x7c ./src/main.o
+                0x0000c074       0x98 ./src/leuart.o
+ .rodata        0x0000c10c      0x1e4 ./src/main.o
  .rodata.__sf_fake_stdin
-                0x0000b19c       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
-                0x0000b19c                __sf_fake_stdin
+                0x0000c2f0       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
+                0x0000c2f0                __sf_fake_stdin
  .rodata.__sf_fake_stdout
-                0x0000b1bc       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
-                0x0000b1bc                __sf_fake_stdout
+                0x0000c310       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
+                0x0000c310                __sf_fake_stdout
  .rodata.__sf_fake_stderr
-                0x0000b1dc       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
-                0x0000b1dc                __sf_fake_stderr
+                0x0000c330       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
+                0x0000c330                __sf_fake_stderr
  .rodata.str1.1
-                0x0000b1fc        0x2 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-impure.o)
- *fill*         0x0000b1fe        0x2 
+                0x0000c350        0x2 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-impure.o)
+ *fill*         0x0000c352        0x2 
  .rodata._global_impure_ptr
-                0x0000b200        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-impure.o)
-                0x0000b200                _global_impure_ptr
+                0x0000c354        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-impure.o)
+                0x0000c354                _global_impure_ptr
  .rodata.str1.1
-                0x0000b204       0x11 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfprintf.o)
+                0x0000c358       0x11 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfprintf.o)
  .rodata.str1.1
                 0x00000000       0x11 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf.o)
  .rodata.str1.1
-                0x0000b215       0x22 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf_i.o)
- *fill*         0x0000b237        0x1 
+                0x0000c369       0x22 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf_i.o)
+ .rodata._ctype_
+                0x0000c38b      0x101 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-ctype_.o)
+                0x0000c38b                _ctype_
+ *fill*         0x0000c48c        0x4 
  .rodata.atanlo
-                0x0000b238       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_atan.o)
+                0x0000c490       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_atan.o)
  .rodata.atanhi
-                0x0000b258       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_atan.o)
+                0x0000c4b0       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_atan.o)
  *(.eh_frame*)
- .eh_frame      0x0000b278        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtbegin.o
- .eh_frame      0x0000b278        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtend.o
+ .eh_frame      0x0000c4d0        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtbegin.o
+ .eh_frame      0x0000c4d0        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtend.o
 
-.glue_7         0x0000b27c        0x0
+.glue_7         0x0000c4d4        0x0
  .glue_7        0x00000000        0x0 linker stubs
 
-.glue_7t        0x0000b27c        0x0
+.glue_7t        0x0000c4d4        0x0
  .glue_7t       0x00000000        0x0 linker stubs
 
-.vfp11_veneer   0x0000b27c        0x0
+.vfp11_veneer   0x0000c4d4        0x0
  .vfp11_veneer  0x00000000        0x0 linker stubs
 
-.v4_bx          0x0000b27c        0x0
+.v4_bx          0x0000c4d4        0x0
  .v4_bx         0x00000000        0x0 linker stubs
 
-.iplt           0x0000b27c        0x0
+.iplt           0x0000c4d4        0x0
  .iplt          0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtbegin.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x0000b27c                __exidx_start = .
+                0x0000c4d4                __exidx_start = .
 
-.ARM.exidx      0x0000b27c        0x8
+.ARM.exidx      0x0000c4d4        0x8
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
- .ARM.exidx     0x0000b27c        0x8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m/crt0.o
- .ARM.exidx     0x0000b284        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m\libgcc.a(_divdi3.o)
+ .ARM.exidx     0x0000c4d4        0x8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+ .ARM.exidx     0x0000c4dc        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m\libgcc.a(_divdi3.o)
                                   0x8 (size before relaxing)
- .ARM.exidx     0x0000b284        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m\libgcc.a(_udivdi3.o)
+ .ARM.exidx     0x0000c4dc        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m\libgcc.a(_udivdi3.o)
                                   0x8 (size before relaxing)
-                0x0000b284                __exidx_end = .
-                0x0000b284                __etext = .
+                0x0000c4dc                __exidx_end = .
+                0x0000c4dc                __etext = .
 
-.rel.dyn        0x0000b284        0x0
+.rel.dyn        0x0000c4dc        0x0
  .rel.iplt      0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtbegin.o
 
-.data           0x20000000      0x4ac load address 0x0000b284
+.data           0x20000000      0x4b4 load address 0x0000c4dc
                 0x20000000                __data_start__ = .
  *(dma)
  dma            0x20000000      0x200 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/dma_api.o
@@ -4888,41 +4978,45 @@ LOAD c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/
  .data._impure_ptr
                 0x20000364        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-impure.o)
                 0x20000364                _impure_ptr
-                0x20000368                . = ALIGN (0x4)
+ .data.__ctype_ptr__
+                0x20000368        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-ctype_.o)
+                0x20000368                __ctype_ptr__
+                0x2000036c                . = ALIGN (0x4)
  *(.ram)
- .ram           0x20000368      0x128 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_msc.o
-                0x20000368                MSC_ErasePage
-                0x20000414                MSC_WriteWord
-                0x20000434                MSC_WriteWordFast
-                0x20000454                MSC_MassErase
- .ram.__stub    0x20000490       0x10 linker stubs
-                0x200004a0                . = ALIGN (0x4)
-                0x200004a0                PROVIDE (__preinit_array_start, .)
+ .ram           0x2000036c      0x128 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_msc.o
+                0x2000036c                MSC_ErasePage
+                0x20000418                MSC_WriteWord
+                0x20000438                MSC_WriteWordFast
+                0x20000458                MSC_MassErase
+ *fill*         0x20000494        0x4 
+ .ram.__stub    0x20000498       0x10 linker stubs
+                0x200004a8                . = ALIGN (0x4)
+                0x200004a8                PROVIDE (__preinit_array_start, .)
  *(.preinit_array)
-                0x200004a0                PROVIDE (__preinit_array_end, .)
-                0x200004a0                . = ALIGN (0x4)
-                0x200004a0                PROVIDE (__init_array_start, .)
+                0x200004a8                PROVIDE (__preinit_array_end, .)
+                0x200004a8                . = ALIGN (0x4)
+                0x200004a8                PROVIDE (__init_array_start, .)
  *(SORT(.init_array.*))
  *(.init_array)
- .init_array    0x200004a0        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtbegin.o
- .init_array    0x200004a4        0x4 ./mbed/common/SPI.o
-                0x200004a8                PROVIDE (__init_array_end, .)
-                0x200004a8                . = ALIGN (0x4)
-                0x200004a8                PROVIDE (__fini_array_start, .)
+ .init_array    0x200004a8        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtbegin.o
+ .init_array    0x200004ac        0x4 ./mbed/common/SPI.o
+                0x200004b0                PROVIDE (__init_array_end, .)
+                0x200004b0                . = ALIGN (0x4)
+                0x200004b0                PROVIDE (__fini_array_start, .)
  *(SORT(.fini_array.*))
  *(.fini_array)
- .fini_array    0x200004a8        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtbegin.o
-                0x200004ac                PROVIDE (__fini_array_end, .)
-                0x200004ac                . = ALIGN (0x4)
-                0x200004ac                __data_end__ = .
+ .fini_array    0x200004b0        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtbegin.o
+                0x200004b4                PROVIDE (__fini_array_end, .)
+                0x200004b4                . = ALIGN (0x4)
+                0x200004b4                __data_end__ = .
 
-.jcr            0x200004ac        0x0 load address 0x0000b730
- .jcr           0x200004ac        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtbegin.o
+.jcr            0x200004b4        0x0 load address 0x0000c990
+ .jcr           0x200004b4        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtbegin.o
 
-.igot.plt       0x200004ac        0x0 load address 0x0000b730
+.igot.plt       0x200004b4        0x0 load address 0x0000c990
  .igot.plt      0x00000000        0x0 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtbegin.o
 
-.bss            0x20000500     0x1614 load address 0x0000b800
+.bss            0x20000500     0x161c load address 0x0000ca00
                 0x20000500                __bss_start__ = .
  *(.bss*)
  .bss           0x20000500       0x1c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtbegin.o
@@ -5137,29 +5231,39 @@ LOAD c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/
  .bss.z_axis_data
                 0x20001b06        0x2 ./src/mma8452q.o
                 0x20001b06                z_axis_data
+ .bss.max_X_value
+                0x20001b08        0x2 ./src/mma8452q.o
+                0x20001b08                max_X_value
+ .bss.max_Y_value
+                0x20001b0a        0x2 ./src/mma8452q.o
+                0x20001b0a                max_Y_value
+ .bss.max_Z_value
+                0x20001b0c        0x2 ./src/mma8452q.o
+                0x20001b0c                max_Z_value
+ *fill*         0x20001b0e        0x2 
  .bss.__malloc_sbrk_start
-                0x20001b08        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-mallocr.o)
-                0x20001b08                __malloc_sbrk_start
+                0x20001b10        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-mallocr.o)
+                0x20001b10                __malloc_sbrk_start
  .bss.__malloc_free_list
-                0x20001b0c        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-mallocr.o)
-                0x20001b0c                __malloc_free_list
+                0x20001b14        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-mallocr.o)
+                0x20001b14                __malloc_free_list
  *(COMMON)
- COMMON         0x20001b10        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libnosys.a(errno.o)
-                0x20001b10                errno
-                0x20001b14                __bss_end__ = .
+ COMMON         0x20001b18        0x4 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libnosys.a(errno.o)
+                0x20001b18                errno
+                0x20001b1c                __bss_end__ = .
 
-.heap           0x20001b18      0xc00
-                0x20001b18                __end__ = .
-                0x20001b18                end = __end__
-                0x20001b18                _end = __end__
+.heap           0x20001b20      0xc00
+                0x20001b20                __end__ = .
+                0x20001b20                end = __end__
+                0x20001b20                _end = __end__
  *(.heap*)
- .heap          0x20001b18      0xc00 ./mbed/targets/cmsis/TARGET_Silicon_Labs/TARGET_EFM32/TARGET_EFM32LG_STK3600/TOOLCHAIN_GCC_ARM/startup_efm32lg.o
-                0x20001b18                __HeapBase
-                0x20002718                __HeapLimit = .
+ .heap          0x20001b20      0xc00 ./mbed/targets/cmsis/TARGET_Silicon_Labs/TARGET_EFM32/TARGET_EFM32LG_STK3600/TOOLCHAIN_GCC_ARM/startup_efm32lg.o
+                0x20001b20                __HeapBase
+                0x20002720                __HeapLimit = .
 
-.stack_dummy    0x20001b18      0x400
+.stack_dummy    0x20001b20      0x400
  *(.stack)
- .stack         0x20001b18      0x400 ./mbed/targets/cmsis/TARGET_Silicon_Labs/TARGET_EFM32/TARGET_EFM32LG_STK3600/TOOLCHAIN_GCC_ARM/startup_efm32lg.o
+ .stack         0x20001b20      0x400 ./mbed/targets/cmsis/TARGET_Silicon_Labs/TARGET_EFM32/TARGET_EFM32LG_STK3600/TOOLCHAIN_GCC_ARM/startup_efm32lg.o
                 0x20008000                __StackTop = (ORIGIN (RAM) + 0x8000)
                 0x20007c00                __StackLimit = (__StackTop - SIZEOF (.stack_dummy))
                 0x20008000                PROVIDE (__stack, __StackTop)
@@ -5297,83 +5401,93 @@ OUTPUT(DMPM_Project.axf elf32-littlearm)
  .ARM.attributes
                 0x00000b89       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-abs.o)
  .ARM.attributes
-                0x00000bb6       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-cxa_atexit.o)
+                0x00000bb6       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-atoi.o)
  .ARM.attributes
-                0x00000be3       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-errno.o)
+                0x00000be3       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-cxa_atexit.o)
  .ARM.attributes
-                0x00000c10       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-exit.o)
+                0x00000c10       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-errno.o)
  .ARM.attributes
-                0x00000c3d       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fflush.o)
+                0x00000c3d       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-exit.o)
  .ARM.attributes
-                0x00000c6a       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
+                0x00000c6a       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fflush.o)
  .ARM.attributes
-                0x00000c97       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fwalk.o)
+                0x00000c97       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
  .ARM.attributes
-                0x00000cc4       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-impure.o)
+                0x00000cc4       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fwalk.o)
  .ARM.attributes
-                0x00000cf1       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-init.o)
+                0x00000cf1       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-impure.o)
  .ARM.attributes
-                0x00000d1e       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-makebuf.o)
+                0x00000d1e       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-init.o)
  .ARM.attributes
-                0x00000d4b       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memchr-stub.o)
+                0x00000d4b       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-makebuf.o)
  .ARM.attributes
-                0x00000d78       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memcmp.o)
+                0x00000d78       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memchr-stub.o)
  .ARM.attributes
-                0x00000da5       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memcpy-stub.o)
+                0x00000da5       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memcmp.o)
  .ARM.attributes
-                0x00000dd2       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memmove.o)
+                0x00000dd2       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memcpy-stub.o)
  .ARM.attributes
-                0x00000dff       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memset.o)
+                0x00000dff       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memmove.o)
  .ARM.attributes
-                0x00000e2c       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-freer.o)
+                0x00000e2c       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memset.o)
  .ARM.attributes
-                0x00000e59       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-mallocr.o)
+                0x00000e59       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-freer.o)
  .ARM.attributes
-                0x00000e86       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sbrkr.o)
+                0x00000e86       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-mallocr.o)
  .ARM.attributes
-                0x00000eb3       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sprintf.o)
+                0x00000eb3       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sbrkr.o)
  .ARM.attributes
-                0x00000ee0       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-stdio.o)
+                0x00000ee0       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sprintf.o)
  .ARM.attributes
-                0x00000f0d       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strlen.o)
+                0x00000f0d       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-stdio.o)
  .ARM.attributes
-                0x00000f3a       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfprintf.o)
+                0x00000f3a       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strcpy.o)
  .ARM.attributes
-                0x00000f67       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf.o)
+                0x00000f67       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strlen.o)
  .ARM.attributes
-                0x00000f94       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf_i.o)
+                0x00000f94       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strstr.o)
  .ARM.attributes
-                0x00000fc1       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-wbuf.o)
+                0x00000fc1       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
  .ARM.attributes
-                0x00000fee       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-writer.o)
+                0x00000fee       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfprintf.o)
  .ARM.attributes
-                0x0000101b       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-wsetup.o)
+                0x0000101b       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf.o)
  .ARM.attributes
-                0x00001048       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-closer.o)
+                0x00001048       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf_i.o)
  .ARM.attributes
-                0x00001075       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fstatr.o)
+                0x00001075       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-wbuf.o)
  .ARM.attributes
-                0x000010a2       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-isattyr.o)
+                0x000010a2       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-writer.o)
  .ARM.attributes
-                0x000010cf       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-lseekr.o)
+                0x000010cf       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-wsetup.o)
  .ARM.attributes
-                0x000010fc       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-reallocr.o)
+                0x000010fc       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-closer.o)
  .ARM.attributes
-                0x00001129       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-readr.o)
+                0x00001129       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-ctype_.o)
  .ARM.attributes
-                0x00001156       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-msizer.o)
+                0x00001156       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fstatr.o)
  .ARM.attributes
-                0x00001183       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-w_atan2.o)
+                0x00001183       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-isattyr.o)
  .ARM.attributes
-                0x000011b0       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-e_atan2.o)
+                0x000011b0       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-lseekr.o)
  .ARM.attributes
-                0x000011dd       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_atan.o)
+                0x000011dd       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-reallocr.o)
  .ARM.attributes
-                0x0000120a       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_fabs.o)
+                0x0000120a       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-readr.o)
  .ARM.attributes
-                0x00001237       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtend.o
+                0x00001237       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-msizer.o)
  .ARM.attributes
-                0x00001264       0x1d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtn.o
+                0x00001264       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-w_atan2.o)
+ .ARM.attributes
+                0x00001291       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-e_atan2.o)
+ .ARM.attributes
+                0x000012be       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_atan.o)
+ .ARM.attributes
+                0x000012eb       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_fabs.o)
+ .ARM.attributes
+                0x00001318       0x2d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtend.o
+ .ARM.attributes
+                0x00001345       0x1d c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/armv7-m/crtn.o
 
 .comment        0x00000000       0x70
  .comment       0x00000000       0x70 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_acmp.o
@@ -5425,7 +5539,7 @@ OUTPUT(DMPM_Project.axf elf32-littlearm)
  .comment       0x00000000       0x71 ./src/main.o
  .comment       0x00000000       0x71 ./src/mma8452q.o
 
-.debug_info     0x00000000    0x2e951
+.debug_info     0x00000000    0x2f203
  .debug_info    0x00000000      0x5bf ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_acmp.o
  .debug_info    0x000005bf     0x10db ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_cmu.o
  .debug_info    0x0000169a     0x127f ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_dma.o
@@ -5468,14 +5582,14 @@ OUTPUT(DMPM_Project.axf elf32-littlearm)
  .debug_info    0x0001d1ce     0x2a0a ./src/capsense.o
  .debug_info    0x0001fbd8     0x1aca ./src/dma.o
  .debug_info    0x000216a2      0x5b0 ./src/eeprom_emulation.o
- .debug_info    0x00021c52     0x1b4b ./src/flash.o
- .debug_info    0x0002379d     0x1cb6 ./src/hmc5883l.o
- .debug_info    0x00025453     0x1e22 ./src/i2c_drv.o
- .debug_info    0x00027275     0x28a6 ./src/leuart.o
- .debug_info    0x00029b1b     0x2e71 ./src/main.o
- .debug_info    0x0002c98c     0x1fc5 ./src/mma8452q.o
+ .debug_info    0x00021c52     0x1b48 ./src/flash.o
+ .debug_info    0x0002379a     0x1cc6 ./src/hmc5883l.o
+ .debug_info    0x00025460     0x1e22 ./src/i2c_drv.o
+ .debug_info    0x00027282     0x2e28 ./src/leuart.o
+ .debug_info    0x0002a0aa     0x3019 ./src/main.o
+ .debug_info    0x0002d0c3     0x2140 ./src/mma8452q.o
 
-.debug_abbrev   0x00000000     0x64c0
+.debug_abbrev   0x00000000     0x6588
  .debug_abbrev  0x00000000      0x15c ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_acmp.o
  .debug_abbrev  0x0000015c      0x2e2 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_cmu.o
  .debug_abbrev  0x0000043e      0x23b ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_dma.o
@@ -5518,14 +5632,14 @@ OUTPUT(DMPM_Project.axf elf32-littlearm)
  .debug_abbrev  0x00004820      0x357 ./src/capsense.o
  .debug_abbrev  0x00004b77      0x2e8 ./src/dma.o
  .debug_abbrev  0x00004e5f      0x1b8 ./src/eeprom_emulation.o
- .debug_abbrev  0x00005017      0x24c ./src/flash.o
- .debug_abbrev  0x00005263      0x315 ./src/hmc5883l.o
- .debug_abbrev  0x00005578      0x336 ./src/i2c_drv.o
- .debug_abbrev  0x000058ae      0x489 ./src/leuart.o
- .debug_abbrev  0x00005d37      0x445 ./src/main.o
- .debug_abbrev  0x0000617c      0x344 ./src/mma8452q.o
+ .debug_abbrev  0x00005017      0x259 ./src/flash.o
+ .debug_abbrev  0x00005270      0x332 ./src/hmc5883l.o
+ .debug_abbrev  0x000055a2      0x336 ./src/i2c_drv.o
+ .debug_abbrev  0x000058d8      0x4e7 ./src/leuart.o
+ .debug_abbrev  0x00005dbf      0x46c ./src/main.o
+ .debug_abbrev  0x0000622b      0x35d ./src/mma8452q.o
 
-.debug_loc      0x00000000     0x5036
+.debug_loc      0x00000000     0x52c1
  .debug_loc     0x00000000      0x138 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_acmp.o
  .debug_loc     0x00000138      0x430 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_cmu.o
  .debug_loc     0x00000568      0x2d4 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_dma.o
@@ -5562,17 +5676,17 @@ OUTPUT(DMPM_Project.axf elf32-littlearm)
  .debug_loc     0x0000402a       0x20 ./mbed/common/us_ticker_api.o
  .debug_loc     0x0000404a       0x84 ./mbed/common/wait_api.o
  .debug_loc     0x000040ce      0x169 ./src/bme280.o
- .debug_loc     0x00004237       0xf9 ./src/capsense.o
- .debug_loc     0x00004330       0x6c ./src/dma.o
- .debug_loc     0x0000439c      0x200 ./src/eeprom_emulation.o
- .debug_loc     0x0000459c      0x23c ./src/flash.o
- .debug_loc     0x000047d8      0x13c ./src/hmc5883l.o
- .debug_loc     0x00004914      0x11c ./src/i2c_drv.o
- .debug_loc     0x00004a30      0x2d9 ./src/leuart.o
- .debug_loc     0x00004d09      0x211 ./src/main.o
- .debug_loc     0x00004f1a      0x11c ./src/mma8452q.o
+ .debug_loc     0x00004237       0xfa ./src/capsense.o
+ .debug_loc     0x00004331       0x6c ./src/dma.o
+ .debug_loc     0x0000439d      0x200 ./src/eeprom_emulation.o
+ .debug_loc     0x0000459d      0x230 ./src/flash.o
+ .debug_loc     0x000047cd      0x13c ./src/hmc5883l.o
+ .debug_loc     0x00004909      0x11c ./src/i2c_drv.o
+ .debug_loc     0x00004a25      0x4ea ./src/leuart.o
+ .debug_loc     0x00004f0f      0x212 ./src/main.o
+ .debug_loc     0x00005121      0x1a0 ./src/mma8452q.o
 
-.debug_aranges  0x00000000     0x16b0
+.debug_aranges  0x00000000     0x17c0
  .debug_aranges
                 0x00000000       0x60 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_acmp.o
  .debug_aranges
@@ -5664,13 +5778,13 @@ OUTPUT(DMPM_Project.axf elf32-littlearm)
  .debug_aranges
                 0x00001498       0x50 ./src/i2c_drv.o
  .debug_aranges
-                0x000014e8       0xc0 ./src/leuart.o
+                0x000014e8      0x168 ./src/leuart.o
  .debug_aranges
-                0x000015a8       0xa0 ./src/main.o
+                0x00001650       0xd0 ./src/main.o
  .debug_aranges
-                0x00001648       0x68 ./src/mma8452q.o
+                0x00001720       0xa0 ./src/mma8452q.o
 
-.debug_ranges   0x00000000     0x1390
+.debug_ranges   0x00000000     0x14a0
  .debug_ranges  0x00000000       0x50 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_acmp.o
  .debug_ranges  0x00000050      0x110 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_cmu.o
  .debug_ranges  0x00000160       0xa8 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_dma.o
@@ -5713,11 +5827,11 @@ OUTPUT(DMPM_Project.axf elf32-littlearm)
  .debug_ranges  0x000010e8       0x70 ./src/flash.o
  .debug_ranges  0x00001158       0x60 ./src/hmc5883l.o
  .debug_ranges  0x000011b8       0x40 ./src/i2c_drv.o
- .debug_ranges  0x000011f8       0xb0 ./src/leuart.o
- .debug_ranges  0x000012a8       0x90 ./src/main.o
- .debug_ranges  0x00001338       0x58 ./src/mma8452q.o
+ .debug_ranges  0x000011f8      0x158 ./src/leuart.o
+ .debug_ranges  0x00001350       0xc0 ./src/main.o
+ .debug_ranges  0x00001410       0x90 ./src/mma8452q.o
 
-.debug_line     0x00000000     0xe433
+.debug_line     0x00000000     0xe820
  .debug_line    0x00000000      0x3b5 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_acmp.o
  .debug_line    0x000003b5      0x8dc ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_cmu.o
  .debug_line    0x00000c91      0x599 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_dma.o
@@ -5757,17 +5871,17 @@ OUTPUT(DMPM_Project.axf elf32-littlearm)
  .debug_line    0x0000a58e      0x24e ./mbed/common/us_ticker_api.o
  .debug_line    0x0000a7dc      0x180 ./mbed/common/wait_api.o
  .debug_line    0x0000a95c      0x542 ./src/bme280.o
- .debug_line    0x0000ae9e      0x68b ./src/capsense.o
- .debug_line    0x0000b529      0x529 ./src/dma.o
- .debug_line    0x0000ba52      0x405 ./src/eeprom_emulation.o
- .debug_line    0x0000be57      0x4c8 ./src/flash.o
- .debug_line    0x0000c31f      0x5bc ./src/hmc5883l.o
- .debug_line    0x0000c8db      0x5c6 ./src/i2c_drv.o
- .debug_line    0x0000cea1      0x7de ./src/leuart.o
- .debug_line    0x0000d67f      0x7ab ./src/main.o
- .debug_line    0x0000de2a      0x609 ./src/mma8452q.o
+ .debug_line    0x0000ae9e      0x68d ./src/capsense.o
+ .debug_line    0x0000b52b      0x529 ./src/dma.o
+ .debug_line    0x0000ba54      0x405 ./src/eeprom_emulation.o
+ .debug_line    0x0000be59      0x4bc ./src/flash.o
+ .debug_line    0x0000c315      0x5c2 ./src/hmc5883l.o
+ .debug_line    0x0000c8d7      0x5c6 ./src/i2c_drv.o
+ .debug_line    0x0000ce9d      0xa8e ./src/leuart.o
+ .debug_line    0x0000d92b      0x852 ./src/main.o
+ .debug_line    0x0000e17d      0x6a3 ./src/mma8452q.o
 
-.debug_str      0x00000000     0xa2f6
+.debug_str      0x00000000     0xa5d5
  .debug_str     0x00000000      0x5a3 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_acmp.o
                                 0x686 (size before relaxing)
  .debug_str     0x000005a3      0xa39 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_cmu.o
@@ -5842,28 +5956,28 @@ OUTPUT(DMPM_Project.axf elf32-littlearm)
                                 0x53e (size before relaxing)
  .debug_str     0x00008535       0x6d ./mbed/common/wait_api.o
                                 0x294 (size before relaxing)
- .debug_str     0x000085a2      0x35a ./src/bme280.o
-                                0xe67 (size before relaxing)
- .debug_str     0x000088fc      0x503 ./src/capsense.o
+ .debug_str     0x000085a2      0x358 ./src/bme280.o
+                                0xe65 (size before relaxing)
+ .debug_str     0x000088fa      0x503 ./src/capsense.o
                                0x22df (size before relaxing)
- .debug_str     0x00008dff       0xa7 ./src/dma.o
+ .debug_str     0x00008dfd       0xa7 ./src/dma.o
                                 0xcca (size before relaxing)
- .debug_str     0x00008ea6      0x2a5 ./src/eeprom_emulation.o
+ .debug_str     0x00008ea4      0x2a5 ./src/eeprom_emulation.o
                                 0x563 (size before relaxing)
- .debug_str     0x0000914b      0x375 ./src/flash.o
+ .debug_str     0x00009149      0x329 ./src/flash.o
                                 0xd17 (size before relaxing)
- .debug_str     0x000094c0      0x261 ./src/hmc5883l.o
-                                0xe16 (size before relaxing)
- .debug_str     0x00009721      0x199 ./src/i2c_drv.o
+ .debug_str     0x00009472      0x26d ./src/hmc5883l.o
+                                0xe22 (size before relaxing)
+ .debug_str     0x000096df      0x199 ./src/i2c_drv.o
                                0x10aa (size before relaxing)
- .debug_str     0x000098ba      0x46a ./src/leuart.o
-                               0x1a28 (size before relaxing)
- .debug_str     0x00009d24      0x41a ./src/main.o
-                               0x1b5b (size before relaxing)
- .debug_str     0x0000a13e      0x1b8 ./src/mma8452q.o
-                               0x1155 (size before relaxing)
+ .debug_str     0x00009878      0x5a2 ./src/leuart.o
+                               0x1c94 (size before relaxing)
+ .debug_str     0x00009e1a      0x4c0 ./src/main.o
+                               0x1cf1 (size before relaxing)
+ .debug_str     0x0000a2da      0x2fb ./src/mma8452q.o
+                               0x12a2 (size before relaxing)
 
-.debug_frame    0x00000000     0x3f30
+.debug_frame    0x00000000     0x42bc
  .debug_frame   0x00000000       0xcc ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_acmp.o
  .debug_frame   0x000000cc      0x2d8 ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_cmu.o
  .debug_frame   0x000003a4      0x1bc ./mbed/targets/hal/TARGET_Silicon_Labs/TARGET_EFM32/emlib/src/em_dma.o
@@ -5910,46 +6024,50 @@ OUTPUT(DMPM_Project.axf elf32-littlearm)
  .debug_frame   0x00002ee0      0x148 ./src/flash.o
  .debug_frame   0x00003028       0xf8 ./src/hmc5883l.o
  .debug_frame   0x00003120       0xb4 ./src/i2c_drv.o
- .debug_frame   0x000031d4      0x1e0 ./src/leuart.o
- .debug_frame   0x000033b4      0x18c ./src/main.o
- .debug_frame   0x00003540       0xe0 ./src/mma8452q.o
- .debug_frame   0x00003620       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-abs.o)
- .debug_frame   0x00003640       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-cxa_atexit.o)
- .debug_frame   0x0000366c       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-errno.o)
- .debug_frame   0x0000368c       0x28 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-exit.o)
- .debug_frame   0x000036b4       0x5c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fflush.o)
- .debug_frame   0x00003710      0x12c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
- .debug_frame   0x0000383c       0x54 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fwalk.o)
- .debug_frame   0x00003890       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-init.o)
- .debug_frame   0x000038bc       0x30 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-makebuf.o)
- .debug_frame   0x000038ec       0x28 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memchr-stub.o)
- .debug_frame   0x00003914       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memcmp.o)
- .debug_frame   0x00003940       0x28 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memcpy-stub.o)
- .debug_frame   0x00003968       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memmove.o)
- .debug_frame   0x00003994       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memset.o)
- .debug_frame   0x000039b4       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-freer.o)
- .debug_frame   0x000039e0       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-mallocr.o)
- .debug_frame   0x00003a0c       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sbrkr.o)
- .debug_frame   0x00003a38       0x58 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sprintf.o)
- .debug_frame   0x00003a90       0x80 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-stdio.o)
- .debug_frame   0x00003b10       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strlen.o)
- .debug_frame   0x00003b30       0x88 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfprintf.o)
- .debug_frame   0x00003bb8       0xa8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf.o)
- .debug_frame   0x00003c60       0x60 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf_i.o)
- .debug_frame   0x00003cc0       0x3c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-wbuf.o)
- .debug_frame   0x00003cfc       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-writer.o)
- .debug_frame   0x00003d28       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-wsetup.o)
- .debug_frame   0x00003d54       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-closer.o)
- .debug_frame   0x00003d80       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fstatr.o)
- .debug_frame   0x00003dac       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-isattyr.o)
- .debug_frame   0x00003dd8       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-lseekr.o)
- .debug_frame   0x00003e04       0x30 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-reallocr.o)
- .debug_frame   0x00003e34       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-readr.o)
- .debug_frame   0x00003e60       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-msizer.o)
- .debug_frame   0x00003e80       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-w_atan2.o)
- .debug_frame   0x00003ea0       0x38 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-e_atan2.o)
- .debug_frame   0x00003ed8       0x38 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_atan.o)
- .debug_frame   0x00003f10       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_fabs.o)
+ .debug_frame   0x000031d4      0x3b0 ./src/leuart.o
+ .debug_frame   0x00003584      0x1f0 ./src/main.o
+ .debug_frame   0x00003774      0x168 ./src/mma8452q.o
+ .debug_frame   0x000038dc       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-abs.o)
+ .debug_frame   0x000038fc       0x30 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-atoi.o)
+ .debug_frame   0x0000392c       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-cxa_atexit.o)
+ .debug_frame   0x00003958       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-errno.o)
+ .debug_frame   0x00003978       0x28 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-exit.o)
+ .debug_frame   0x000039a0       0x5c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fflush.o)
+ .debug_frame   0x000039fc      0x12c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-findfp.o)
+ .debug_frame   0x00003b28       0x54 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fwalk.o)
+ .debug_frame   0x00003b7c       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-init.o)
+ .debug_frame   0x00003ba8       0x30 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-makebuf.o)
+ .debug_frame   0x00003bd8       0x28 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memchr-stub.o)
+ .debug_frame   0x00003c00       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memcmp.o)
+ .debug_frame   0x00003c2c       0x28 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memcpy-stub.o)
+ .debug_frame   0x00003c54       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memmove.o)
+ .debug_frame   0x00003c80       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-memset.o)
+ .debug_frame   0x00003ca0       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-freer.o)
+ .debug_frame   0x00003ccc       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-mallocr.o)
+ .debug_frame   0x00003cf8       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sbrkr.o)
+ .debug_frame   0x00003d24       0x58 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-sprintf.o)
+ .debug_frame   0x00003d7c       0x80 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-stdio.o)
+ .debug_frame   0x00003dfc       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strcpy.o)
+ .debug_frame   0x00003e1c       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strlen.o)
+ .debug_frame   0x00003e3c       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strstr.o)
+ .debug_frame   0x00003e68       0x54 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-strtol.o)
+ .debug_frame   0x00003ebc       0x88 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-svfprintf.o)
+ .debug_frame   0x00003f44       0xa8 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf.o)
+ .debug_frame   0x00003fec       0x60 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-vfprintf_i.o)
+ .debug_frame   0x0000404c       0x3c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-wbuf.o)
+ .debug_frame   0x00004088       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-writer.o)
+ .debug_frame   0x000040b4       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-wsetup.o)
+ .debug_frame   0x000040e0       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-closer.o)
+ .debug_frame   0x0000410c       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-fstatr.o)
+ .debug_frame   0x00004138       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-isattyr.o)
+ .debug_frame   0x00004164       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-lseekr.o)
+ .debug_frame   0x00004190       0x30 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-reallocr.o)
+ .debug_frame   0x000041c0       0x2c c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-readr.o)
+ .debug_frame   0x000041ec       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libc_s.a(lib_a-nano-msizer.o)
+ .debug_frame   0x0000420c       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-w_atan2.o)
+ .debug_frame   0x0000422c       0x38 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-e_atan2.o)
+ .debug_frame   0x00004264       0x38 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_atan.o)
+ .debug_frame   0x0000429c       0x20 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libm.a(lib_a-s_fabs.o)
 
 .stabstr        0x00000000       0x76
  .stabstr       0x00000000       0x76 c:/siliconlabs/simplicitystudio/v3/developer/toolchains/gnu_arm/4.8_2013q4/bin/../lib/gcc/arm-none-eabi/4.8.3/../../../../arm-none-eabi/lib/armv7-m\libnosys.a(getpid.o)

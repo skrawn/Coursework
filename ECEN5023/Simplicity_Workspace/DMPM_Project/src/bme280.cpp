@@ -188,7 +188,7 @@ void BME280_Set_Mode(BME280_Mode_t mode)
 	I2C_Write_Polling(BME280_SLAVE_ADDR, REG_CTRL_MEAS, 1, &ctrl_meas_reg, 1);
 }
 
-void BME280_Read_All(void)
+void BME280_ReadAll(void)
 {
 	int32_t pres_raw = 0, hum_raw = 0, temp_raw = 0;
 
@@ -224,7 +224,7 @@ void BME280_Convert_And_Read_All(void)
 		I2C_Read_Polling(BME280_SLAVE_ADDR, REG_CTRL_MEAS, 1, &status, 1);
 	}
 
-	BME280_Read_All();
+	BME280_ReadAll();
 }
 
 int32_t BME280_Get_Temp(void)

@@ -212,6 +212,7 @@ void LESENSE_IRQHandler(void)
 			tx_size = sprintf((char *) mode_str, "\r\nSwitching to race mode!\r\n");
 			LEUART_Put_TX_Buffer(mode_str, tx_size);
 			setMode(DMPM_Mode_Race);
+			LEUART_TX_Buffer();
 		}
 	}
 	else
@@ -224,6 +225,7 @@ void LESENSE_IRQHandler(void)
 			tx_size = sprintf((char *) mode_str, "\r\nSwitching to low power mode!\r\n");
 			LEUART_Put_TX_Buffer(mode_str, tx_size);
 			setMode(DMPM_Mode_Low_Power);
+			LEUART_TX_Buffer();
 		}
 	}
 }

@@ -126,6 +126,10 @@ int16_t x_axis_data = 0;
 int16_t y_axis_data = 0;
 int16_t z_axis_data = 0;
 
+int16_t max_X_value = 0;
+int16_t max_Y_value = 0;
+int16_t max_Z_value = 0;
+
 void MMA8452Q_Init(void)
 {
 	uint8_t reg = 0;
@@ -299,6 +303,16 @@ void MMA8452Q_ReadAll(void)
 	x_axis_data = -y_data;
 	y_axis_data = x_data;
 	z_axis_data = z_data;
+
+	// Update maximums
+	if (abs(x_axis_data) > max_X_value)
+		max_X_value = x_axis_data;
+
+	if (abs(y_axis_data) > max_Y_value)
+		max_Y_value = y_axis_data;
+
+	if (abs(z_axis_data) > max_Z_value)
+		max_Z_value = z_axis_data;
 }
 
 int16_t MMA8452Q_GetXData(void)
@@ -314,6 +328,52 @@ int16_t MMA8452Q_GetYData(void)
 int16_t MMA8452Q_GetZData(void)
 {
 	return z_axis_data;
+}
+
+int16_t MMA8452Q_GetMaxX(void)
+{
+	return max_X_value;
+}
+
+int16_t MMA8452Q_GetMaxY(void)
+{
+	return max_Y_value;
+}
+
+int16_t MMA8452Q_GetMaxZ(void)
+{
+	return max_Z_value;
+}
+
+void MMA8452Q_SetXAlarm(uint16_t alarm_val)
+{
+	uint8_t reg;
+
+	reg = (uint8_t) (alarm_val * PULSE_THS_CONV_NUM / PULSE_THS_CONV_DEN);
+	I2C_Write_Polling(MMA8452Q_SLAVE_ADDR, REG_PULSE_THSX, 1, &reg, 1);
+}
+
+void MMA8452Q_SetYAlarm(uint16_t alarm_val)
+{
+	uint8_t reg;
+
+	reg = (uint8_t) (alarm_val * PULSE_THS_CONV_NUM / PULSE_THS_CONV_DEN);
+	I2C_Write_Polling(MMA8452Q_SLAVE_ADDR, REG_PULSE_THSY, 1, &reg, 1);
+}
+
+void MMA8452Q_SetZAlarm(uint16_t alarm_val)
+{
+	uint8_t reg;
+
+	reg = (uint8_t) (alarm_val * PULSE_THS_CONV_NUM / PULSE_THS_CONV_DEN);
+	I2C_Write_Polling(MMA8452Q_SLAVE_ADDR, REG_PULSE_THSZ, 1, &reg, 1);
+}
+
+void MMA8452Q_ResetMax(void)
+{
+	max_X_value = 0;
+	max_Y_value = 0;
+	max_Z_value = 0;
 }
 
 uint8_t MMA8452Q_GetPulseIntStatus(void)

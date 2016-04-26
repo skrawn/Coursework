@@ -53,6 +53,8 @@
 
 #define LOW_POWER_MODE_SLEEP_TIME	4	// s
 
+#define RESET_EEPROM_VALUES			(0)
+
 #define N_DMA_CH_IN_USE		3
 
 typedef enum {

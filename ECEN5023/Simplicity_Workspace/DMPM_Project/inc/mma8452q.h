@@ -41,6 +41,13 @@ void MMA8452Q_ReadAll(void);
 int16_t MMA8452Q_GetXData(void);
 int16_t MMA8452Q_GetYData(void);
 int16_t MMA8452Q_GetZData(void);
+int16_t MMA8452Q_GetMaxX(void);
+int16_t MMA8452Q_GetMaxY(void);
+int16_t MMA8452Q_GetMaxZ(void);
+void MMA8452Q_SetXAlarm(uint16_t alarm_val);
+void MMA8452Q_SetYAlarm(uint16_t alarm_val);
+void MMA8452Q_SetZAlarm(uint16_t alarm_val);
+void MMA8452Q_ResetMax(void);
 uint8_t MMA8452Q_GetPulseIntStatus(void);
 void MMA8452Q_Realign(void);
 

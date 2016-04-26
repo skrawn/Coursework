@@ -85,6 +85,7 @@ void Flash_Init(void)
 	EE_DeclareVariable(&ZAxisOffset);
 
 	// Check if anything has been initialized yet
+#if RESET_EEPROM_VALUES
 	EE_Read(&FirstInit, &first_init);
 	if (first_init == FIRST_INIT_VAL)
 	{
@@ -107,6 +108,7 @@ void Flash_Init(void)
 		EE_Read(&ZAxisOffset, (uint16_t *) &EEPROM_Data.ZAxisOffset);
 	}
 	else
+#endif
 	{
 		EE_Write(&FirstInit, FIRST_INIT_VAL);
 
