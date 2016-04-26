@@ -622,32 +622,120 @@ static void setZAlarm(void)
 
 static void setUTemp(void)
 {
+	uint8_t tx_buf[50] = {0};
+	uint32_t tx_size;
+	uint16_t alarm_val = parse_float_string();
 
+	// Range checking
+	if (alarm_val <= 1000 && alarm_val >= 0)
+	{
+		Flash_Update_UpperTempAlarm(alarm_val);
+		tx_size = sprintf((char *) tx_buf, "Upper temperature alarm value set to %d.%Cg\r\n", Flash_Get_UpperTempAlarm() / 10,
+				Flash_Get_UpperTempAlarm() % 10);
+	}
+	else
+	{
+		tx_size = sprintf((char *) tx_buf, "Invalid upper temperature alarm value entered!\r\n");
+	}
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 }
 
 static void setLTemp(void)
 {
+	uint8_t tx_buf[50] = {0};
+	uint32_t tx_size;
+	uint16_t alarm_val = parse_float_string();
 
+	// Range checking
+	if (alarm_val <= 1000 && alarm_val >= 0)
+	{
+		Flash_Update_LowerTempAlarm(alarm_val);
+		tx_size = sprintf((char *) tx_buf, "Lower temperature alarm value set to %d.%dC\r\n", Flash_Get_LowerTempAlarm() / 10,
+				Flash_Get_LowerTempAlarm() % 10);
+	}
+	else
+	{
+		tx_size = sprintf((char *) tx_buf, "Invalid lower temperature alarm value entered!\r\n");
+	}
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 }
 
 static void setUPres(void)
 {
+	uint8_t tx_buf[50] = {0};
+	uint32_t tx_size;
+	uint16_t alarm_val = parse_float_string();
 
+	// Range checking
+	if (alarm_val <= 3248 && alarm_val >= 886)
+	{
+		Flash_Update_UpperPresAlarm(alarm_val);
+		tx_size = sprintf((char *) tx_buf, "Upper pressure alarm value set to %d.%02dinHg\r\n", Flash_Get_UpperPressureAlarm() / 10,
+				Flash_Get_UpperPressureAlarm() % 10);
+	}
+	else
+	{
+		tx_size = sprintf((char *) tx_buf, "Invalid upper pressure alarm value entered!\r\n");
+	}
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 }
 
 static void setLPres(void)
 {
+	uint8_t tx_buf[50] = {0};
+	uint32_t tx_size;
+	uint16_t alarm_val = parse_float_string();
 
+	// Range checking
+	if (alarm_val <= 3248 && alarm_val >= 886)
+	{
+		Flash_Update_LowerPresAlarm(alarm_val);
+		tx_size = sprintf((char *) tx_buf, "Lower pressure alarm value set to %d.%02dinHg\r\n", Flash_Get_LowerPressureAlarm() / 100,
+				Flash_Get_LowerPressureAlarm() % 100);
+	}
+	else
+	{
+		tx_size = sprintf((char *) tx_buf, "Invalid lower pressure alarm value entered!\r\n");
+	}
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 }
 
 static void setUHum(void)
 {
+	uint8_t tx_buf[50] = {0};
+	uint32_t tx_size;
+	uint16_t alarm_val = parse_float_string();
 
+	// Range checking
+	if (alarm_val <= 100 && alarm_val >= 0)
+	{
+		Flash_Update_UpperHumAlarm(alarm_val);
+		tx_size = sprintf((char *) tx_buf, "Upper humidity alarm value set to %d%%\r\n", Flash_Get_UpperHumidityAlarm());
+	}
+	else
+	{
+		tx_size = sprintf((char *) tx_buf, "Invalid upper humidity alarm value entered!\r\n");
+	}
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 }
 
 static void setLHum(void)
 {
+	uint8_t tx_buf[50] = {0};
+	uint32_t tx_size;
+	uint16_t alarm_val = parse_float_string();
 
+	// Range checking
+	if (alarm_val <= 100 && alarm_val >= 0)
+	{
+		Flash_Update_LowerHumAlarm(alarm_val);
+		tx_size = sprintf((char *) tx_buf, "Lower humidity alarm value set to %d%%\r\n", Flash_Get_LowerHumidityAlarm());
+	}
+	else
+	{
+		tx_size = sprintf((char *) tx_buf, "Invalid lower humidity alarm value entered!\r\n");
+	}
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 }
 
 static void changeMode(void)
@@ -658,15 +746,11 @@ static void changeMode(void)
 	if (getMode() == DMPM_Mode_Race)
 	{
 		setMode(DMPM_Mode_Low_Power);
-		tx_size = sprintf((char *) tx_buf, "\r\nSwitching to low power mode!\r\n");
 	}
 	else
 	{
-		setMode(DMPM_Mode_Low_Power);
-		tx_size = sprintf((char *) tx_buf, "\r\nSwitching to race mode!\r\n");
+		setMode(DMPM_Mode_Race);
 	}
-	LEUART_Put_TX_Buffer(tx_buf, tx_size);
-	LEUART_TX_Buffer();
 }
 
 static uint16_t parse_float_string(void)
@@ -674,7 +758,7 @@ static uint16_t parse_float_string(void)
 	uint8_t alarm_str[8] = {0};
 	uint8_t *number_str;
 	uint16_t number;
-	uint32_t tx_size, i = 0, k = 0;
+	uint32_t i = 0, k = 0;
 
 	// Index to the end of command delimiter '!'
 	while (LEUART_RX_Buf[i] != END_OF_CMD_DELIMITER && i < LEUART_RX_DMA_N_XFERS) {

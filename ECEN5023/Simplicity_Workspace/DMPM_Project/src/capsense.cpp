@@ -191,8 +191,7 @@ void Capsense_Init(void)
 void LESENSE_IRQHandler(void)
 {
 	// Clear the interrupt
-	uint32_t intflags = LESENSE_IntGet(), i, tx_size;
-	uint8_t mode_str[40];
+	uint32_t intflags = LESENSE_IntGet(), i;
 	LESENSE_IntClear(intflags);
 
 	// Read the results registers
@@ -209,10 +208,7 @@ void LESENSE_IRQHandler(void)
 		{
 			LESENSE_IntDisable(LESENSE_IEN_CH11);
 			LESENSE_IntEnable(LESENSE_IEN_CH8);
-			tx_size = sprintf((char *) mode_str, "\r\nSwitching to race mode!\r\n");
-			LEUART_Put_TX_Buffer(mode_str, tx_size);
 			setMode(DMPM_Mode_Race);
-			LEUART_TX_Buffer();
 		}
 	}
 	else
@@ -222,10 +218,8 @@ void LESENSE_IRQHandler(void)
 		{
 			LESENSE_IntDisable(LESENSE_IEN_CH8);
 			LESENSE_IntEnable(LESENSE_IEN_CH11);
-			tx_size = sprintf((char *) mode_str, "\r\nSwitching to low power mode!\r\n");
-			LEUART_Put_TX_Buffer(mode_str, tx_size);
 			setMode(DMPM_Mode_Low_Power);
-			LEUART_TX_Buffer();
+
 		}
 	}
 }

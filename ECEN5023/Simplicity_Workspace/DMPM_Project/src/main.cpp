@@ -45,6 +45,7 @@
 #include "em_prs.h"
 #include "em_letimer.h"
 #include "flash.h"
+#include "gpio_irq_api.h"
 #include "hmc5883l.h"
 #include "i2c_drv.h"
 #include "leuart.h"
@@ -60,6 +61,16 @@ uint32_t vectorTable[VECTOR_SIZE] __attribute__ ((aligned(256)));
 #define BluefruitCTSPin		15
 #define BluefruitCTSMode	gpioModePushPullDrive
 #define BluefruitCTSDrive	gpioDriveModeLowest
+
+#define PUSHBUTTON_0_Port		gpioPortB
+#define PUSHBUTTON_0_Pin		9
+#define PUSHBUTTON_0_Mode		gpioModeInput
+#define PUSHBUTTON_0_Name		PB9
+
+#define PUSHBUTTON_1_Port		gpioPortB
+#define PUSHBUTTON_1_Pin		10
+#define PUSHBUTTON_1_Mode		gpioModeInput
+#define PUSHBUTTON_1_Name		PB10
 
 #define N_DMA_CH_IN_USE		3
 
@@ -79,6 +90,13 @@ uint32_t vectorTable[VECTOR_SIZE] __attribute__ ((aligned(256)));
 #define BLE_Command_4			"AT+FACTORYRESET\n"
 
 DMPM_Mode_t active_mode;
+bool race_mode_run_active = false;
+
+gpio_irq_t PB0_pin_irq;
+gpio_irq_t PB1_pin_irq;
+
+void PUSHBUTTON_0_Handler(void);
+void PUSHBUTTON_1_Handler(void);
 
 void GPIO_Initialize(void);
 void moveInterruptVectorToRam(void);
@@ -96,8 +114,19 @@ void GPIO_Initialize(void)
 	CMU_ClockEnable(cmuClock_GPIO, true);
 
 	// Drive the Bluefruit CTS pin low
-	//GPIO_DriveModeSet(BluefruitCTSPort, BluefruitCTSDrive);
 	GPIO_PinModeSet(BluefruitCTSPort, BluefruitCTSPin, BluefruitCTSMode, 0);
+
+	PB0_pin_irq.pin = PUSHBUTTON_0_Name;
+	PB1_pin_irq.pin = PUSHBUTTON_1_Name;
+	gpio_irq_init(&PB0_pin_irq, PUSHBUTTON_0_Name, GPIO_Interrupt_Handler, 1);
+	gpio_irq_init(&PB1_pin_irq, PUSHBUTTON_1_Name, GPIO_Interrupt_Handler, 2);
+
+	gpio_irq_set(&PB0_pin_irq, IRQ_FALL, 1);
+	gpio_irq_set(&PB1_pin_irq, IRQ_FALL, 1);
+
+	// Turn on the glitch filter for these pins
+	GPIO_PinOutSet(PUSHBUTTON_0_Port, PUSHBUTTON_0_Pin);
+	GPIO_PinOutSet(PUSHBUTTON_1_Port, PUSHBUTTON_1_Pin);
 }
 
 /**************************************************************************//**
@@ -152,7 +181,7 @@ void printData(void)
 	uint16_t heading;
 
 	// BME280 data
-	tx_size = sprintf((char *) tx_buf, "Temperature: %d.%d C\r\nPressure: %d.%d inHg\r\nHumidity: %l.%l %%\r\n",
+	tx_size = sprintf((char *) tx_buf, "Temperature: %li.%lu C\r\nPressure: %li.%lu inHg\r\nHumidity: %li.%lu %%\r\n",
 			BME280_Get_Temp() / 100, abs(BME280_Get_Temp() % 100), BME280_Get_Pres() / 100, BME280_Get_Pres() % 100,
 			BME280_Get_Humidity() / 10, BME280_Get_Humidity() % 10);
 	LEUART_Put_TX_Buffer(tx_buf, tx_size);
@@ -290,6 +319,81 @@ void LETIMER0_IRQHandler(void)
 	}
 }
 
+void GPIO_Interrupt_Handler(uint32_t id, gpio_irq_event event)
+{
+	switch (id)
+	{
+		case 1:
+			PUSHBUTTON_0_Handler();
+			break;
+
+		case 2:
+			PUSHBUTTON_1_Handler();
+			break;
+
+		case 3:
+			MMA8452Q_INT1_Handler();
+			break;
+
+		case 4:
+			MMA8452Q_INT2_Handler();
+			break;
+	}
+}
+
+void PUSHBUTTON_0_Handler(void)
+{
+	uint32_t tx_size;
+	uint8_t tx_buf[80] = {0};
+
+	// Start/Stop in race mode
+	if (getMode() == DMPM_Mode_Race)
+	{
+		if (race_mode_run_active)
+		{
+			tx_size = sprintf((char *) tx_buf, "Run ended! Results:\r\nX-Max: %d.%02dg\r\nY-Max: %d.%02dg\r\nZ-Max: %d.%02dg\r\n",
+					MMA8452Q_GetMaxX() / 100, abs(MMA8452Q_GetMaxX() % 100), MMA8452Q_GetMaxY() / 100,
+					abs(MMA8452Q_GetMaxY() % 100), MMA8452Q_GetMaxZ() / 100, abs(MMA8452Q_GetMaxZ() % 100));
+			LEUART_Put_TX_Buffer(tx_buf, tx_size);
+			tx_size = sprintf((char *) tx_buf, "Temp: %li.%luC\r\nHumidity: %li.%lu%%\r\nPressure: %lu.%luinHg", BME280_Get_Temp() / 100,
+					abs(BME280_Get_Temp() % 100), BME280_Get_Humidity() / 10, BME280_Get_Humidity() % 10, BME280_Get_Pres() / 100,
+					BME280_Get_Pres() % 100);
+			LEUART_Put_TX_Buffer(tx_buf, tx_size);
+			race_mode_run_active = false;
+		}
+		else
+		{
+			tx_size = sprintf((char *) tx_buf, "Ready to race!\r\n");
+			LEUART_Put_TX_Buffer(tx_buf, tx_size);
+			race_mode_run_active = true;
+		}
+		LEUART_TX_Buffer();
+	}
+}
+
+void PUSHBUTTON_1_Handler(void)
+{
+	uint32_t tx_size;
+	uint8_t tx_buf[40] = {0};
+
+	// Reset measurements in race mode
+	if (getMode() == DMPM_Mode_Race)
+	{
+		if (race_mode_run_active)
+		{
+			MMA8452Q_ResetMax();
+			tx_size = sprintf((char *) tx_buf, "Resetting values!\r\n");
+			LEUART_Put_TX_Buffer(tx_buf, tx_size);
+		}
+		else
+		{
+			tx_size = sprintf((char *) tx_buf, "Not on a run, nothing to do.\r\n");
+			LEUART_Put_TX_Buffer(tx_buf, tx_size);
+		}
+		LEUART_TX_Buffer();
+	}
+}
+
 /**************************************************************************//**
  * @brief Configure trace output for energyAware Profiler
  * @note  Enabling trace will add 80uA current for the EFM32_Gxxx_STK.
@@ -351,7 +455,7 @@ void wait_ms(uint32_t time_ms)
 	uint32_t n_ticks;
 
 	if (time_ms > 8589934)
-		n_ticks = 8589934 * 499;
+		n_ticks = 8589934 * 498;
 	else
 		n_ticks = time_ms*500;
 
@@ -361,6 +465,36 @@ void wait_ms(uint32_t time_ms)
 
 void setMode(DMPM_Mode_t new_mode)
 {
+	uint32_t tx_size;
+	uint8_t mode_str[40];
+
+	// Do things to prepare for the different modes
+	if (new_mode == DMPM_Mode_Race)
+	{
+		// Stop LETIMER
+		LETIMER_Enable(LETIMER0, false);
+
+		// Disable the accelerometer interrupts
+		MMA8452Q_Enable_Interrupts(false);
+
+		race_mode_run_active = false;
+		tx_size = sprintf((char *) mode_str, "\r\nSwitching to race mode!\r\n");
+		LEUART_Put_TX_Buffer(mode_str, tx_size);
+	}
+	else
+	{
+		// Start LETIMER
+		LETIMER0->CNT = LETIMER_CompareGet(LETIMER0, 0);
+
+		// Enable accelerometer interrupts
+		MMA8452Q_Enable_Interrupts(true);
+
+		LETIMER_Enable(LETIMER0, true);
+		tx_size = sprintf((char *) mode_str, "\r\nSwitching to low power mode!\r\n");
+		LEUART_Put_TX_Buffer(mode_str, tx_size);
+	}
+
+	LEUART_TX_Buffer();
 	active_mode = new_mode;
 }
 
@@ -451,22 +585,19 @@ int main(void)
 	while (1) {
 		while (active_mode == DMPM_Mode_Race)
 		{
-			// See what the current active buffer is
-			//active_buffer = LEUART_GetActiveBuffer();
-
 			MMA8452Q_ReadAll();
 			HMC5883L_ReadAll();
 			BME280_ReadAll();
 			//printData();
 
-			LEUART_TX_Wait();
+			//LEUART_TX_Wait();
 
 			// Delay is actually necessary. The ADAfruit app can't relay data
 			// as quickly to the app as it can be transmitted so there's no
 			// point in continuously printing the data if it's a second or two
 			// out of date. With the wait, the freshest data is sent and it
 			// is much more readable to the user.
-			wait_ms(500);
+			//wait_ms(500);
 		}
 		sleep();
 	}

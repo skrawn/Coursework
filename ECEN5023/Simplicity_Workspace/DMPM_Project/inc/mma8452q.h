@@ -49,6 +49,10 @@ void MMA8452Q_SetYAlarm(uint16_t alarm_val);
 void MMA8452Q_SetZAlarm(uint16_t alarm_val);
 void MMA8452Q_ResetMax(void);
 uint8_t MMA8452Q_GetPulseIntStatus(void);
+uint8_t MMA8452Q_GetInterruptSource(void);
 void MMA8452Q_Realign(void);
+void MMA8452Q_Enable_Interrupts(bool enable);
+void MMA8452Q_INT1_Handler(void);
+void MMA8452Q_INT2_Handler(void);
 
 #endif /* MMA8452Q_H_ */

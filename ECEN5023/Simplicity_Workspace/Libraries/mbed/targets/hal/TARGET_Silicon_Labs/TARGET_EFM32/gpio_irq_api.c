@@ -156,12 +156,12 @@ void gpio_irq_set(gpio_irq_t *obj, gpio_irq_event event, uint32_t enable)
 inline void gpio_irq_enable(gpio_irq_t *obj)
 {
     if(GPIO->IEN == 0) blockSleepMode(GPIO_LEAST_ACTIVE_SLEEPMODE);
-    GPIO_IntEnable(1 << obj->pin & 0xF); // pin mask for pins to enable
+    GPIO_IntEnable(1 << (obj->pin & 0xF)); // pin mask for pins to enable
 }
 
 inline void gpio_irq_disable(gpio_irq_t *obj)
 {
-    GPIO_IntDisable(1 << obj->pin & 0xF); // pin mask for pins to disable
+    GPIO_IntDisable(1 << (obj->pin & 0xF)); // pin mask for pins to disable
     if(GPIO->IEN == 0) unblockSleepMode(GPIO_LEAST_ACTIVE_SLEEPMODE);
 }
 

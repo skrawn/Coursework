@@ -32,8 +32,10 @@
  *******************************************************************************/
 
 #include <stdio.h>
+#include "config.h"
 #include "em_gpio.h"
 #include "flash.h"
+#include "gpio_irq_api.h"
 #include "i2c_drv.h"
 #include "leuart.h"
 #include "mma8452q.h"
@@ -46,10 +48,12 @@
 #define MMA8452Q_INT1_Port		gpioPortD
 #define MMA8452Q_INT1_Pin		2
 #define MMA8452Q_INT1_Mode		gpioModeInput
+#define MMA8452Q_INT1_Name		PD2
 
 #define MMA8452Q_INT2_Port		gpioPortD
 #define MMA8452Q_INT2_Pin		1
 #define MMA8452Q_INT2_Mode		gpioModeInput
+#define MMA8452Q_INT2_Name		PD1
 
 #define MMA8452Q_SLAVE_ADDR		0x3A // SA = 1
 
@@ -130,16 +134,19 @@ int16_t max_X_value = 0;
 int16_t max_Y_value = 0;
 int16_t max_Z_value = 0;
 
+gpio_irq_t INT1_pin_irq;
+gpio_irq_t INT2_pin_irq;
+
 void MMA8452Q_Init(void)
 {
 	uint8_t reg = 0;
 
-	GPIO_PinModeSet(MMA8452Q_INT1_Port, MMA8452Q_INT1_Pin, MMA8452Q_INT1_Mode, 0);
-	GPIO_PinModeSet(MMA8452Q_INT2_Port, MMA8452Q_INT2_Pin, MMA8452Q_INT1_Mode, 0);
+	// Configure the interrupt lines
+	gpio_irq_init(&INT1_pin_irq, MMA8452Q_INT1_Name, GPIO_Interrupt_Handler, 3);
+	gpio_irq_init(&INT2_pin_irq, MMA8452Q_INT2_Name, GPIO_Interrupt_Handler, 4);
 
-	// Enable external interrupt on these pins. Interrupt on rising edge.
-	GPIO_IntConfig(MMA8452Q_INT1_Port, MMA8452Q_INT1_Pin, true, false, true);
-	GPIO_IntConfig(MMA8452Q_INT2_Port, MMA8452Q_INT2_Pin, true, false, true);
+	gpio_irq_set(&INT1_pin_irq, IRQ_RISE, 1);
+	gpio_irq_set(&INT2_pin_irq, IRQ_RISE, 1);
 
 	// Check the device ID first
 	I2C_Read_Polling(MMA8452Q_SLAVE_ADDR, REG_WHO_AM_I, 1, &reg, 1);
@@ -190,7 +197,7 @@ void MMA8452Q_Init(void)
 	reg = 0x00 |
 			(1 << 5) |	// Transient interrupt goes to INT1
 			(0 << 3);	// Pulse interrupt goes to INT2
-	I2C_Write_Polling(MMA8452Q_SLAVE_ADDR, REG_CTRL_REG4, 1, &reg, 1);
+	I2C_Write_Polling(MMA8452Q_SLAVE_ADDR, REG_CTRL_REG5, 1, &reg, 1);
 
 	reg = 0x00 |
 			(0 << 4) |	// High-pass filter disabled
@@ -229,9 +236,8 @@ void MMA8452Q_Init(void)
 	reg = 3;
 	I2C_Write_Polling(MMA8452Q_SLAVE_ADDR, REG_PULSE_LTCY, 1, &reg, 1);
 
-	// Set window time to...5 seconds? This is probably not needed for single pulse mode,
-	// but configure it anyway. Each tick is 160ms.
-	reg = 31;
+	// Set window time to 1 second? aEach tick is 160ms.
+	reg = 7;
 	I2C_Write_Polling(MMA8452Q_SLAVE_ADDR, REG_PULSE_WIND, 1, &reg, 1);
 
 	reg = 0x00 |
@@ -246,23 +252,16 @@ void MMA8452Q_Init(void)
 	I2C_Write_Polling(MMA8452Q_SLAVE_ADDR, REG_PULSE_CFG, 1, &reg, 1);
 
 	MMA8452Q_GetPulseIntStatus();
+	MMA8452Q_GetInterruptSource();
 
-	// TODO - Data rates above 50Hz are "overkill"
 	// Set the data rate and put the accelerometer into active mode
 	reg = 0x00 |
 			(1 << 6) |	// Autosleep data rate = 12.5Hz
-			//(0 << 6) |	// Autosleep data rate = 50Hz
 			(5 << 3) |	// Output data rate = 12.5Hz
-			//(0 << 3) |	// Output data rate = 800Hz
 			(1 << 2) |	// Low noise mode enabled
 			(0 << 1) |	// Normal read mode
 			(1);		// Active mode
 	I2C_Write_Polling(MMA8452Q_SLAVE_ADDR, REG_CTRL_REG1, 1, &reg, 1);
-
-	// Enable GPIO interrupts
-	GPIO_IntEnable(MMA8452Q_INT1_Pin | MMA8452Q_INT2_Pin);
-	NVIC_EnableIRQ(GPIO_ODD_IRQn);
-	NVIC_EnableIRQ(GPIO_EVEN_IRQn);
 }
 
 void MMA8452Q_Enable(bool enable)
@@ -385,6 +384,15 @@ uint8_t MMA8452Q_GetPulseIntStatus(void)
 	return reg;
 }
 
+uint8_t MMA8452Q_GetInterruptSource(void)
+{
+	uint8_t reg;
+
+	I2C_Read_Polling(MMA8452Q_SLAVE_ADDR, REG_INT_SOURCE, 1, &reg, 1);
+
+	return reg;
+}
+
 void MMA8452Q_Realign(void)
 {
 	// Used to realign board to 0g positions
@@ -395,7 +403,6 @@ void MMA8452Q_Realign(void)
 	I2C_Read_Polling(MMA8452Q_SLAVE_ADDR, REG_STATUS, 1, &status, 1);
 	while ((status & 0x7) != 0x7)
 	{
-
 		I2C_Read_Polling(MMA8452Q_SLAVE_ADDR, REG_STATUS, 1, &status, 1);
 	}
 
@@ -441,67 +448,74 @@ void MMA8452Q_Realign(void)
 	Flash_Update_ZAxisOffset(z_offset);
 }
 
-/* TODO - Use GPIO IRQ API to implement handlers
- * void GPIO_ODD_IRQHandler(void)
+void MMA8452Q_Enable_Interrupts(bool enable)
 {
-	uint32_t intflags = GPIO_IntGet(), tx_size = 0;
-	uint8_t reg = 0, tx_buf[40];
-	GPIO_IntClear(intflags);
-
-	if (intflags & MMA8452Q_INT2_Pin)
+	if (enable)
 	{
-		// Pulse detected
-		// Read the pulse source register
-		reg = MMA8452Q_GetPulseIntStatus();
+		// Clear any pending interrupts first
+		MMA8452Q_GetInterruptSource();
+		MMA8452Q_GetPulseIntStatus();
 
-		if (reg & PULSE_SRC_AXZ)
-		{
-			if (reg & PULSE_SRC_POLZ)
-				tx_size = sprintf((char *) tx_buf, "Pulse exceeding %d.%02dg detected downwards!",
-						EEPROM_Data.XAxisAlarm / 100, EEPROM_Data.XAxisAlarm % 100);
-			else
-				tx_size = sprintf((char *) tx_buf, "Pulse exceeding %d.%02dg detected upwards!",
-						EEPROM_Data.XAxisAlarm / 100, EEPROM_Data.XAxisAlarm % 100);
-			LEUART_Put_TX_Buffer(tx_buf, tx_size);
-		}
-
-		// Okay, need to get the direction right here. The Z-axis is correct, but on my dev kit,
-		// the positive x-axis is to the left and the positive y-axis is toward the back of the
-		// board (battery).
-		if (reg & PULSE_SRC_AXY)
-		{
-			if (reg & PULSE_SRC_POLY)
-				tx_size = sprintf((char *) tx_buf, "Pulse exceeding %d.%02dg detected backwards!",
-						EEPROM_Data.YAxisAlarm / 100, EEPROM_Data.YAxisAlarm % 100);
-			else
-				tx_size = sprintf((char *) tx_buf, "Pulse exceeding %d.%02dg detected forwards!",
-						EEPROM_Data.YAxisAlarm / 100, EEPROM_Data.YAxisAlarm % 100);
-			LEUART_Put_TX_Buffer(tx_buf, tx_size);
-		}
-
-		if (reg & PULSE_SRC_AXX)
-		{
-			if (reg & PULSE_SRC_POLX)
-				tx_size = sprintf((char *) tx_buf, "Pulse exceeding %d.%02dg detected to the right!",
-						EEPROM_Data.XAxisAlarm / 100, EEPROM_Data.XAxisAlarm % 100);
-			else
-				tx_size = sprintf((char *) tx_buf, "Pulse exceeding %d.%02dg detected to the left!",
-						EEPROM_Data.XAxisAlarm / 100, EEPROM_Data.XAxisAlarm % 100);
-			LEUART_Put_TX_Buffer(tx_buf, tx_size);
-		}
-
-		LEUART_TX_Buffer();
+		gpio_irq_enable(&INT1_pin_irq);
+		gpio_irq_enable(&INT2_pin_irq);
+	}
+	else
+	{
+		gpio_irq_disable(&INT1_pin_irq);
+		gpio_irq_disable(&INT2_pin_irq);
 	}
 }
 
-void GPIO_EVEN_IRQHandler(void)
+void MMA8452Q_INT1_Handler(void)
 {
-	uint32_t intflags = GPIO_IntGet();
-	GPIO_IntClear(intflags);
 
-	// Check the source of the interrupt
-	if (intflags & MMA8452Q_INT1_Pin)
+}
+
+void MMA8452Q_INT2_Handler(void)
+{
+	uint8_t reg = 0, tx_buf[40];
+	uint32_t tx_size;
+
+	// Pulse detected
+	// Read (and clear) the pulse source register
+	reg = MMA8452Q_GetPulseIntStatus();
+
+	if (reg & PULSE_SRC_AXZ)
 	{
-		// Transient detected
+		if (reg & PULSE_SRC_POLZ)
+			tx_size = sprintf((char *) tx_buf, "Pulse exceeding %d.%02dg detected downwards!\r\n",
+					EEPROM_Data.XAxisAlarm / 100, EEPROM_Data.XAxisAlarm % 100);
+		else
+			tx_size = sprintf((char *) tx_buf, "Pulse exceeding %d.%02dg detected upwards!\r\n",
+					EEPROM_Data.XAxisAlarm / 100, EEPROM_Data.XAxisAlarm % 100);
+		LEUART_Put_TX_Buffer(tx_buf, tx_size);
 	}
-}*/
+
+	// Okay, need to get the direction right here. The Z-axis is correct, but on my dev kit,
+	// the positive x-axis is to the left and the positive y-axis is toward the back of the
+	// board (battery).
+	if (reg & PULSE_SRC_AXY)
+	{
+		if (reg & PULSE_SRC_POLY)
+			tx_size = sprintf((char *) tx_buf, "Pulse exceeding %d.%02dg detected backwards!\r\n",
+					EEPROM_Data.YAxisAlarm / 100, EEPROM_Data.YAxisAlarm % 100);
+		else
+			tx_size = sprintf((char *) tx_buf, "Pulse exceeding %d.%02dg detected forwards!\r\n",
+					EEPROM_Data.YAxisAlarm / 100, EEPROM_Data.YAxisAlarm % 100);
+		LEUART_Put_TX_Buffer(tx_buf, tx_size);
+	}
+
+	if (reg & PULSE_SRC_AXX)
+	{
+		if (reg & PULSE_SRC_POLX)
+			tx_size = sprintf((char *) tx_buf, "Pulse exceeding %d.%02dg detected to the left!\r\n",
+					EEPROM_Data.XAxisAlarm / 100, EEPROM_Data.XAxisAlarm % 100);
+		else
+			tx_size = sprintf((char *) tx_buf, "Pulse exceeding %d.%02dg detected to the right!\r\n",
+					EEPROM_Data.XAxisAlarm / 100, EEPROM_Data.XAxisAlarm % 100);
+		LEUART_Put_TX_Buffer(tx_buf, tx_size);
+	}
+
+	LEUART_TX_Buffer();
+}
+

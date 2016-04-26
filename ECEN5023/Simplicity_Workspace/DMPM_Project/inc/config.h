@@ -62,6 +62,8 @@ typedef enum {
 	DMPM_Mode_Race
 } DMPM_Mode_t;
 
+void GPIO_Interrupt_Handler(uint32_t id, gpio_irq_event event);
+
 float convertToCelsius(int16_t adcSample);
 void wait_ms(uint32_t time_ms);
 void setMode(DMPM_Mode_t new_mode);

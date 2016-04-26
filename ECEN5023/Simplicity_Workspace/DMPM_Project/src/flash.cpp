@@ -31,6 +31,7 @@
  *
  *******************************************************************************/
 
+#include "config.h"
 #include "em_ebi.h"
 #include "em_gpio.h"
 #include "flash.h"
@@ -85,7 +86,7 @@ void Flash_Init(void)
 	EE_DeclareVariable(&ZAxisOffset);
 
 	// Check if anything has been initialized yet
-#if RESET_EEPROM_VALUES
+#if !RESET_EEPROM_VALUES
 	EE_Read(&FirstInit, &first_init);
 	if (first_init == FIRST_INIT_VAL)
 	{
