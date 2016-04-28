@@ -254,6 +254,8 @@ void LETIMER0_IRQHandler(void)
 		LETIMER_RepeatSet(LETIMER0, 0, 3);
 		LETIMER_Enable(LETIMER0, true);
 
+		I2C1_Enable(true);
+
 		// Since there will be left-over data received from the LEUART after programming the
 		// Bluefruit, the RX channel needs to be reset. So, on the first interrupt, clear
 		// the RX DMA channel.
@@ -316,6 +318,7 @@ void LETIMER0_IRQHandler(void)
 
 		// Prepare for the next sample
 		BME280_Set_Mode(BME280_MODE_FORCED);
+		I2C1_Enable(false);
 	}
 }
 
@@ -473,6 +476,9 @@ void setMode(DMPM_Mode_t new_mode)
 	{
 		// Stop LETIMER
 		LETIMER_Enable(LETIMER0, false);
+
+		// Enable I2C in case it was turned off by the LEUART handler
+		I2C1_Enable(true);
 
 		// Disable the accelerometer interrupts
 		MMA8452Q_Enable_Interrupts(false);

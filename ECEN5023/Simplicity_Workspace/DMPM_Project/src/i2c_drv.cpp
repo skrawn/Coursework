@@ -172,6 +172,18 @@ I2C_TransferReturn_TypeDef I2C_Read_Reg_Polling(uint8_t slave_addr, uint8_t *reg
 	return I2C_Status;
 }
 
+void I2C1_Enable(bool enable)
+{
+	if (enable)
+	{
+		I2C_Enable(I2C1, true);
+	}
+	else
+	{
+		I2C_Enable(I2C1, false);
+	}
+}
+
 void I2C1_IRQHandler(void)
 {
 	uint32_t active_ints = I2C_IntGet(I2C1);

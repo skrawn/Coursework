@@ -192,7 +192,6 @@ void LESENSE_IRQHandler(void)
 {
 	// Clear the interrupt
 	uint32_t intflags = LESENSE_IntGet(), i;
-	LESENSE_IntClear(intflags);
 
 	// Read the results registers
 	for (i = 0; i < 4; i++)
@@ -222,4 +221,5 @@ void LESENSE_IRQHandler(void)
 
 		}
 	}
+	LESENSE_IntClear(intflags);
 }

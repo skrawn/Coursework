@@ -49,5 +49,6 @@ void I2C_Initialize(void);
 I2C_TransferReturn_TypeDef I2C_Write_Polling(uint8_t slave_addr, uint16_t reg_addr, uint8_t reg_len, uint8_t *tx_data, uint16_t len);
 I2C_TransferReturn_TypeDef I2C_Read_Polling(uint8_t slave_addr, uint16_t reg_addr, uint8_t reg_len, uint8_t *rx_data, uint16_t len);
 I2C_TransferReturn_TypeDef I2C_Read_Reg_Polling(uint8_t slave_addr, uint8_t *reg_addr, uint8_t reg_len, uint8_t *rx_data, uint16_t len);
+void I2C1_Enable(bool enable);
 
 #endif /* I2C_DRV_H_ */

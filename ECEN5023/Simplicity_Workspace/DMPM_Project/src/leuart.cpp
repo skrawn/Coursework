@@ -102,6 +102,7 @@ static void setLPres(void);
 static void setUHum(void);
 static void setLHum(void);
 static void changeMode(void);
+static void zeroAccel(void);
 
 static uint16_t parse_float_string(void);
 
@@ -125,6 +126,7 @@ const BT_Cmd_t CMD_TABLE[] = {
 	{"SetUHum\0", setUHum},
 	{"SetLHum\0", setLHum},
 	{"ChMode\0", changeMode},
+	{"ZeroAccel\0", zeroAccel},
 	{'\0', 0}
 };
 
@@ -740,9 +742,6 @@ static void setLHum(void)
 
 static void changeMode(void)
 {
-	uint8_t tx_buf[40] = {0};
-	uint32_t tx_size;
-
 	if (getMode() == DMPM_Mode_Race)
 	{
 		setMode(DMPM_Mode_Low_Power);
@@ -751,6 +750,17 @@ static void changeMode(void)
 	{
 		setMode(DMPM_Mode_Race);
 	}
+}
+
+static void zeroAccel(void)
+{
+	uint8_t tx_buf[50] = {0};
+	uint32_t tx_size;
+
+	MMA8452Q_Realign();
+
+	tx_size = sprintf((char *) tx_buf, "Accelerometer zeroed!\r\n");
+	LEUART_Put_TX_Buffer(tx_buf, tx_size);
 }
 
 static uint16_t parse_float_string(void)

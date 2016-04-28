@@ -94,8 +94,8 @@ void HMC5883L_Init(void)
 	reg = 0x00 |
 			//(0 << 5) |	// 1 samples averaged per measurement output
 			(3 << 5) |	// 8 samples averaged per measurement output
-			//(4 << 2) |	// 15 Hz output data rate
-			(5 << 2) |	// 30 Hz output data rate
+			(4 << 2) |	// 15 Hz output data rate
+			//(5 << 2) |	// 30 Hz output data rate
 			(0);		// Normal measurement mode
 	I2C_Write_Polling(HMC5883L_SLAVE_ADDR, REG_CONFIG_A, 1, &reg, 1);
 
