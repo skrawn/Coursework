@@ -41,8 +41,11 @@ void I2C_ReadBuffer(uint8_t slave_addr, uint8_t reg_addr, uint8_t *rx_buf, uint3
     
     while (rx_remaining > 0)
     {
-        return_status |= I2C_MasterReadByte(*(rx_buf++));       
         rx_remaining--;        
+        if (rx_remaining == 0)
+            *(rx_buf) = I2C_MasterReadByte(0);       
+        else
+            *(rx_buf++) = I2C_MasterReadByte(1);
     }
     return_status |= I2C_MasterSendStop();
 

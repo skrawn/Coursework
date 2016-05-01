@@ -27,7 +27,7 @@
 *  Place your includes, defines and code here 
 ********************************************************************************/
 /* `#START isr_ResetSteps_intc` */
-
+#include "steps.h"
 /* `#END` */
 
 #ifndef CYINT_IRQ_BASE
@@ -165,7 +165,7 @@ CY_ISR(isr_ResetSteps_Interrupt)
 
     /*  Place your Interrupt code here. */
     /* `#START isr_ResetSteps_Interrupt` */
-
+    Clear_Step_Count();
     /* `#END` */
 }
 

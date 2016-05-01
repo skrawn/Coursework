@@ -27,7 +27,7 @@
 *  Place your includes, defines and code here 
 ********************************************************************************/
 /* `#START isr_INT1_intc` */
-
+#include "mma8452q.h"
 /* `#END` */
 
 #ifndef CYINT_IRQ_BASE
@@ -165,7 +165,7 @@ CY_ISR(isr_INT1_Interrupt)
 
     /*  Place your Interrupt code here. */
     /* `#START isr_INT1_Interrupt` */
-
+    MMA8452Q_INT1_Handler();
     /* `#END` */
 }
 
