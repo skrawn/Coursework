@@ -33,6 +33,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include "AMux.h"
 #include "eeprom_api.h"
 #include "fivePtTripleSmooth.h"
 #include "hanning.h"
@@ -100,8 +101,10 @@
 #define PULSE_THS_CONV_NUM		10		// Converts the user data in 0.01g units
 #define PULSE_THS_CONV_DEN		63		// to the threshold register units of 0.063g
 
-//#define DETECTION_THRESHOLD     100     // Detection threshold = +/- 0.2g = 0.2/0.002 = 100 
-#define DETECTION_THRESHOLD     75     // Detection threshold = +/- 0.15g = 0.15/0.002 = 75 
+//#define DETECTION_THRESHOLD     65      // Detection threshold = +/- 0.2g = 0.2/0.002 = 100
+#define DETECTION_THRESHOLD     20      // Detection threshold = +/- 0.04g = 0.04/0.002 = 20
+#define STEP_THRESHOLD          20
+//#define DETECTION_THRESHOLD     75     // Detection threshold = +/- 0.15g = 0.15/0.002 = 75 
 
 #define REG_TO_READ_NUM			1		// Converts the 0.002g units to 0.01g units
 #define REG_TO_READ_DEN			5
@@ -126,6 +129,13 @@ typedef enum {
     Z_IS_GRAVITY,
 } Orientation_t;
 
+// Corresponds to the mux channel
+typedef enum {
+    LED_RED = 0,
+    LED_BLUE,
+    LED_GREEN
+} LED_Color_t;
+
 const double REG_1G_COUNTS = 500.0;
 
 uint8_t offset_x = 0;
@@ -142,6 +152,7 @@ int16_t max_Z_value = 0;
 
 fivePtTripleSmooth_t x_filter, y_filter, z_filter;
 Hanning_t xh_filter, yh_filter, zh_filter;
+LED_Color_t led_color = LED_RED;
 
 bool at_rest = true;
 
@@ -273,9 +284,10 @@ void MMA8452Q_Init(void)
 	// Set the data rate and put the accelerometer into active mode
 	reg = 0x00 |
 			(1 << 6) |	// Autosleep data rate = 12.5Hz
+            //(7 << 3) |	// Output data rate = 1.56Hz
 			//(5 << 3) |	// Output data rate = 12.5Hz
-            //(4 << 3) |	// Output data rate = 50Hz
-            (3 << 3) |	// Output data rate = 100Hz
+            (4 << 3) |	// Output data rate = 50Hz
+            //(3 << 3) |	// Output data rate = 100Hz
 			(1 << 2) |	// Low noise mode enabled
 			(0 << 1) |	// Normal read mode
 			(1);		// Active mode
@@ -573,17 +585,19 @@ void MMA8452Q_INT1_Handler(void)
     else
     {
         if ((orientation == X_IS_GRAVITY && 
-            abs(gd_max_accel - x_gd_accel) > DETECTION_THRESHOLD) ||
+            abs(gd_max_accel - x_gd_accel) > STEP_THRESHOLD) ||
             (orientation == Y_IS_GRAVITY && 
-            abs(gd_max_accel - y_gd_accel) > DETECTION_THRESHOLD) ||
+            abs(gd_max_accel - y_gd_accel) > STEP_THRESHOLD) ||
             (orientation == Z_IS_GRAVITY && 
-            abs(gd_max_accel - z_gd_accel) > DETECTION_THRESHOLD))
+            abs(gd_max_accel - z_gd_accel) > STEP_THRESHOLD))
         {
             Increment_Step_Count();
-            //at_rest = true;      
+            step_detect_time = Tick_Get_Ticks();
+            step_detected = true;
+            at_rest = true;
             
             // Calculate new gravity directions
-            gd_max_accel = x_gd_accel;
+            /*(gd_max_accel = x_gd_accel;
             orientation = X_IS_GRAVITY;
             if (gd_max_accel < y_gd_accel)
             {
@@ -594,17 +608,28 @@ void MMA8452Q_INT1_Handler(void)
             {
                 gd_max_accel = z_gd_accel;   
                 orientation = Z_IS_GRAVITY;
-            }
+            }*/
         }
         else
         {
             // No second step was detected. If no motion is detected after 500ms,
             // the device is at reset
-            if (Tick_Get_Time_Diff(step_detect_time) > 500)
+            if (Tick_Get_Time_Diff(step_detect_time) > 250)
             {
                 at_rest = true;               
             }
         }
+    }
+    
+    if (step_detected)
+    {
+        led_color = (led_color + 1) % 3;
+        AMux_Select(led_color);
+        step_detected = false;
+    }   
+    else
+    {
+        AMux_Select(3);
     }
     
     // Adjust the data to readable values
@@ -623,7 +648,7 @@ void MMA8452Q_INT1_Handler(void)
     memset(display_str, ' ', 16);
     LCD_Position(1,0);
     LCD_PrintString(display_str);
-    sprintf(display_str, "Z:%d.%02d STEP: %04d", z_data / 100, 
+    sprintf(display_str, "Z:%d.%02d STEP: %03d", z_data / 100, 
         abs(z_data % 100), Get_Step_Count());
     LCD_Position(1,0);
     LCD_PrintString(display_str);

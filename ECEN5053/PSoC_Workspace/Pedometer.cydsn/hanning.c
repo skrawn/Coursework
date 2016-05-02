@@ -24,7 +24,8 @@ int16_t Hanning_Process(Hanning_t *hanning, int16_t data)
     
     // Update the filter components
     hanning->yn_2 = hanning->yn_1;
-    hanning->yn_1 = result;
+    //hanning->yn_1 = result;
+    hanning->yn_1 = data;
     
     return result;
 }
