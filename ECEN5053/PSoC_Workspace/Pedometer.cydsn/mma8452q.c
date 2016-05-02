@@ -102,7 +102,7 @@
 #define PULSE_THS_CONV_DEN		63		// to the threshold register units of 0.063g
 
 //#define DETECTION_THRESHOLD     65      // Detection threshold = +/- 0.2g = 0.2/0.002 = 100
-#define DETECTION_THRESHOLD     50      // Detection threshold = +/- 0.04g = 0.04/0.002 = 20
+#define DETECTION_THRESHOLD     75      // Detection threshold = +/- 0.04g = 0.04/0.002 = 20
 #define STEP_THRESHOLD          20
 //#define DETECTION_THRESHOLD     75     // Detection threshold = +/- 0.15g = 0.15/0.002 = 75 
 
@@ -161,6 +161,7 @@ fivePtTripleSmooth_t x_filter, y_filter, z_filter;
 Hanning_t xh_filter, yh_filter, zh_filter;
 LED_Color_t led_color = LED_RED;
 
+bool portrait = true;
 bool at_rest = true;
 
 void MMA8452Q_Init(void)
@@ -210,21 +211,18 @@ void MMA8452Q_Init(void)
 	I2C_WriteBuffer(MMA8452Q_SLAVE_ADDR, REG_CTRL_REG3, &reg, 1);
 
 	reg = 0x00 |
-			(0 << 7) |	// Sleep/Wake interrupt disabled
-			//(1 << 5) |	// Transient interrupt enabled
+			(0 << 7) |	// Sleep/Wake interrupt disabled			
 			(0 << 5) |	// Transient interrupt disabled
 			(1 << 4) |	// Landscape/portrait interrupt enabled
-			(0 << 3) |	// Pulse interrupt disabled
-			//(0 << 3) |	// Pulse interrupt disabled
+			(0 << 3) |	// Pulse interrupt disabled			
 			(0 << 2) |	// Freefall/motion interrupt disabled
 			(1);		// Data ready interrupt Enabled
 	I2C_WriteBuffer(MMA8452Q_SLAVE_ADDR, REG_CTRL_REG4, &reg, 1);
 
 	reg = 0x00 |
-            (0 << 4) |      // Landscape/portrait interrupt goes to INT2
+            //(0 << 4) |      // Landscape/portrait interrupt goes to INT2
+            (1 << 4) |      // Landscape/portrait interrupt goes to INT1
             (1);            // Data ready interrupt goes to INT1
-			//(1 << 5) |	// Transient interrupt goes to INT1
-			//(0 << 3);	// Pulse interrupt goes to INT2
 	I2C_WriteBuffer(MMA8452Q_SLAVE_ADDR, REG_CTRL_REG5, &reg, 1);
 
 	reg = 0x00 |
@@ -240,17 +238,6 @@ void MMA8452Q_Init(void)
     reg = EEPROM_Get_ZAxisOffset();
 	I2C_WriteBuffer(MMA8452Q_SLAVE_ADDR, REG_OFF_Z, (uint8_t *) &reg, 1);
 
-	// Configure pulse detection
-	// Set the pulse thresholds
-	reg = PULSE_X_THRESH;
-	I2C_WriteBuffer(MMA8452Q_SLAVE_ADDR, REG_PULSE_THSX, &reg, 1);
-
-	reg = PULSE_Y_THRESH;
-	I2C_WriteBuffer(MMA8452Q_SLAVE_ADDR, REG_PULSE_THSY, &reg, 1);
-
-	reg = PULSE_Z_THRESH;
-	I2C_WriteBuffer(MMA8452Q_SLAVE_ADDR, REG_PULSE_THSZ, &reg, 1);
-
 	reg = 0x00 |
 			(0 << 5) |	// Bypass HPF for the pulse processing
 			//(1 << 4) |	// Low pass filtered enable for pulse processing
@@ -258,35 +245,6 @@ void MMA8452Q_Init(void)
 			(0);		// High pass filter cutoff = 0.5Hz
 	I2C_WriteBuffer(MMA8452Q_SLAVE_ADDR, REG_HP_FILTER_CUTOFF, &reg, 1);
 
-	// Pulse window time: in LPLN mode with ODR = 12.5Hz, each count is 80ms. Set the
-	// window for 240ms?
-	reg = 3;
-    //reg = 1;
-	I2C_WriteBuffer(MMA8452Q_SLAVE_ADDR, REG_PULSE_TMLT, &reg, 1);
-
-	// Set latency to 500ms. Each count is 160ms
-	//reg = 3;
-    reg = 1;
-	I2C_WriteBuffer(MMA8452Q_SLAVE_ADDR, REG_PULSE_LTCY, &reg, 1);
-
-	// Set window time to 1 second? aEach tick is 160ms.
-	//reg = 7;
-    reg = 1;
-	I2C_WriteBuffer(MMA8452Q_SLAVE_ADDR, REG_PULSE_WIND, &reg, 1);
-
-	reg = 0x00 |
-			(0 << 7) | 	// Doulbe pulse detection not aborted
-			(1 << 6) | 	// Latch pulse event flags
-			(0 << 5) |	// Disable Z axis double pulse detection
-			(1 << 4) |	// Enable Z axis single pulse detection
-			(0 << 3) |	// Disable Y axis double pulse detection
-			(1 << 2) |	// Enable Y axis single pulse detection
-			(0 << 1) |	// Disable X axis double pulse detection
-			(1); 		// Enable X axis single pulse detection
-	I2C_WriteBuffer(MMA8452Q_SLAVE_ADDR, REG_PULSE_CFG, &reg, 1);
-
-	MMA8452Q_GetPulseIntStatus();
-	MMA8452Q_GetInterruptSource();
 
 	// Set the data rate and put the accelerometer into active mode
 	reg = 0x00 |
@@ -324,11 +282,6 @@ void MMA8452Q_ReadAll(void)
 
 	if (xyz_data[4] > 0x7F)
 		z_data -= 0x1000;
-
-	// Adjust data for the project
-	//x_data = x_data * REG_TO_READ_NUM / REG_TO_READ_DEN;
-	//y_data = y_data * REG_TO_READ_NUM / REG_TO_READ_DEN;
-	//z_data = z_data * REG_TO_READ_NUM / REG_TO_READ_DEN;
 
 	// Positive board x-axis = x-axis
 	// Positive board y-axis = y-axis
@@ -528,11 +481,11 @@ void MMA8452Q_Enable_Interrupts(bool enable)
 
 void MMA8452Q_INT1_Handler(void)
 {
-    int16_t x_data_filt, y_data_filt, z_data_filt, x_data, y_data, z_data, 
+    int16_t x_data_filt, y_data_filt, z_data_filt,
         x_gd_accel, y_gd_accel, z_gd_accel, gd_max_accel_second;    
-    uint8_t status;
-    char display_str[16] = {0};
-    double x_inc_angle, y_inc_angle, z_inc_angle;
+    float  x_data, y_data, z_data;
+    uint8_t status, pl_status, pl_count;
+    char display_str[16] = {0};    
     
     static uint32_t step_detect_time;
     static int16_t x_rest_val, y_rest_val, z_rest_val, gd_max_accel_first;
@@ -542,148 +495,189 @@ void MMA8452Q_INT1_Handler(void)
     
     status = MMA8452Q_GetInterruptSource();
     
-    MMA8452Q_ReadAll();
-    
-    // Pass the results through the five point triple smooth filter
-    //x_data_filt = fivePtTripleSmooth_Process(&x_filter, x_axis_data);
-    //y_data_filt = fivePtTripleSmooth_Process(&y_filter, y_axis_data);
-    //z_data_filt = fivePtTripleSmooth_Process(&z_filter, z_axis_data);    
-    //x_data_filt = Hanning_Process(&xh_filter, x_axis_data);
-    //y_data_filt = Hanning_Process(&yh_filter, y_axis_data);
-    //z_data_filt = Hanning_Process(&zh_filter, z_axis_data);
-    x_data_filt = x_axis_data;
-    y_data_filt = y_axis_data;
-    z_data_filt = z_axis_data;
-    
-    switch (state)
+    if (status & 0x10)
     {
-        case STEP_AT_REST:
-            x_rest_val = x_data_filt;
-            y_rest_val = y_data_filt;
-            z_rest_val = z_data_filt;                             
+        // Portrait/landscape status
+        I2C_ReadBuffer(MMA8452Q_SLAVE_ADDR, REG_PL_STATUS, &status, 1);           
+        pl_count = 5;     
+        I2C_WriteBuffer(MMA8452Q_SLAVE_ADDR, REG_PL_COUNT, &pl_count, 1);
         
-            step_detect_time = Tick_Get_Ticks();
-            state = STEP_FIRST_STEP;                       
-            break;
+        status = (status & 0x6) >> 1;
+    	if (status == 0 || status == 1)
+            portrait = true;
+        else
+            portrait = false;
+    }
+    
+    if (status & 0x1)
+    {
+        // Data ready interrupt
+    
+        MMA8452Q_ReadAll();
         
-        case STEP_FIRST_STEP:
-            // Looks for the first pulse
+        // Pass the results through the five point triple smooth filter
+        x_data_filt = fivePtTripleSmooth_Process(&x_filter, x_axis_data);
+        y_data_filt = fivePtTripleSmooth_Process(&y_filter, y_axis_data);
+        z_data_filt = fivePtTripleSmooth_Process(&z_filter, z_axis_data);    
+        //x_data_filt = Hanning_Process(&xh_filter, x_axis_data);
+        //y_data_filt = Hanning_Process(&yh_filter, y_axis_data);
+        //z_data_filt = Hanning_Process(&zh_filter, z_axis_data);
+        //x_data_filt = x_axis_data;
+        //y_data_filt = y_axis_data;
+        //z_data_filt = z_axis_data;
+        
+        switch (state)
+        {
+            case STEP_AT_REST:
+                x_rest_val = x_data_filt;
+                y_rest_val = y_data_filt;
+                z_rest_val = z_data_filt;                             
             
-            // Calculate the gravity-direction accleration
-            x_gd_accel = x_data_filt * x_rest_val / REG_1G_COUNTS_INT;
-            y_gd_accel = y_data_filt * y_rest_val / REG_1G_COUNTS_INT;
-            z_gd_accel = z_data_filt * z_rest_val / REG_1G_COUNTS_INT;
-        
-            gd_max_accel_first = x_gd_accel + y_gd_accel + z_gd_accel;
-        
-            if (abs(abs(gd_max_accel_first) - REG_1G_COUNTS_INT) > DETECTION_THRESHOLD)
-            {                
-                state = STEP_SECOND_STEP;
                 step_detect_time = Tick_Get_Ticks();
-            }
-            else
-            {
+                state = STEP_FIRST_STEP;                       
+                break;
+            
+            case STEP_FIRST_STEP:
+                // Looks for the first pulse
+                
+                // Calculate the gravity-direction accleration
+                x_gd_accel = x_data_filt * x_rest_val / REG_1G_COUNTS_INT;
+                y_gd_accel = y_data_filt * y_rest_val / REG_1G_COUNTS_INT;
+                z_gd_accel = z_data_filt * z_rest_val / REG_1G_COUNTS_INT;
+            
+                gd_max_accel_first = x_gd_accel + y_gd_accel + z_gd_accel;
+            
+                if (abs(abs(gd_max_accel_first) - REG_1G_COUNTS_INT) > DETECTION_THRESHOLD)
+                {                
+                    state = STEP_SECOND_STEP;
+                    step_detect_time = Tick_Get_Ticks();
+                }
+                else
+                {
+                    if (Tick_Get_Time_Diff(step_detect_time) > 200)
+                    {
+                        state = STEP_AT_REST;   
+                    }   
+                }            
+                break;
+            
+            case STEP_SECOND_STEP:
+                // Look for second pulse
+                
+                // Calculate the gravity-direction accleration
+                x_gd_accel = x_data_filt * x_rest_val / REG_1G_COUNTS_INT;
+                y_gd_accel = y_data_filt * y_rest_val / REG_1G_COUNTS_INT;
+                z_gd_accel = z_data_filt * z_rest_val / REG_1G_COUNTS_INT;
+                
+                gd_max_accel_second = x_gd_accel + y_gd_accel + z_gd_accel;
+                
+                // First, determine if the gravity acceleration is over the threshold
+                if (abs(abs(gd_max_accel_second) - REG_1G_COUNTS_INT) > DETECTION_THRESHOLD)
+                {   
+                    step_detected = true;
+                   
+                }                      
+                
+                if (!step_detected)
+                {
+                    if (Tick_Get_Time_Diff(step_detect_time) > 200)
+                    {
+                        state = STEP_AT_REST;   
+                    }                   
+                }     
+                else
+                {
+                    step_detect_time = Tick_Get_Ticks();
+                    Increment_Step_Count();
+                    state = STEP_DETECTED;
+                    led_color = (led_color + 1) % 3;
+                    AMux_Select(led_color);   
+                }
+                break;
+            
+            case STEP_DETECTED:
+                if (step_detected)
+                {
+                    AMux_Select(3);
+                    step_detected = false;                
+                }              
+                
                 if (Tick_Get_Time_Diff(step_detect_time) > 200)
                 {
                     state = STEP_AT_REST;   
                 }   
-            }            
-            break;
-        
-        case STEP_SECOND_STEP:
-            // Look for second pulse
-            
-            // Calculate the gravity-direction accleration
-            x_gd_accel = x_data_filt * x_rest_val / REG_1G_COUNTS_INT;
-            y_gd_accel = y_data_filt * y_rest_val / REG_1G_COUNTS_INT;
-            z_gd_accel = z_data_filt * z_rest_val / REG_1G_COUNTS_INT;
-            
-            gd_max_accel_second = x_gd_accel + y_gd_accel + z_gd_accel;
-            
-            // First, determine if the gravity acceleration is over the threshold
-            if (abs(abs(gd_max_accel_second) - REG_1G_COUNTS_INT) > DETECTION_THRESHOLD)
-            {   
-                step_detected = true;
-               
-            }                      
-            
-            if (!step_detected)
+                break;
+        } 
+    
+        // Portrait/Landscape Orientation
+        if (portrait)
+        {
+            // In portrait. Look for a change to landscape   
+            if (y_data_filt < 225 && y_data_filt > -225)
             {
-                if (Tick_Get_Time_Diff(step_detect_time) > 200)
-                {
-                    state = STEP_AT_REST;   
-                }                   
-            }     
-            else
-            {
-                step_detect_time = Tick_Get_Ticks();
-                Increment_Step_Count();
-                state = STEP_DETECTED;
-                led_color = (led_color + 1) % 3;
-                AMux_Select(led_color);   
+                portrait = true;
             }
-            break;
+            else
+                portrait = false;
+        }
+        else
+        {
+            // In landscape. Look for a change to portrait
+            if (x_data_filt < 225 && x_data_filt > -225)
+            {
+                portrait = false;
+            }
+            else
+                portrait = true;
+        }
         
-        case STEP_DETECTED:
-            if (step_detected)
-            {
-                AMux_Select(3);
-                step_detected = false;                
-            }              
-            
-            if (Tick_Get_Time_Diff(step_detect_time) > 200)
-            {
-                state = STEP_AT_REST;   
-            }   
-            break;
-    } 
-    
-    // Adjust the data to readable values
-    x_data = x_data_filt * REG_TO_READ_NUM / REG_TO_READ_DEN;
-    y_data = y_data_filt * REG_TO_READ_NUM / REG_TO_READ_DEN;
-    z_data = z_data_filt * REG_TO_READ_NUM / REG_TO_READ_DEN;
-    
-    memset(display_str, ' ', 16);
-    LCD_Position(0,0);
-    LCD_PrintString(display_str);
-    sprintf(display_str, "X:%d.%02d Y:%d.%02d", x_data / 100, 
-        abs(x_data % 100), y_data / 100, abs(y_data % 100));
-    LCD_Position(0,0);
-    LCD_PrintString(display_str);
-    
-    memset(display_str, ' ', 16);
-    LCD_Position(1,0);
-    LCD_PrintString(display_str);
-    sprintf(display_str, "Z:%d.%02d STEP: %03d", z_data / 100, 
-        abs(z_data % 100), Get_Step_Count());
-    LCD_Position(1,0);
-    LCD_PrintString(display_str);
+        // Adjust the data to readable values
+        /*x_data = x_data_filt * REG_TO_READ_NUM / REG_TO_READ_DEN;
+        y_data = y_data_filt * REG_TO_READ_NUM / REG_TO_READ_DEN;
+        z_data = z_data_filt * REG_TO_READ_NUM / REG_TO_READ_DEN;*/
+        x_data = x_data_filt * 0.002;
+        y_data = y_data_filt * 0.002;
+        z_data = z_data_filt * 0.002;
+        
+        /*memset(display_str, ' ', 16);
+        LCD_Position(0,0);
+        LCD_PrintString(display_str);        
+        sprintf(display_str, "X:%.2f Y:%.2f", x_data, y_data);
+        LCD_Position(0,0);
+        LCD_PrintString(display_str);*/
+
+        memset(display_str, ' ', 16);    
+        LCD_Position(0,0);
+        LCD_PrintString(display_str);
+        if (portrait)
+        {            
+            sprintf(display_str, "PORTRAIT");        
+        }
+        else
+        {
+            sprintf(display_str, "LANDSCAPE");        
+        }
+        LCD_Position(0,0);
+        LCD_PrintString(display_str);
+        
+        memset(display_str, ' ', 16);
+        LCD_Position(1,0);
+        LCD_PrintString(display_str);
+        //sprintf(display_str, "Z:%.2f STEP: %03d", z_data, Get_Step_Count());
+        sprintf(display_str, "STEP: %d", Get_Step_Count());
+        LCD_Position(1,0);
+        LCD_PrintString(display_str);
+    }   
 }
 
 void MMA8452Q_INT2_Handler(void)
 {
-	uint8_t reg = 0, tx_buf[40];
-	uint32_t tx_size;
-
-	// Pulse detected
-	// Read (and clear) the pulse source register
-	/*reg = MMA8452Q_GetPulseIntStatus();
-
-	if (reg & PULSE_SRC_AXZ)
-	{
-		Increment_Step_Count();
-	}
-
-	if (reg & PULSE_SRC_AXY)
-	{
-		Increment_Step_Count();
-	}
-
-	if (reg & PULSE_SRC_AXX)
-	{
-		Increment_Step_Count();
-	}*/
-
-//	LEUART_TX_Buffer();
+    uint8_t status = MMA8452Q_GetInterruptSource();        
+    uint8_t count;
+    
+    if (status & 0x10)
+    {
+        
+    }
 }
 
