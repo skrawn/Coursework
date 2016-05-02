@@ -21,9 +21,7 @@ uint32_t step_count = 0;
 uint32_t time_ticks = 0;
 
 int main()
-{
-    char display_str[16] = {0};
-    
+{        
     CyGlobalIntEnable; /* Enable global interrupts. */
 
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
@@ -44,23 +42,10 @@ int main()
     MMA8452Q_Init();
     MMA8452Q_Realign();
 
+    uint32_t ticks = 0;
     for(;;)
-    {
-                      
-        /*MMA8452Q_ReadAll();
-        memset(display_str, 0, 16);
-        sprintf(display_str, "X:%d.%02d Y:%d.%02d", MMA8452Q_GetXData() / 100, 
-            abs(MMA8452Q_GetXData() % 100), MMA8452Q_GetYData() / 100, abs(MMA8452Q_GetYData() % 100));
-        LCD_Position(0,0);
-        LCD_PrintString(display_str);
+    {                    
         
-        memset(display_str, 0, 16);
-        sprintf(display_str, "Z:%d.%02d STEP: %04d", MMA8452Q_GetZData() / 100, 
-            abs(MMA8452Q_GetZData() % 100), step_count);
-        LCD_Position(1,0);
-        LCD_PrintString(display_str);*/
-        
-        CyDelay(100);
     }
 }
 
@@ -71,7 +56,7 @@ void Tick_Increment(void)
 
 uint32_t Tick_Get_Time_Diff(uint32_t last_tick)
 {
-    if (last_tick < time_ticks)    
+    if (last_tick > time_ticks)    
         // Counter wrapped around
         return UINT_LEAST32_MAX - last_tick;    
     else

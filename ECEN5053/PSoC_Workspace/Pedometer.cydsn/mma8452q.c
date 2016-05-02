@@ -102,7 +102,7 @@
 #define PULSE_THS_CONV_DEN		63		// to the threshold register units of 0.063g
 
 //#define DETECTION_THRESHOLD     65      // Detection threshold = +/- 0.2g = 0.2/0.002 = 100
-#define DETECTION_THRESHOLD     20      // Detection threshold = +/- 0.04g = 0.04/0.002 = 20
+#define DETECTION_THRESHOLD     50      // Detection threshold = +/- 0.04g = 0.04/0.002 = 20
 #define STEP_THRESHOLD          20
 //#define DETECTION_THRESHOLD     75     // Detection threshold = +/- 0.15g = 0.15/0.002 = 75 
 
@@ -128,6 +128,13 @@ typedef enum {
     Y_IS_GRAVITY,
     Z_IS_GRAVITY,
 } Orientation_t;
+
+typedef enum {
+    STEP_AT_REST = 0,
+    STEP_FIRST_STEP,
+    STEP_SECOND_STEP,
+    STEP_DETECTED
+} Step_Detect_State_t;
 
 // Corresponds to the mux channel
 typedef enum {
@@ -522,115 +529,114 @@ void MMA8452Q_Enable_Interrupts(bool enable)
 void MMA8452Q_INT1_Handler(void)
 {
     int16_t x_data_filt, y_data_filt, z_data_filt, x_data, y_data, z_data, 
-        x_gd_accel, y_gd_accel, z_gd_accel, gd_max_accel;    
+        x_gd_accel, y_gd_accel, z_gd_accel, gd_max_accel_second;    
     uint8_t status;
     char display_str[16] = {0};
     double x_inc_angle, y_inc_angle, z_inc_angle;
     
     static uint32_t step_detect_time;
-    static int16_t x_rest_val, y_rest_val, z_rest_val;
+    static int16_t x_rest_val, y_rest_val, z_rest_val, gd_max_accel_first;
     static bool step_detected = false;
     static Orientation_t orientation;
+    static Step_Detect_State_t state;
     
     status = MMA8452Q_GetInterruptSource();
     
     MMA8452Q_ReadAll();
     
     // Pass the results through the five point triple smooth filter
-    x_data_filt = fivePtTripleSmooth_Process(&x_filter, x_axis_data);
-    y_data_filt = fivePtTripleSmooth_Process(&y_filter, y_axis_data);
-    z_data_filt = fivePtTripleSmooth_Process(&z_filter, z_axis_data);    
+    //x_data_filt = fivePtTripleSmooth_Process(&x_filter, x_axis_data);
+    //y_data_filt = fivePtTripleSmooth_Process(&y_filter, y_axis_data);
+    //z_data_filt = fivePtTripleSmooth_Process(&z_filter, z_axis_data);    
     //x_data_filt = Hanning_Process(&xh_filter, x_axis_data);
     //y_data_filt = Hanning_Process(&yh_filter, y_axis_data);
     //z_data_filt = Hanning_Process(&zh_filter, z_axis_data);
-    //x_data_filt = x_axis_data;
-    //y_data_filt = y_axis_data;
-    //z_data_filt = z_axis_data;
+    x_data_filt = x_axis_data;
+    y_data_filt = y_axis_data;
+    z_data_filt = z_axis_data;
     
-    if (at_rest)
+    switch (state)
     {
-        x_rest_val = x_data_filt;
-        y_rest_val = y_data_filt;
-        z_rest_val = z_data_filt;                
-    }       
-    
-    // Calculate the gravity-direction accleration
-    x_gd_accel = x_data_filt * x_rest_val / REG_1G_COUNTS_INT;
-    y_gd_accel = y_data_filt * y_rest_val / REG_1G_COUNTS_INT;
-    z_gd_accel = z_data_filt * z_rest_val / REG_1G_COUNTS_INT;
-    
-    if (at_rest)
-    {
-        // The largest of the gravity-directions determines the orientation of the
-        // device
-        gd_max_accel = x_gd_accel;
-        orientation = X_IS_GRAVITY;
-        if (gd_max_accel < y_gd_accel)
-        {
-            gd_max_accel = y_gd_accel;   
-            orientation = Y_IS_GRAVITY;
-        }
-        if (gd_max_accel < z_gd_accel)
-        {
-            gd_max_accel = z_gd_accel;   
-            orientation = Z_IS_GRAVITY;
-        }
+        case STEP_AT_REST:
+            x_rest_val = x_data_filt;
+            y_rest_val = y_data_filt;
+            z_rest_val = z_data_filt;                             
         
-        if (abs(gd_max_accel - REG_1G_COUNTS_INT) > DETECTION_THRESHOLD)
-        {            
-            at_rest = false;   
             step_detect_time = Tick_Get_Ticks();
-        }
-    }
-    else
-    {
-        if ((orientation == X_IS_GRAVITY && 
-            abs(gd_max_accel - x_gd_accel) > STEP_THRESHOLD) ||
-            (orientation == Y_IS_GRAVITY && 
-            abs(gd_max_accel - y_gd_accel) > STEP_THRESHOLD) ||
-            (orientation == Z_IS_GRAVITY && 
-            abs(gd_max_accel - z_gd_accel) > STEP_THRESHOLD))
-        {
-            Increment_Step_Count();
-            step_detect_time = Tick_Get_Ticks();
-            step_detected = true;
-            at_rest = true;
+            state = STEP_FIRST_STEP;                       
+            break;
+        
+        case STEP_FIRST_STEP:
+            // Looks for the first pulse
             
-            // Calculate new gravity directions
-            /*(gd_max_accel = x_gd_accel;
-            orientation = X_IS_GRAVITY;
-            if (gd_max_accel < y_gd_accel)
-            {
-                gd_max_accel = y_gd_accel;   
-                orientation = Y_IS_GRAVITY;
+            // Calculate the gravity-direction accleration
+            x_gd_accel = x_data_filt * x_rest_val / REG_1G_COUNTS_INT;
+            y_gd_accel = y_data_filt * y_rest_val / REG_1G_COUNTS_INT;
+            z_gd_accel = z_data_filt * z_rest_val / REG_1G_COUNTS_INT;
+        
+            gd_max_accel_first = x_gd_accel + y_gd_accel + z_gd_accel;
+        
+            if (abs(abs(gd_max_accel_first) - REG_1G_COUNTS_INT) > DETECTION_THRESHOLD)
+            {                
+                state = STEP_SECOND_STEP;
+                step_detect_time = Tick_Get_Ticks();
             }
-            if (gd_max_accel < z_gd_accel)
+            else
             {
-                gd_max_accel = z_gd_accel;   
-                orientation = Z_IS_GRAVITY;
-            }*/
-        }
-        else
-        {
-            // No second step was detected. If no motion is detected after 500ms,
-            // the device is at reset
-            if (Tick_Get_Time_Diff(step_detect_time) > 250)
+                if (Tick_Get_Time_Diff(step_detect_time) > 200)
+                {
+                    state = STEP_AT_REST;   
+                }   
+            }            
+            break;
+        
+        case STEP_SECOND_STEP:
+            // Look for second pulse
+            
+            // Calculate the gravity-direction accleration
+            x_gd_accel = x_data_filt * x_rest_val / REG_1G_COUNTS_INT;
+            y_gd_accel = y_data_filt * y_rest_val / REG_1G_COUNTS_INT;
+            z_gd_accel = z_data_filt * z_rest_val / REG_1G_COUNTS_INT;
+            
+            gd_max_accel_second = x_gd_accel + y_gd_accel + z_gd_accel;
+            
+            // First, determine if the gravity acceleration is over the threshold
+            if (abs(abs(gd_max_accel_second) - REG_1G_COUNTS_INT) > DETECTION_THRESHOLD)
+            {   
+                step_detected = true;
+               
+            }                      
+            
+            if (!step_detected)
             {
-                at_rest = true;               
+                if (Tick_Get_Time_Diff(step_detect_time) > 200)
+                {
+                    state = STEP_AT_REST;   
+                }                   
+            }     
+            else
+            {
+                step_detect_time = Tick_Get_Ticks();
+                Increment_Step_Count();
+                state = STEP_DETECTED;
+                led_color = (led_color + 1) % 3;
+                AMux_Select(led_color);   
             }
-        }
-    }
-    
-    if (step_detected)
-    {
-        led_color = (led_color + 1) % 3;
-        AMux_Select(led_color);
-        step_detected = false;
-    }   
-    else
-    {
-        AMux_Select(3);
-    }
+            break;
+        
+        case STEP_DETECTED:
+            if (step_detected)
+            {
+                AMux_Select(3);
+                step_detected = false;                
+            }              
+            
+            if (Tick_Get_Time_Diff(step_detect_time) > 200)
+            {
+                state = STEP_AT_REST;   
+            }   
+            break;
+    } 
     
     // Adjust the data to readable values
     x_data = x_data_filt * REG_TO_READ_NUM / REG_TO_READ_DEN;
