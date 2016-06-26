@@ -13,13 +13,14 @@ struct sched_param nrt_param;
 
 pthread_mutex_t rsrcA, rsrcB;
 
-volatile int rsrcACnt=0, rsrcBCnt=0, noWait=0;
+volatile int rsrcACnt=0, rsrcBCnt=0, noWait=0, backOff=0;
 
 
 void *grabRsrcs(void *threadid)
 {
    if((int)threadid == THREAD_1)
    {
+     if(backOff) usleep(rand() % 10000000);
      printf("THREAD 1 grabbing resources\n");
      pthread_mutex_lock(&rsrcA);
      rsrcACnt++;
@@ -34,11 +35,12 @@ void *grabRsrcs(void *threadid)
    }
    else
    {
+     if(backOff) usleep(rand() % 10000000);
      printf("THREAD 2 grabbing resources\n");
      pthread_mutex_lock(&rsrcB);
      rsrcBCnt++;
      if(!noWait) usleep(1000000);
-     printf("THREAD 1 got B, trying for A\n");
+     printf("THREAD 2 got B, trying for A\n");
      pthread_mutex_lock(&rsrcA);
      rsrcACnt++;
      printf("THREAD 2 got B and A\n");
@@ -65,6 +67,8 @@ int main (int argc, char *argv[])
        safe=1;
      else if(strncmp("race", argv[1], 4) == 0)
        noWait=1;
+     else if (strncmp("backoff" , argv[1], 7) == 0)
+       backOff=1;
      else
        printf("Will set up unsafe deadlock scenario\n");
    }
