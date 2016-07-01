@@ -1,22 +1,28 @@
 /****************************************************************************/
 /* Function: Basic POSIX message queue demo from VxWorks Prog. Guide p. 78  */
 /*                                                                          */
-/* Sam Siewert - 9/24/97                                                    */
+/* Sean Donohue - 06/27/2016                                                */
 /*                                                                          */
 /*                                                                          */
 /****************************************************************************/
                                                                     
-#include "msgQLib.h"
-#include "mqueue.h"
-#include "errnoLib.h" 
-#include "ioLib.h" 
+#include <mqueue.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
 
-#define SNDRCV_MQ "send_receive_mq"
+#define SNDRCV_MQ "/send_receive_mq"
 #define MAX_MSG_SIZE 128
+#define ERROR (-1)
 
 struct mq_attr mq_attr;
 
-void receiver(void)
+pthread_t sender_thread, receiver_thread;
+pthread_attr_t sender_attr, receiver_attr;  
+struct sched_param sender_param, receiver_param;
+
+void *receiver(void *arg)
 {
   mqd_t mymq;
   char buffer[MAX_MSG_SIZE];
@@ -45,7 +51,7 @@ void receiver(void)
 
 static char canned_msg[] = "this is a test, and only a test, in the event of a real emergency, you would be instructed ...";
 
-void sender(void)
+void *sender(void *arg)
 {
   mqd_t mymq;
   int prio;
@@ -79,19 +85,49 @@ void mq_demo(void)
 
   mq_attr.mq_flags = 0;
 
+  pthread_attr_t main_attr;
+  struct sched_param main_param;
+
+  pthread_attr_init(&main_attr);
+  pthread_attr_setinheritsched(&main_attr, PTHREAD_EXPLICIT_SCHED);
+  pthread_attr_setschedpolicy(&main_attr, SCHED_FIFO);
+
+  pthread_attr_init(&sender_attr);
+  pthread_attr_setinheritsched(&sender_attr, PTHREAD_INHERIT_SCHED);
+
+  pthread_attr_init(&receiver_attr);
+  pthread_attr_setinheritsched(&receiver_attr, PTHREAD_INHERIT_SCHED);
+
+  main_param.__sched_priority = sched_get_priority_max(SCHED_FIFO);
+  receiver_param.__sched_priority = main_param.__sched_priority - 1;
+  sender_param.__sched_priority = receiver_param.__sched_priority - 1;
+
+  sched_setscheduler(getpid(), SCHED_FIFO, &main_param);
+  sched_setscheduler(getpid(), SCHED_FIFO, &sender_param);
+  sched_setscheduler(getpid(), SCHED_FIFO, &receiver_param);
+  pthread_attr_setschedparam(&main_attr, &main_param);
+  pthread_attr_setschedparam(&sender_attr, &sender_param);
+  pthread_attr_setschedparam(&receiver_attr, &receiver_param);
+
 
   /* receiver runs at a higher priority than the sender */
-  if(taskSpawn("Receiver", 90, 0, 4000, receiver, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) == ERROR) {
+  if(pthread_create(&receiver_thread, &receiver_attr, receiver, (void *) 0) == ERROR) {
     printf("Receiver task spawn failed\n");
   }
   else
     printf("Receiver task spawned\n");
 
-  if(taskSpawn("Sender", 100, 0, 4000, sender, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) == ERROR) {
+  if(pthread_create(&sender_thread, &sender_attr, sender, (void *) 0) == ERROR) {
     printf("Sender task spawn failed\n");
   }
   else
     printf("Sender task spawned\n");
 
-   
+   pthread_join(sender_thread, 0);
+   pthread_join(receiver_thread, 0);
+}
+
+void main(void)
+{
+	mq_demo();
 }
