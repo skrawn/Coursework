@@ -137,17 +137,10 @@ int main( int argc, char** argv )
     	return -1;
     }
 
-    printf("Capture initialized\n");
-
-    //sem_init(&frame_signal, 1, 0);
-    //sem_init(&capture_complete, 1, 0);
-
-    //pthread_create(&capture_thread, &frame_attr, framerate_tests, (void *) 0);
-
     capture_id = pthread_create(&capture_thread, &capture_attr, capture_frame, (void *) 0);
     clock_gettime(CLOCK_REALTIME, &start_time);
-    printf("main_loop\n");
-    while (capture_get_capture_count() < 1000 && deadline_misses < 10)
+
+    while (capture_get_capture_count() < 2000 && deadline_misses < 10)
     {
         clock_gettime(CLOCK_REALTIME, &end_time);
         delta_t(&end_time, &start_time, &delta);
@@ -155,25 +148,15 @@ int main( int argc, char** argv )
 
         if (delta_ms >= DEADLINE_MS)
         {
-
-        	pthread_mutex_lock(&capture_complete_mutex);
-        	pthread_mutex_unlock(&capture_complete_mutex);
-        	//bin_sem_wait(&sem_capture_complete);
-        	printf("Capture count = %lu\n", capture_get_capture_count());
-        	capture_id = pthread_create(&capture_thread, &capture_attr, capture_frame, (void *) 0);
-        	/*if (capture_get_capture_complete())
-        	{
-        		capture_id = pthread_create(&capture_thread, &capture_attr, capture_frame, (void *) 0);
-        	}
-        	else
-        	{
-        		deadline_misses++;
-        		printf("Capture deadline missed!\n");
-        	}*/
+        	sem_post(&capture_sem);
 
             clock_gettime(CLOCK_REALTIME, &start_time);
         }
+
+        sched_yield();
     }
+
+    pthread_kill(capture_thread, 1);
 
 	// Free the core this thread is using
 	CPU_FREE(cores);
@@ -182,9 +165,6 @@ int main( int argc, char** argv )
 
 	pthread_attr_destroy(&main_attr);
 	pthread_attr_destroy(&capture_attr);
-
-    //sem_destroy(&frame_signal);
-    //sem_destroy(&capture_complete);
 
 	return 0;
 }

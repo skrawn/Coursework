@@ -35,18 +35,16 @@
 #define CAPTURE_HPP_
 
 #include <pthread.h>
+#include <semaphore.h>
 #include <unistd.h>
 
 #include "bin_sem.hpp"
 
-extern pthread_mutex_t capture_complete_mutex;
-extern struct binary_semaphore sem_capture_complete;
+extern sem_t capture_sem;
 
 int capture_init(int dev);
 int capture_close(int dev);
 void *capture_frame(void *arg);
-void capture_set_capture_complete(bool complete);
-bool capture_get_capture_complete(void);
 long unsigned int capture_get_capture_count(void);
 
 

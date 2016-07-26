@@ -52,10 +52,11 @@ using namespace std;
 CvCapture *capture;
 IplImage* frame;
 
-long unsigned int capture_count = 0, total_captures = 0;
-long unsigned int average_capture_time_nsec = 0;
-long unsigned int total_capture_time_nsec = 0;
+volatile unsigned long capture_count = 0, total_captures = 0;
+volatile unsigned long average_capture_time_nsec = 0;
+volatile unsigned long total_capture_time_nsec = 0;
 
+sem_t capture_sem;
 pthread_mutex_t capture_in_progress;
 pthread_mutex_t capture_complete_mutex;
 bool capture_initialized = false;
@@ -84,8 +85,7 @@ int capture_init(int dev)
 		return -1;
 	}
 
-	pthread_mutex_init(&capture_complete_mutex, NULL);
-	bin_sem_init(&sem_capture_complete, 1);
+	sem_init(&capture_sem, 1, 1);
 
 	capture_initialized = true;
 
@@ -99,8 +99,7 @@ int capture_close(int dev)
 		cvReleaseCapture(&capture);
 	}
 
-	pthread_mutex_destroy(&capture_complete_mutex);
-	bin_sem_destroy(&sem_capture_complete);
+	sem_destroy(&capture_sem);
 
 	return 1;
 }
@@ -112,6 +111,8 @@ void *capture_frame(void *arg)
 	clock_gettime(CLOCK_REALTIME, &start_time);
 #endif
 
+	int sem_val;
+
 	if (!capture_initialized)
 	{
 		printf("Capture not initialized!\n");
@@ -119,64 +120,40 @@ void *capture_frame(void *arg)
 		return NULL;
 	}
 
-	pthread_mutex_lock(&capture_complete_mutex);
-
-	//capture_set_capture_complete(false);
-
-	pthread_mutex_lock(&capture_in_progress);
-
-	if ((frame = cvQueryFrame(capture)) == 0)
+	while (1)
 	{
-		perror("cvQueryFrame");
-	}
-	else
-		printf("capture_done\n");
+		sem_wait(&capture_sem);
 
-	pthread_mutex_unlock(&capture_in_progress);
-
-	// Signal to other threads that a capture is complete
-	// TODO
+		if ((frame = cvQueryFrame(capture)) == 0)
+		{
+			perror("cvQueryFrame");
+		}
+		else
+		{
+			total_captures++;
 
 #if DEBUG_CAPTURE_STATS
-	clock_gettime(CLOCK_REALTIME, &end_time);
-	delta_t(&end_time, &start_time, &delta);
-	capture_count++;
-	total_captures++;
-	total_capture_time_nsec += delta.tv_sec * 1000000000 + delta.tv_nsec;
+			clock_gettime(CLOCK_REALTIME, &end_time);
+			delta_t(&end_time, &start_time, &delta);
+			capture_count++;
+			total_capture_time_nsec += delta.tv_sec * 1000000000 + delta.tv_nsec;
 
-	if (!(capture_count % 100))
-	{
-		average_capture_time_nsec = total_capture_time_nsec / capture_count;
-		printf("capture_frame: Average capture time over 100 frames: %lu ms\n",
-				average_capture_time_nsec / 1000000);
-		capture_count = 0;
-		total_capture_time_nsec = 0;
-		average_capture_time_nsec = 0;
-	}
+			if (!(capture_count % 100))
+			{
+				average_capture_time_nsec = total_capture_time_nsec / capture_count;
+				printf("capture_frame: Average capture time over 100 frames: %lu ms\n",
+						average_capture_time_nsec / 1000000);
+				capture_count = 0;
+				total_capture_time_nsec = 0;
+				average_capture_time_nsec = 0;
+			}
 #endif
 
-	//capture_set_capture_complete(true);
-	//bin_sem_post(&sem_capture_complete);
-	pthread_mutex_unlock(&capture_complete_mutex);
+		}
+	}
 
 	pthread_exit(NULL);
 	return NULL;
-}
-
-void capture_set_capture_complete(bool complete)
-{
-	pthread_mutex_lock(&capture_complete_mutex);
-	capture_complete = complete;
-	pthread_mutex_unlock(&capture_complete_mutex);
-}
-
-bool capture_get_capture_complete(void)
-{
-	bool retval;
-	pthread_mutex_lock(&capture_complete_mutex);
-	retval = capture_complete;
-	pthread_mutex_unlock(&capture_complete_mutex);
-	return retval;
 }
 
 long unsigned int capture_get_capture_count(void)
