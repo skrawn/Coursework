@@ -64,7 +64,9 @@ bool capture_complete = false;
 
 struct binary_semaphore sem_capture_complete;
 
-int capture_init(int dev)
+string capture_dir = "";
+
+int capture_init(int dev, string cap_dir)
 {
 	// Initialize the capture
 	if ((capture = cvCreateCameraCapture(dev)) == NULL)
@@ -84,6 +86,8 @@ int capture_init(int dev)
 		perror("cvQueryFrame");
 		return -1;
 	}
+
+	capture_dir = cap_dir;
 
 	sem_init(&capture_sem, 1, 1);
 
@@ -148,7 +152,11 @@ void *capture_frame(void *arg)
 				average_capture_time_nsec = 0;
 			}
 #endif
+			// Save the capture to the directory
+			if (!capture_dir.empty())
+			{
 
+			}
 		}
 	}
 
@@ -159,4 +167,9 @@ void *capture_frame(void *arg)
 long unsigned int capture_get_capture_count(void)
 {
 	return total_captures;
+}
+
+void capture_set_capture_directory(string directory)
+{
+	capture_dir = directory;
 }

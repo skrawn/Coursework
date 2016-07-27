@@ -36,16 +36,20 @@
 
 #include <pthread.h>
 #include <semaphore.h>
+#include <string>
 #include <unistd.h>
 
 #include "bin_sem.hpp"
 
+using namespace std;
+
 extern sem_t capture_sem;
 
-int capture_init(int dev);
+int capture_init(int dev, string cap_dir);
 int capture_close(int dev);
 void *capture_frame(void *arg);
 long unsigned int capture_get_capture_count(void);
+void capture_set_capture_directory(string directory);
 
 
 #endif /* CAPTURE_HPP_ */

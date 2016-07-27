@@ -37,6 +37,9 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <string>
+#include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -63,6 +66,12 @@ using namespace std;
 
 #define DEADLINE_MS     100 // ms
 
+#define MAX_PATH_LENGTH		255
+#define MAX_USERNAME_LEN	32
+
+char working_directory[MAX_PATH_LENGTH] = {0};
+const char capture_save_dir[] = "Captures\0";
+
 pthread_t capture_thread;
 pthread_attr_t capture_attr;
 struct sched_param capture_param;
@@ -72,13 +81,39 @@ sem_t frame_signal;
 bool test_complete = false;
 
 int dev = 0;
+int fps;
 
 int main( int argc, char** argv )
 {
     struct timespec start_time, end_time, delta;
+    struct stat st;
     unsigned int delta_ms;
-    int retval, capture_id, deadline_misses = 0;
+    int retval, capture_id, deadline_misses = 0, i = MAX_PATH_LENGTH;
     cpu_set_t *cores;
+    char process_path[MAX_PATH_LENGTH] = {0};
+
+    // Determine the working directory of this process
+    sprintf(process_path, "/proc/%d/exe", getpid());
+    readlink(process_path, working_directory, MAX_PATH_LENGTH);
+
+    // Returns the path to this process. Strip off the process name to get the path
+    // then append the image saving directory.
+    while (working_directory[i] != '/' && i > 0)
+    {
+    	i--;
+    }
+    memset(&working_directory[i+1], 0, MAX_PATH_LENGTH - (i+1));
+    strcpy(&working_directory[i+1], capture_save_dir);
+
+    // Create the directory if it does not exist
+    if (stat(working_directory, &st))
+    {
+    	if (mkdir(working_directory, 511) == -1)
+    	{
+    		perror("mkdir");
+    		return 0;
+    	}
+    }
 
 	// Allocate one core for this thread
 	cores = CPU_ALLOC(1);
@@ -95,6 +130,16 @@ int main( int argc, char** argv )
     {
         sscanf(argv[1], "%d", &dev);
         printf("using %s\n", argv[1]);
+
+        if (argc > 2)
+        {
+        	sscanf(argv[2], "%d", &fps);
+			printf("fps %s\n", argv[2]);
+        }
+        else
+        {
+        	fps = 10;
+        }
     }
     else if(argc == 1)
         printf("using default\n");
@@ -104,8 +149,6 @@ int main( int argc, char** argv )
         printf("usage: capture [dev]\n");
         exit(-1);
     }
-
-    print_scheduler();
 
     // Set up the scheduler for SCHED_FIFO
     main_thread = pthread_self();
@@ -118,8 +161,6 @@ int main( int argc, char** argv )
     pthread_attr_setinheritsched(&capture_attr, PTHREAD_INHERIT_SCHED);
 
     // Set priorities
-    //main_param.__sched_priority = sched_get_priority_max(SCHED_FIFO);
-    //capture_param.__sched_priority = main_param.__sched_priority - 1;
     capture_param.__sched_priority = sched_get_priority_max(SCHED_FIFO);
     main_param.__sched_priority = capture_param.__sched_priority - 1;
 
@@ -131,7 +172,7 @@ int main( int argc, char** argv )
 
     print_scheduler();
 
-    if (!capture_init(dev))
+    if (!capture_init(dev, string(working_directory)))
     {
     	printf("Failed to open camera on device %d. Timelapse is closing\n", dev);
     	return -1;
@@ -139,7 +180,7 @@ int main( int argc, char** argv )
 
     capture_id = pthread_create(&capture_thread, &capture_attr, capture_frame, (void *) 0);
     clock_gettime(CLOCK_REALTIME, &start_time);
-
+    sched_yield();
     while (capture_get_capture_count() < 2000 && deadline_misses < 10)
     {
         clock_gettime(CLOCK_REALTIME, &end_time);
@@ -148,12 +189,9 @@ int main( int argc, char** argv )
 
         if (delta_ms >= DEADLINE_MS)
         {
+        	clock_gettime(CLOCK_REALTIME, &start_time);
         	sem_post(&capture_sem);
-
-            clock_gettime(CLOCK_REALTIME, &start_time);
         }
-
-        sched_yield();
     }
 
     pthread_kill(capture_thread, 1);
