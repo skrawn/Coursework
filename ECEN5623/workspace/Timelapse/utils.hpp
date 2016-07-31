@@ -34,9 +34,12 @@
 #ifndef UTILS_HPP_
 #define UTILS_HPP_
 
+#ifdef __cplusplus
 #include <time.h>
+#endif
 
 int delta_t(struct timespec *stop, struct timespec *start, struct timespec *delta_t);
 void print_scheduler(void);
+void get_localtime(struct tm *loc_time);
 
 #endif /* UTILS_HPP_ */

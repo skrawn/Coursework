@@ -37,6 +37,7 @@
 #define OK				0
 #define ERROR			-1
 
-#define DEBUG_CAPTURE_STATS		(1)
+#define DEBUG_CAPTURE_STATS			(1)
+#define DEBUG_SHOW_RUNNING_CORE		(1)
 
 #endif /* CONFIG_H_ */

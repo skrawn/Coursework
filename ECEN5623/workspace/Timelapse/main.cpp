@@ -32,20 +32,22 @@
  *******************************************************************************/
 
 #include <iostream>
+#include <string>
+
 #include <pthread.h>
 #include <semaphore.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <string>
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
 
+#include "config.h"
+
 #include "bin_sem.hpp"
 #include "capture.hpp"
-#include "config.h"
 #include "utils.hpp"
 
 using namespace std;
@@ -89,7 +91,7 @@ int main( int argc, char** argv )
     struct stat st;
     unsigned int delta_ms;
     int retval, capture_id, deadline_misses = 0, i = MAX_PATH_LENGTH;
-    cpu_set_t *cores;
+    cpu_set_t all_cpu_set, threadcpu;
     char process_path[MAX_PATH_LENGTH] = {0};
 
     // Determine the working directory of this process
@@ -115,12 +117,23 @@ int main( int argc, char** argv )
     	}
     }
 
+#if DEBUG_SHOW_RUNNING_CORE
+    int cpucore;
+    cpucore = sched_getcpu();
+
+    printf("main running on core %d\n", cpucore);
+#endif
+
+    CPU_ZERO(&all_cpu_set);
+    for (i = 0; i < 4; i++)
+    	CPU_SET(i, &all_cpu_set);
+
 	// Allocate one core for this thread
-	cores = CPU_ALLOC(1);
+	/*cores = CPU_ALLOC(1);
 
 	// Bind this thread to core 0.
 	if (pthread_setaffinity_np(pthread_self(), sizeof(cores), cores) < 0)
-		perror("pthread_setaffinity_np");
+		perror("pthread_setaffinity_np");*/
 
     pthread_t main_thread;
     pthread_attr_t main_attr;
@@ -181,11 +194,12 @@ int main( int argc, char** argv )
     capture_id = pthread_create(&capture_thread, &capture_attr, capture_frame, (void *) 0);
     clock_gettime(CLOCK_REALTIME, &start_time);
     sched_yield();
-    while (capture_get_capture_count() < 2000 && deadline_misses < 10)
+    while (capture_get_capture_count() < 100 && deadline_misses < 10)
     {
         clock_gettime(CLOCK_REALTIME, &end_time);
         delta_t(&end_time, &start_time, &delta);
         delta_ms = delta.tv_nsec / NSEC_TO_MSEC;
+        delta_ms += delta.tv_sec * 1000;
 
         if (delta_ms >= DEADLINE_MS)
         {
@@ -197,7 +211,7 @@ int main( int argc, char** argv )
     pthread_kill(capture_thread, 1);
 
 	// Free the core this thread is using
-	CPU_FREE(cores);
+	//CPU_FREE(cores);
 
 	capture_close(dev);
 

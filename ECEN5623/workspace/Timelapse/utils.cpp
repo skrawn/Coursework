@@ -31,12 +31,15 @@
  *
  *******************************************************************************/
 
+#include <ctime>
+
 #include <pthread.h>
 #include <sched.h>
 #include <stdio.h>
 #include <unistd.h>
 
 #include "config.h"
+
 #include "utils.hpp"
 
 #define NSEC_PER_SEC	1000000000
@@ -98,3 +101,9 @@ void print_scheduler(void)
    }
 }
 
+void get_localtime(struct tm *loc_time)
+{
+	time_t rawtime;
+	time(&rawtime);
+	loc_time = localtime(&rawtime);
+}

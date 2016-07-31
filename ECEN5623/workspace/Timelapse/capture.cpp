@@ -31,8 +31,7 @@
  *
  *******************************************************************************/
 
-#include <stdio.h>
-#include <time.h>
+#include <ctime>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/features2d/features2d.hpp>
@@ -40,7 +39,6 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "capture.hpp"
-#include "config.h"
 #include "utils.hpp"
 
 using namespace cv;
@@ -65,6 +63,8 @@ bool capture_complete = false;
 struct binary_semaphore sem_capture_complete;
 
 string capture_dir = "";
+
+static void *save_frame(void *arg);
 
 int capture_init(int dev, string cap_dir)
 {
@@ -112,10 +112,28 @@ void *capture_frame(void *arg)
 {
 #if DEBUG_CAPTURE_STATS
 	struct timespec start_time, end_time, delta;
-	clock_gettime(CLOCK_REALTIME, &start_time);
+	volatile unsigned long max_runtime = 0, min_runtime = ULONG_MAX, capture_time;
 #endif
 
-	int sem_val;
+#if DEBUG_SHOW_RUNNING_CORE
+	int cpucore;
+	cpucore = sched_getcpu();
+
+	printf("capture_frame running on core %d\n", cpucore);
+#endif
+
+	int image_properties = CV_IMWRITE_PXM_BINARY;
+	int sem_val, header_length, bytes;
+	time_t raw_time;
+	FILE *f, *temp_f;
+	char time_string[50] = {0};
+	char filename[10] = {0}, full_file_name[256] = {0}, temp_image_file[256] = {0};
+	char buffer[64] = {0};
+	filename[0] = 'I'; filename[1] = 'M'; filename[2] = 'G';
+	filename[3] = '_';
+
+	strcpy(temp_image_file, capture_dir.c_str());
+	strcat(temp_image_file, "/temp.PPM");
 
 	if (!capture_initialized)
 	{
@@ -127,6 +145,7 @@ void *capture_frame(void *arg)
 	while (1)
 	{
 		sem_wait(&capture_sem);
+		clock_gettime(CLOCK_REALTIME, &start_time);
 
 		if ((frame = cvQueryFrame(capture)) == 0)
 		{
@@ -140,25 +159,121 @@ void *capture_frame(void *arg)
 			clock_gettime(CLOCK_REALTIME, &end_time);
 			delta_t(&end_time, &start_time, &delta);
 			capture_count++;
-			total_capture_time_nsec += delta.tv_sec * 1000000000 + delta.tv_nsec;
+			capture_time = delta.tv_sec * 1000000000 + delta.tv_nsec;
+			if (max_runtime < capture_time)
+				max_runtime = capture_time;
+			if (min_runtime > capture_time)
+				min_runtime = capture_time;
+			total_capture_time_nsec += capture_time;
 
 			if (!(capture_count % 100))
 			{
 				average_capture_time_nsec = total_capture_time_nsec / capture_count;
-				printf("capture_frame: Average capture time over 100 frames: %lu ms\n",
-						average_capture_time_nsec / 1000000);
+				printf("capture_frame: Average capture time over 100 frames: %lu ms - Max: %lu - Min: %lu\n",
+						average_capture_time_nsec / 1000000, max_runtime / 1000000, min_runtime / 1000000);
 				capture_count = 0;
 				total_capture_time_nsec = 0;
 				average_capture_time_nsec = 0;
+				max_runtime = 0;
+				min_runtime = ULONG_MAX;
 			}
 #endif
 			// Save the capture to the directory
 			if (!capture_dir.empty())
 			{
+				memset(full_file_name, 0, sizeof(full_file_name));
 
+				// Get the current time so we can save it in the file
+				time(&raw_time);
+				sprintf(time_string, "%s", ctime(&raw_time));
+
+				// Create the filename
+				sprintf(&filename[4], "%lu.PPM", total_captures);
+				strcat(full_file_name, capture_dir.c_str());
+				strcat(full_file_name, "/");
+				strcat(full_file_name, filename);
+
+				// Save the capture to a temporary PPM file
+				if (cvSaveImage(temp_image_file , frame, (const int *) &image_properties) != 1)
+				{
+					perror("cvSaveImage");
+				}
+				else
+				{
+					// Need to copy the temp image file to the file with the header in it.
+					f = fopen(full_file_name, "wb");
+					temp_f = fopen(temp_image_file, "rb");
+
+					// Copy up to the P6\n part of the image
+					fread(&buffer[0], 1, 1, temp_f);
+					while(buffer[0] != '\n')
+					{
+						fwrite(&buffer[0], sizeof(char), 1, f);
+						fread(&buffer[0], 1, 1, temp_f);
+					}
+					fwrite(&buffer[0], sizeof(char), 1, f);
+
+					// Now insert the timestamp
+					header_length = sprintf(buffer, "# Created: %s\n", time_string);
+					fwrite(buffer, sizeof(char), header_length, f);
+
+					// Write the rest of the image
+					while (0 < (bytes = fread(buffer, 1, sizeof(buffer), temp_f)))
+						fwrite(buffer, sizeof(char), bytes, f);
+					fclose(f);
+					fclose(temp_f);
+				}
 			}
 		}
 	}
+
+	pthread_exit(NULL);
+	return NULL;
+}
+
+void *create_video(void *arg)
+{
+	//AVCodec *codec;
+	//AVCodecContext *c = NULL;
+	//AVFrame *picture;
+
+#if DEBUG_SHOW_RUNNING_CORE
+	int cpucore;
+	cpucore = sched_getcpu();
+
+	printf("create_video running on core %d\n", cpucore);
+#endif
+
+	// Find the MPEG4 video encoder
+	/*codec = avcodec_find_encoder(AV_CODEC_ID_MPEG4);
+	if (!codec)
+	{
+		printf("MPEG4 Codec not found!\n");
+		pthread_exit(NULL);
+	}
+
+	c = avcodec_alloc_context3(codec);
+	//picture = avcodec_alloc_frame();
+
+	// Sample parameters
+	c->bit_rate = 400000;
+	c->width = 800;
+	c->height = 448;
+	c->time_base = (AVRational) {1, 25};
+	c->gop_size = 10;	// emit one intra frame every ten frames
+	c->max_b_frames = 1;
+	//c->pix_fmt = AV_PIX_FMT_YUV420P;
+	c->pix_fmt = AV_PIX_FMT_RGB24;
+
+	// Open the codec
+	if (avcodec_open2(c, codec, NULL) < 0) {
+		printf("Could not open codec!\n");
+		pthread_exit(NULL);
+	}
+
+
+	// Open the output file
+	//f = fopen("")*/
 
 	pthread_exit(NULL);
 	return NULL;
@@ -172,4 +287,11 @@ long unsigned int capture_get_capture_count(void)
 void capture_set_capture_directory(string directory)
 {
 	capture_dir = directory;
+}
+
+static void *save_frame(void *arg)
+{
+
+	pthread_exit(NULL);
+	return NULL;
 }
