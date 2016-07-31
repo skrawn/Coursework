@@ -34,8 +34,8 @@
 								<inputType id="nvcc.compiler.input.cpp.219964643" superClass="nvcc.compiler.input.cpp"/>
 								<inputType id="nvcc.compiler.input.c.1116441480" superClass="nvcc.compiler.input.c"/>
 							</tool>
-							<tool command="nvcc" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX} ${OUTPUT} ${INPUTS} `pkg-config --libs opencv` -L/usr/local/lib -L/usr/local/cuda-6.5/lib -lopencv_core -lopencv_flann -lopencv_video -lopencv_video" errorParsers="nvcc.errorParser;org.eclipse.cdt.core.GLDErrorParser" id="nvcc.linker.base.1816925152" name="NVCC Linker" superClass="nvcc.linker.base">
-								<option id="nvcc.linker.option.libs.1025815634" name="Libraries (-l)" superClass="nvcc.linker.option.libs" valueType="libs"/>
+							<tool command="nvcc" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX} ${OUTPUT} ${INPUTS} `pkg-config --libs opencv` -L/usr/local/lib -L/usr/local/cuda-6.5/lib -lopencv_core -lopencv_flann -lopencv_video -lopencv_video -lavdevice -lavformat -lavfilter -lavcodec -lswresample -lswscale -lavutil" errorParsers="nvcc.errorParser;org.eclipse.cdt.core.GLDErrorParser" id="nvcc.linker.base.1816925152" name="NVCC Linker" superClass="nvcc.linker.base">
+								<option id="nvcc.linker.option.libs.1025815634" name="Libraries (-l)" superClass="nvcc.linker.option.libs"/>
 								<option id="nvcc.linker.option.paths.2017932289" name="Library search path (-L)" superClass="nvcc.linker.option.paths"/>
 								<option id="nvcc.linker.option.cudart.1666679275" name="CUDA Runtime Library:" superClass="nvcc.linker.option.cudart" value="nvcc.linker.option.cudart.static" valueType="enumerated"/>
 								<option id="nvcc.linker.option.shared.861705563" name="Shared (-shared)" superClass="nvcc.linker.option.shared" value="false" valueType="boolean"/>

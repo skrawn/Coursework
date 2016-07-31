@@ -40,7 +40,7 @@
 #include <semaphore.h>
 #include <string>
 #include <unistd.h>
-//#include <libavcodec/avcodec.h>
+
 #include "config.h"
 
 #include "bin_sem.hpp"
@@ -55,6 +55,7 @@ void *capture_frame(void *arg);
 void *create_video(void *arg);
 long unsigned int capture_get_capture_count(void);
 void capture_set_capture_directory(string directory);
+void capture_end_capture(bool end);
 
 
 #endif /* CAPTURE_HPP_ */
