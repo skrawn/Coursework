@@ -78,6 +78,10 @@ pthread_t capture_thread;
 pthread_attr_t capture_attr;
 struct sched_param capture_param;
 
+pthread_t vid_thread;
+pthread_attr_t vid_attr;
+struct sched_param vid_param;
+
 sem_t frame_signal;
 //sem_t capture_complete;
 bool test_complete = false;
@@ -173,18 +177,25 @@ int main( int argc, char** argv )
     pthread_attr_init(&capture_attr);
     pthread_attr_setinheritsched(&capture_attr, PTHREAD_INHERIT_SCHED);
 
+    pthread_attr_init(&vid_attr);
+    pthread_attr_setinheritsched(&vid_attr, PTHREAD_INHERIT_SCHED);
+
     // Set priorities
     capture_param.__sched_priority = sched_get_priority_max(SCHED_FIFO);
     main_param.__sched_priority = capture_param.__sched_priority - 1;
+    vid_param.__sched_priority = main_param.__sched_priority - 1;
 
     // Apply scheduling attributes
     sched_setscheduler(getpid(), SCHED_FIFO, &main_param);
     sched_setscheduler(getpid(), SCHED_FIFO, &capture_param);
+    sched_setscheduler(getpid(), SCHED_FIFO, &vid_param);
     pthread_attr_setschedparam(&main_attr, &main_param);
     pthread_attr_setschedparam(&capture_attr, &capture_param);
+    pthread_attr_setschedparam(&vid_attr, &vid_param);
 
     print_scheduler();
 
+#if !DEBUG_NO_CAPTURE
     if (!capture_init(dev, string(working_directory)))
     {
     	printf("Failed to open camera on device %d. Timelapse is closing\n", dev);
@@ -210,13 +221,28 @@ int main( int argc, char** argv )
 
     pthread_kill(capture_thread, 1);
 
+    capture_close(dev);
+#endif
+
+#if !DEBUG_NO_ENCODE
+
+#endif
+
+    pthread_create(&vid_thread, &vid_attr, create_video, (void *) 0);
+    clock_gettime(CLOCK_REALTIME, &start_time);
+    pthread_join(vid_thread, NULL);
+    clock_gettime(CLOCK_REALTIME, &end_time);
+    delta_t(&end_time, &start_time, &delta);
+    printf("Capture run-time: %d s %d nsec\n", delta.tv_sec, delta.tv_nsec);
+
 	// Free the core this thread is using
 	//CPU_FREE(cores);
 
-	capture_close(dev);
+
 
 	pthread_attr_destroy(&main_attr);
 	pthread_attr_destroy(&capture_attr);
+	pthread_attr_destroy(&vid_attr);
 
 	return 0;
 }

@@ -40,5 +40,7 @@
 #define DEBUG_CAPTURE_STATS			(1)
 #define DEBUG_ENCODE_STATS			(1)
 #define DEBUG_SHOW_RUNNING_CORE		(1)
+#define DEBUG_NO_CAPTURE			(1)
+#define DEBUG_NO_ENCODE				(0)
 
 #endif /* CONFIG_H_ */
