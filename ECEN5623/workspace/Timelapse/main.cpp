@@ -100,7 +100,12 @@ int main( int argc, char** argv )
 
     // Determine the working directory of this process
     sprintf(process_path, "/proc/%d/exe", getpid());
-    readlink(process_path, working_directory, MAX_PATH_LENGTH);
+    if (process_path != NULL)
+    	readlink(process_path, working_directory, MAX_PATH_LENGTH);
+    else
+    {
+    	strcpy(working_directory, "~/Documents");
+    }
 
     // Returns the path to this process. Strip off the process name to get the path
     // then append the image saving directory.
@@ -108,8 +113,19 @@ int main( int argc, char** argv )
     {
     	i--;
     }
+    i--;
+    while (working_directory[i] != '/' && i > 0)
+	{
+		i--;
+	}
+    i--;
+    while (working_directory[i] != '/' && i > 0)
+	{
+		i--;
+	}
     memset(&working_directory[i+1], 0, MAX_PATH_LENGTH - (i+1));
     strcpy(&working_directory[i+1], capture_save_dir);
+    printf("Working directory: %s\n", working_directory);
 
     // Create the directory if it does not exist
     if (stat(working_directory, &st))
@@ -219,21 +235,26 @@ int main( int argc, char** argv )
         }
     }
 
-    pthread_kill(capture_thread, 1);
+    capture_end_capture(true);
+    sem_post(&capture_sem);
+    pthread_join(capture_thread, NULL);
+
+    //pthread_kill(capture_thread, 1);
 
     capture_close(dev);
+#else
+    capture_set_capture_count(100);
+    capture_set_capture_directory(string(working_directory));
 #endif
 
 #if !DEBUG_NO_ENCODE
-
-#endif
-
     pthread_create(&vid_thread, &vid_attr, create_video, (void *) 0);
     clock_gettime(CLOCK_REALTIME, &start_time);
     pthread_join(vid_thread, NULL);
     clock_gettime(CLOCK_REALTIME, &end_time);
     delta_t(&end_time, &start_time, &delta);
-    printf("Capture run-time: %d s %d nsec\n", delta.tv_sec, delta.tv_nsec);
+    printf("Video creation run-time: %ld s %ld nsec\n", delta.tv_sec, delta.tv_nsec);
+#endif
 
 	// Free the core this thread is using
 	//CPU_FREE(cores);

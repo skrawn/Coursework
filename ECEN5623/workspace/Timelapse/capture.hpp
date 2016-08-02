@@ -54,6 +54,7 @@ int capture_close(int dev);
 void *capture_frame(void *arg);
 void *create_video(void *arg);
 long unsigned int capture_get_capture_count(void);
+void capture_set_capture_count(long unsigned int caps);
 void capture_set_capture_directory(string directory);
 void capture_end_capture(bool end);
 

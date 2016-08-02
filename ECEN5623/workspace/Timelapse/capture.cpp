@@ -29,6 +29,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  *
+ * Contains example code from the ffmpeg library.
+ *
  *******************************************************************************/
 
 #include <ctime>
@@ -49,6 +51,7 @@ extern "C" {
 #include <libavutil/opt.h>
 #include <libavutil/mathematics.h>
 #include <libavutil/timestamp.h>
+#include <libavfilter/avfilter.h>
 #include <libavformat/avformat.h>
 #include <libswscale/swscale.h>
 #include <libswresample/swresample.h>
@@ -67,8 +70,7 @@ using namespace std;
 //#define DEFAULT_PIX_FMT			AV_PIX_FMT_RGB24
 #define DEFAULT_PIX_FMT 			AV_PIX_FMT_YUV420P
 #define DEFAULT_FRAME_RATE			20		// frames/sec
-#define DEFAULT_VIDEO_OUTBUF_SIZE	200000;
-#define DEFAULT_DURATION			10.0	// seconds
+#define DEFAULT_DURATION			200.0	// seconds
 
 #define SCALE_FLAGS 				SWS_BICUBIC
 
@@ -106,6 +108,8 @@ typedef struct OutputStream {
 	struct SwsContext *sws_ctx;
 	struct SwrContext *swr_ctx;
 } OutputStream;
+
+int video_frame_count = 0;
 
 static void open_video(AVFormatContext *oc, AVCodec *codec, OutputStream *ost, AVDictionary *opt_arg);
 static void add_stream(OutputStream *ost, AVFormatContext *oc, AVCodec **codec, enum AVCodecID codec_id);
@@ -217,13 +221,15 @@ void *capture_frame(void *arg)
 	time_t raw_time;
 	FILE *f, *temp_f;
 	char time_string[50] = {0};
-	char filename[10] = {0}, full_file_name[256] = {0}, temp_image_file[256] = {0};
+	char filename[13] = {0}, full_file_name[256] = {0}, temp_image_file[256] = {0};
 	char buffer[64] = {0};
 	filename[0] = 'I'; filename[1] = 'M'; filename[2] = 'G';
 	filename[3] = '_';
 
 	strcpy(temp_image_file, capture_dir.c_str());
 	strcat(temp_image_file, "/temp.PPM");
+
+	printf("capture_frame: Captures will be saved at %s\n", capture_dir.c_str());
 
 	if (!capture_initialized)
 	{
@@ -235,6 +241,10 @@ void *capture_frame(void *arg)
 	while (!end_capture)
 	{
 		sem_wait(&capture_sem);
+
+		if (end_capture)
+			break;
+
 		clock_gettime(CLOCK_REALTIME, &start_time);
 
 		if ((frame = cvQueryFrame(capture)) == 0)
@@ -333,6 +343,8 @@ void *create_video(void *arg)
 
 	char video_filename[] = {"Capture.mp4\0"};
 
+	video_frame_count = 0;
+
 #if DEBUG_SHOW_RUNNING_CORE
 	int cpucore;
 	cpucore = sched_getcpu();
@@ -424,6 +436,11 @@ void *create_video(void *arg)
 long unsigned int capture_get_capture_count(void)
 {
 	return total_captures;
+}
+
+void capture_set_capture_count(long unsigned int caps)
+{
+	total_captures = caps;
 }
 
 void capture_set_capture_directory(string directory)
@@ -619,39 +636,52 @@ static int write_video_frame(AVFormatContext *oc, OutputStream *ost)
 static AVFrame *get_video_frame(OutputStream *ost)
 {
     AVCodecContext *c = ost->enc;
+    IplImage *frame;
+    Mat matFrame;
+    char filename[12] = {0}, full_file_name[256] = {0};
+    filename[0] = 'I'; filename[1] = 'M'; filename[2] = 'G';
+	filename[3] = '_';
 
     /* check if we want to generate more frames */
     if (av_compare_ts(ost->next_pts, c->time_base,
                       DEFAULT_DURATION, (AVRational){ 1, 1 }) >= 0)
         return NULL;
 
-    if (c->pix_fmt != AV_PIX_FMT_YUV420P) {
-        /* as we only generate a YUV420P picture, we must convert it
-         * to the codec pixel format if needed */
-        if (!ost->sws_ctx) {
-            ost->sws_ctx = sws_getContext(c->width, c->height,
-                                          AV_PIX_FMT_YUV420P,
-                                          c->width, c->height,
-                                          c->pix_fmt,
-                                          SCALE_FLAGS, NULL, NULL, NULL);
-            if (!ost->sws_ctx) {
-                fprintf(stderr,
-                        "Could not initialize the conversion context\n");
-                exit(1);
-            }
-        }
-        // Grab our frames here
-        fill_yuv_image(ost->tmp_frame, ost->next_pts, c->width, c->height);
-        sws_scale(ost->sws_ctx,
-                  (const uint8_t * const *)ost->tmp_frame->data, ost->tmp_frame->linesize,
-                  0, c->height, ost->frame->data, ost->frame->linesize);
-    } else {
-        fill_yuv_image(ost->frame, ost->next_pts, c->width, c->height);
-    }
+    // Create the filename
+    if (video_frame_count >= capture_get_capture_count())
+    	return NULL;
 
-    ost->frame->pts = ost->next_pts++;
+	sprintf(&filename[4], "%d.PPM", ++video_frame_count);
+	strcat(full_file_name, capture_dir.c_str());
+	strcat(full_file_name, "/");
+	strcat(full_file_name, filename);
+	printf("Loading image %s\n", full_file_name);
+	frame = cvLoadImage(full_file_name, CV_LOAD_IMAGE_COLOR);
 
-    return ost->frame;
+	if (!frame)
+	{
+		printf("get_video_frame: Could not load %s\n", full_file_name);
+		return NULL;
+	}
+
+	matFrame = Mat(frame);
+
+    if (!ost->sws_ctx)
+	{
+		ost->sws_ctx = sws_getContext(c->width, c->height, AV_PIX_FMT_BGR24, c->width, c->height,
+									  c->pix_fmt, SCALE_FLAGS, NULL, NULL, NULL);
+		if (!ost->sws_ctx)
+		{
+			printf("get_video_frame: Could not initialize the conversion context\n");
+			return NULL;
+		}
+	}
+	const int stride[] = { static_cast<int>(matFrame.step[0]) };
+	sws_scale(ost->sws_ctx, &matFrame.data, stride, 0, matFrame.rows, ost->frame->data, ost->frame->linesize);
+
+	ost->frame->pts = ost->next_pts++;
+
+	return ost->frame;
 }
 
 static AVFrame *alloc_picture(enum AVPixelFormat pix_fmt, int width, int height)
@@ -688,6 +718,7 @@ static void close_stream(AVFormatContext *oc, OutputStream *ost)
 
 static void log_packet(const AVFormatContext *fmt_ctx, const AVPacket *pkt)
 {
+#if DEBUG_SHOW_ENCODE_LOG
     AVRational *time_base = &fmt_ctx->streams[pkt->stream_index]->time_base;
 
     printf("pts:%s pts_time:%s dts:%s dts_time:%s duration:%s duration_time:%s stream_index:%d\n",
@@ -695,6 +726,7 @@ static void log_packet(const AVFormatContext *fmt_ctx, const AVPacket *pkt)
            av_ts2str(pkt->dts), av_ts2timestr(pkt->dts, time_base),
            av_ts2str(pkt->duration), av_ts2timestr(pkt->duration, time_base),
            pkt->stream_index);
+#endif
 }
 
 /* Prepare a dummy image. */
