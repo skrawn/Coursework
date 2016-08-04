@@ -48,23 +48,16 @@
 
 #include "bin_sem.hpp"
 #include "capture.hpp"
+#include "save_frame.hpp"
 #include "utils.hpp"
 
 using namespace std;
 
-#define N_RESOLUTIONS	5
-#define N_FRAMES        100
 #define NSEC_PER_SEC	1000000000
 
 #define NSEC_TO_MSEC_F  1000000.0
 #define NSEC_TO_MSEC    1000000
 #define SEC_TO_MSEC		1000
-
-#define N_TRANSFORMS    4
-#define CANNY           0
-#define SOBEL           1
-#define HOUGH           2
-#define CAPTURE_ONLY	3
 
 #define DEADLINE_MS     100 // ms
 
@@ -82,21 +75,28 @@ pthread_t vid_thread;
 pthread_attr_t vid_attr;
 struct sched_param vid_param;
 
+pthread_t save_frame_thread;
+pthread_attr_t save_frame_attr;
+struct sched_param save_frame_param;
+
 sem_t frame_signal;
-//sem_t capture_complete;
-bool test_complete = false;
 
 int dev = 0;
-int fps;
+int fps = 10;
 
 int main( int argc, char** argv )
 {
     struct timespec start_time, end_time, delta;
     struct stat st;
-    unsigned int delta_ms;
-    int retval, capture_id, deadline_misses = 0, i = MAX_PATH_LENGTH;
+    unsigned long delta_ns, deadline_ns;
+    int retval, capture_id, deadline_misses = 0, i = MAX_PATH_LENGTH, num_args,
+    		nframes = 100;
     cpu_set_t all_cpu_set, threadcpu;
     char process_path[MAX_PATH_LENGTH] = {0};
+
+    pthread_t main_thread;
+	pthread_attr_t main_attr;
+	struct sched_param main_param;
 
     // Determine the working directory of this process
     sprintf(process_path, "/proc/%d/exe", getpid());
@@ -148,34 +148,53 @@ int main( int argc, char** argv )
     for (i = 0; i < 4; i++)
     	CPU_SET(i, &all_cpu_set);
 
-	// Allocate one core for this thread
-	/*cores = CPU_ALLOC(1);
-
-	// Bind this thread to core 0.
-	if (pthread_setaffinity_np(pthread_self(), sizeof(cores), cores) < 0)
-		perror("pthread_setaffinity_np");*/
-
-    pthread_t main_thread;
-    pthread_attr_t main_attr;
-    struct sched_param main_param;
-
     if(argc > 1)
     {
-        sscanf(argv[1], "%d", &dev);
-        printf("using %s\n", argv[1]);
-
-        if (argc > 2)
-        {
-        	sscanf(argv[2], "%d", &fps);
-			printf("fps %s\n", argv[2]);
-        }
-        else
-        {
-        	fps = 10;
-        }
+    	int arg_num = 1;
+    	argc--;
+    	while (argc)
+    	{
+    		if (strcmp(argv[arg_num], "-d") == 0)
+    		{
+    			argc -= 2;
+    			sscanf(argv[++arg_num], "%d", &dev);
+    			printf("Using camera device number %d\n", dev);
+    			arg_num++;
+    		}
+    		else if (strcmp(argv[arg_num], "-f") == 0)
+    		{
+    			// Number of frames
+    			argc -= 2;
+    			nframes = atoi(argv[++arg_num]);
+    			if (nframes < 100 && nframes > 5000)
+    			{
+    				printf("Error: number of frames must be between 100 and 5000\n");
+    				return -1;
+    			}
+    			printf("Number of frames to capture: %d\n", nframes);
+    			arg_num++;
+    		}
+    		else if (strcmp(argv[arg_num], "-fr") == 0)
+    		{
+    			argc -= 2;
+    			fps = atoi(argv[++arg_num]);
+    			if (fps <= 0 && fps > 60)
+    			{
+    				printf("Error: framerate must be between 1 and 60 fps\n");
+    				return -1;
+    			}
+    			printf("Framerate: %d fps\n", fps);
+    			arg_num++;
+    		}
+    		else
+    		{
+    			printf("Error: Invalid input.\n");
+    			return -1;
+    		}
+    	}
     }
     else if(argc == 1)
-        printf("using default\n");
+        printf("using defaults: camera device 0, 100 frames @ 10Hz\n");
 
     else
     {
@@ -191,59 +210,92 @@ int main( int argc, char** argv )
 
     // Make child threads inherit the scheduler of the launching thread
     pthread_attr_init(&capture_attr);
-    pthread_attr_setinheritsched(&capture_attr, PTHREAD_INHERIT_SCHED);
+    pthread_attr_setinheritsched(&capture_attr, PTHREAD_EXPLICIT_SCHED);
+    pthread_attr_setschedpolicy(&capture_attr, SCHED_FIFO);
 
     pthread_attr_init(&vid_attr);
     pthread_attr_setinheritsched(&vid_attr, PTHREAD_INHERIT_SCHED);
 
+    pthread_attr_init(&save_frame_attr);
+    pthread_attr_setinheritsched(&save_frame_attr, PTHREAD_EXPLICIT_SCHED);
+    pthread_attr_setschedpolicy(&save_frame_attr, SCHED_FIFO);
+
     // Set priorities
     capture_param.__sched_priority = sched_get_priority_max(SCHED_FIFO);
-    main_param.__sched_priority = capture_param.__sched_priority - 1;
+    save_frame_param.__sched_priority = capture_param.__sched_priority - 1;
+    main_param.__sched_priority = save_frame_param.__sched_priority - 1;
     vid_param.__sched_priority = main_param.__sched_priority - 1;
 
     // Apply scheduling attributes
     sched_setscheduler(getpid(), SCHED_FIFO, &main_param);
     sched_setscheduler(getpid(), SCHED_FIFO, &capture_param);
     sched_setscheduler(getpid(), SCHED_FIFO, &vid_param);
+    sched_setscheduler(getpid(), SCHED_FIFO, &save_frame_param);
     pthread_attr_setschedparam(&main_attr, &main_param);
     pthread_attr_setschedparam(&capture_attr, &capture_param);
     pthread_attr_setschedparam(&vid_attr, &vid_param);
+    pthread_attr_setschedparam(&save_frame_attr, &save_frame_param);
 
     print_scheduler();
 
 #if !DEBUG_NO_CAPTURE
-    if (!capture_init(dev, string(working_directory)))
+    if (!capture_init(dev, string(working_directory), nframes))
     {
     	printf("Failed to open camera on device %d. Timelapse is closing\n", dev);
     	return -1;
     }
 
     capture_id = pthread_create(&capture_thread, &capture_attr, capture_frame, (void *) 0);
-    clock_gettime(CLOCK_REALTIME, &start_time);
     sched_yield();
-    while (capture_get_capture_count() < 100 && deadline_misses < 10)
+
+    save_frame_init(working_directory, nframes);
+    pthread_create(&save_frame_thread, &save_frame_attr, save_frame, (void *) 0);
+    sched_yield();
+
+    deadline_ns = 1000000000 / fps;
+
+    clock_gettime(CLOCK_REALTIME, &start_time);
+    while (capture_get_capture_count() < nframes)
     {
         clock_gettime(CLOCK_REALTIME, &end_time);
         delta_t(&end_time, &start_time, &delta);
-        delta_ms = delta.tv_nsec / NSEC_TO_MSEC;
-        delta_ms += delta.tv_sec * 1000;
+        delta_ns = delta.tv_nsec;
+        delta_ns += delta.tv_sec * 1000000000;
 
-        if (delta_ms >= DEADLINE_MS)
+        if (delta_ns >= deadline_ns)
         {
+        	// Check that the capture thread is waiting at the semaphore
+        	sem_getvalue(&capture_sem, &retval);
         	clock_gettime(CLOCK_REALTIME, &start_time);
-        	sem_post(&capture_sem);
+        	if (retval > 0)
+        	{
+        		deadline_misses++;
+        	}
+        	else
+        	{
+        		/*if (capture_get_capture_count() >= (nframes - 1) )
+        			save_frame_last_frame(true);*/
+        		sem_post(&capture_sem);
+        	}
         }
+        sched_yield();
     }
 
     capture_end_capture(true);
     sem_post(&capture_sem);
     pthread_join(capture_thread, NULL);
 
-    //pthread_kill(capture_thread, 1);
-
     capture_close(dev);
+
+    pthread_join(save_frame_thread, NULL);
+
+    if (deadline_misses > 0)
+    	printf("Capture deadline misses: %d\n", deadline_misses);
+
+    capture_set_capture_count(nframes);
+
 #else
-    capture_set_capture_count(100);
+    capture_set_capture_count(nframes);
     capture_set_capture_directory(string(working_directory));
 #endif
 
@@ -255,11 +307,6 @@ int main( int argc, char** argv )
     delta_t(&end_time, &start_time, &delta);
     printf("Video creation run-time: %ld s %ld nsec\n", delta.tv_sec, delta.tv_nsec);
 #endif
-
-	// Free the core this thread is using
-	//CPU_FREE(cores);
-
-
 
 	pthread_attr_destroy(&main_attr);
 	pthread_attr_destroy(&capture_attr);

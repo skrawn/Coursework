@@ -41,6 +41,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "capture.hpp"
+#include "save_frame.hpp"
 #include "utils.hpp"
 
 extern "C" {
@@ -74,8 +75,8 @@ using namespace std;
 
 #define SCALE_FLAGS 				SWS_BICUBIC
 
-CvCapture *capture;
-IplImage* frame;
+//CvCapture *capture;
+VideoCapture capture;
 
 volatile unsigned long capture_count = 0, total_captures = 0;
 volatile unsigned long average_capture_time_nsec = 0;
@@ -121,7 +122,6 @@ static void close_stream(AVFormatContext *oc, OutputStream *ost);
 static void log_packet(const AVFormatContext *fmt_ctx, const AVPacket *pkt);
 static void fill_yuv_image(AVFrame *pict, int frame_index,
                            int width, int height);
-static void *save_frame(void *arg);
 
 #ifdef  __cplusplus
 // Some fixes for the inline functions av_err2str and av_ts2str.
@@ -160,26 +160,39 @@ static const string av_ts_make_time_string(int64_t ts, AVRational *tb)
 
 #endif // __cplusplus
 
-int capture_init(int dev, string cap_dir)
+int capture_init(int dev, string cap_dir, int capture_size)
 {
+	//IplImage* frame;
+	Mat image;
+
 	// Initialize the capture
-	if ((capture = cvCreateCameraCapture(dev)) == NULL)
+	/*if ((capture = cvCreateCameraCapture(dev)) == NULL)
 	{
 		perror("cvCreateCameraCapture");
 		return -1;
+	}*/
+	if (!capture.open(dev))
+	{
+		printf("capture_init: Could not open capture on device 0!\n");
 	}
 
 	// Set the resolution
-	cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH, DEFAULT_H_RES);
-	cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_HEIGHT, DEFAULT_V_RES);
+	//cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH, DEFAULT_H_RES);
+	//cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_HEIGHT, DEFAULT_V_RES);
+	capture.set(CV_CAP_PROP_FRAME_WIDTH, DEFAULT_H_RES);
+	capture.set(CV_CAP_PROP_FRAME_HEIGHT, DEFAULT_V_RES);
 
 	// Grab the first frame to make sure everything is working and allocate
 	// all resources (to save time later)
-	if ((frame = cvQueryFrame(capture)) == 0)
+	/*if ((frame = cvQueryFrame(capture)) == 0)
 	{
 		perror("cvQueryFrame");
 		return -1;
-	}
+	}*/
+	capture.read(image);
+
+	// Then be sure to deallocate it...
+	//cvReleaseImage(&frame);
 
 	capture_dir = cap_dir;
 
@@ -192,10 +205,14 @@ int capture_init(int dev, string cap_dir)
 
 int capture_close(int dev)
 {
-	if (capture != NULL)
+	if (capture.isOpened())
+	{
+		capture.release();
+	}
+	/*if (capture != NULL)
 	{
 		cvReleaseCapture(&capture);
-	}
+	}*/
 
 	sem_destroy(&capture_sem);
 
@@ -215,7 +232,8 @@ void *capture_frame(void *arg)
 
 	printf("capture_frame running on core %d\n", cpucore);
 #endif
-
+	//IplImage* frame;
+	Mat frame;
 	int image_properties = CV_IMWRITE_PXM_BINARY;
 	int sem_val, header_length, bytes;
 	time_t raw_time;
@@ -247,12 +265,23 @@ void *capture_frame(void *arg)
 
 		clock_gettime(CLOCK_REALTIME, &start_time);
 
-		if ((frame = cvQueryFrame(capture)) == 0)
+		//if ((frame = cvQueryFrame(capture)) == 0)
+		/*if ((frame = cvQueryFrameM(capture)) == 0)
 		{
 			perror("cvQueryFrame");
 		}
+		else*/
+		if (!capture.read(frame))
+		{
+			printf("capture_frame: failed to read frame from device\n!");
+		}
 		else
 		{
+			if (save_frame_initialized())
+			{
+				save_frame_save_frame(frame, total_captures);
+			}
+
 			total_captures++;
 
 #if DEBUG_CAPTURE_STATS
@@ -278,8 +307,9 @@ void *capture_frame(void *arg)
 				min_runtime = ULONG_MAX;
 			}
 #endif
+
 			// Save the capture to the directory
-			if (!capture_dir.empty())
+			/*if (!capture_dir.empty())
 			{
 				memset(full_file_name, 0, sizeof(full_file_name));
 
@@ -323,7 +353,7 @@ void *capture_frame(void *arg)
 					fclose(f);
 					fclose(temp_f);
 				}
-			}
+			}*/
 		}
 	}
 
@@ -636,35 +666,34 @@ static int write_video_frame(AVFormatContext *oc, OutputStream *ost)
 static AVFrame *get_video_frame(OutputStream *ost)
 {
     AVCodecContext *c = ost->enc;
-    IplImage *frame;
     Mat matFrame;
-    char filename[12] = {0}, full_file_name[256] = {0};
+    char filename[13] = {0}, full_file_name[256] = {0};
     filename[0] = 'I'; filename[1] = 'M'; filename[2] = 'G';
 	filename[3] = '_';
 
     /* check if we want to generate more frames */
-    if (av_compare_ts(ost->next_pts, c->time_base,
+    /*if (av_compare_ts(ost->next_pts, c->time_base,
                       DEFAULT_DURATION, (AVRational){ 1, 1 }) >= 0)
-        return NULL;
+        return NULL;*/
 
     // Create the filename
     if (video_frame_count >= capture_get_capture_count())
     	return NULL;
 
-	sprintf(&filename[4], "%d.PPM", ++video_frame_count);
+	sprintf(&filename[4], "%d.PPM", video_frame_count++);
 	strcat(full_file_name, capture_dir.c_str());
 	strcat(full_file_name, "/");
 	strcat(full_file_name, filename);
-	printf("Loading image %s\n", full_file_name);
-	frame = cvLoadImage(full_file_name, CV_LOAD_IMAGE_COLOR);
+	//printf("Processing frame %s\n", full_file_name);
+	//printf("Loading image %s\n", full_file_name);
+	//frame = cvLoadImage(full_file_name, CV_LOAD_IMAGE_COLOR);
+	matFrame = imread(full_file_name, CV_LOAD_IMAGE_COLOR);
 
-	if (!frame)
+	if (!matFrame.data)
 	{
 		printf("get_video_frame: Could not load %s\n", full_file_name);
 		return NULL;
 	}
-
-	matFrame = Mat(frame);
 
     if (!ost->sws_ctx)
 	{
@@ -676,6 +705,7 @@ static AVFrame *get_video_frame(OutputStream *ost)
 			return NULL;
 		}
 	}
+
 	const int stride[] = { static_cast<int>(matFrame.step[0]) };
 	sws_scale(ost->sws_ctx, &matFrame.data, stride, 0, matFrame.rows, ost->frame->data, ost->frame->linesize);
 
@@ -757,11 +787,4 @@ static void fill_yuv_image(AVFrame *pict, int frame_index,
             pict->data[2][y * pict->linesize[2] + x] = 64 + x + i * 5;
         }
     }
-}
-
-static void *save_frame(void *arg)
-{
-
-	pthread_exit(NULL);
-	return NULL;
 }

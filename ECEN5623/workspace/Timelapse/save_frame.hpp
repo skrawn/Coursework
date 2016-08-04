@@ -1,6 +1,6 @@
 /******************************************************************************
- * @file capture.hpp
- * @brief Camera capture driver
+ * @file save_frame.hpp
+ * @brief Thread to offload the saving of frames to a file
  * @author Sean Donohue
  ******************************************************************************
  * @section License
@@ -31,32 +31,20 @@
  *
  *******************************************************************************/
 
-#ifndef CAPTURE_HPP_
-#define CAPTURE_HPP_
+#ifndef SAVE_FRAME_HPP_
+#define SAVE_FRAME_HPP_
 
-#include <stdio.h>
-#include <time.h>
-#include <pthread.h>
-#include <semaphore.h>
-#include <string>
-#include <unistd.h>
+#include <opencv2/core/core.hpp>
 
-#include "config.h"
+using namespace cv;
 
-#include "bin_sem.hpp"
+void save_frame_init(string save_dir, int cap_len);
+void *save_frame(void *arg);
+int save_frame_save_frame(Mat frame, int frame_num);
+void save_frame_close(void);
+bool save_frame_queue_empty(void);
+void save_frame_last_frame(bool last);
+bool save_frame_initialized(void);
+void save_frame_set_capture_length(int cap_len);
 
-using namespace std;
-
-extern sem_t capture_sem;
-
-int capture_init(int dev, string cap_dir, int capture_size);
-int capture_close(int dev);
-void *capture_frame(void *arg);
-void *create_video(void *arg);
-long unsigned int capture_get_capture_count(void);
-void capture_set_capture_count(long unsigned int caps);
-void capture_set_capture_directory(string directory);
-void capture_end_capture(bool end);
-
-
-#endif /* CAPTURE_HPP_ */
+#endif /* SAVE_FRAME_HPP_ */
