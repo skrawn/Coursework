@@ -1,6 +1,4 @@
 
-FRDM_LIBS := /usr/lib/arm-none-eabi/lib
-
 -include sources.mk
 
 CC := gcc
@@ -17,6 +15,11 @@ ifndef ($(ARCH))
 	ARCH := $(shell uname -m)
 endif
 
+# No IP address was given for upload. Use default
+ifndef ($(IP_ADDR))
+	IP_ADDR := 192.168.1.111
+endif
+
 ifeq ($(ARCH),$(filter $(ARCH),x86_64 host))
 	# host could apply to either the x86_64 host machine or the BBB
 	ifeq ($(shell uname -m),x86_64)
@@ -26,12 +29,12 @@ ifeq ($(ARCH),$(filter $(ARCH),x86_64 host))
 	endif
 else ifeq ($(ARCH),$(filter $(ARCH),bbb armv7l))
 	OBJ_DIR := ./bbb/
-	TOOLS_DIR := /usr/bin
-	CC := $(TOOLS_DIR)/arm-linux-gnueabihf-gcc
+	TOOLS_BASE := /usr/bin/arm-linux-gnueabihf-
+	CC := $(TOOLS_BASE)gcc
 else ifeq ($(ARCH),frdm)
 	OBJ_DIR := ./frdm/
-	TOOLS_DIR := /usr/bin
-	CC := $(TOOLS_DIR)/arm-none-eabi-gcc
+	TOOLS_BASE := /usr/bin/arm-none-eabi-
+	CC := $(TOOLS_BASE)gcc
 	CFLAGS = -mcpu=cortex-m0plus -mthumb -DFRDM
 	LFLAGS = -specs=nosys.specs
 else
@@ -59,7 +62,7 @@ compile-all: $(OBJS)
 
 
 upload:
-	scp ./bbb/$(OP_EXE_NAME) root@192.168.1.111:/home/root/Project1/$(OP_EXE_NAME)
+	scp ./bbb/$(OP_EXE_NAME) debian@$(IP_ADDR):/home/root/Project1/$(OP_EXE_NAME)
 
 clean:
 	$(RM) ./x86_64/* ./bbb/* ./frdm/*
