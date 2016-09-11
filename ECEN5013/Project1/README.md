@@ -4,19 +4,21 @@
 
 ###Makefile commands:
 
-`build (default)`     compiles and links all files
+`make [cmd] [ARCH=[x86_64, host, bbb, frdm]]` - ARCH argument can be used to specify target architecture for any command
 
-`preprocess`          Proprocesses all files
+`build (default)` - compiles and links all files
 
-`asm-file`            generates assembly output of all files and any single file
+`preprocess` - Proprocesses all files
 
-`%.o`                 Individually compiles a single object file based on the name of the file
+`asm-file` - generates assembly output of all files and any single file
 
-`compile-all`         Compiles all object files but does not link
+`%.o` - Individually compiles a single object file based on the name of the file
 
-`upload [IP_ADDR=XXX.XXX.XXX.XXX]`              Uploads the executable image to the BeagleBone Black at 192.168.1.111 (or IP_ADDR) to the debian user account.
+`compile-all` - Compiles all object files but does not link
 
-`clean`               cleans all generated files
+`upload [IP_ADDR=XXX.XXX.XXX.XXX]` - Uploads the executable image to the BeagleBone Black at 192.168.1.111 (or IP_ADDR) to the debian user account.
 
-`build-lib`           generates a library of memory and data functions to libproject1.a
+`clean` -  cleans all generated files
+
+`build-lib` - generates a library of memory and data functions to libproject1.a
 
