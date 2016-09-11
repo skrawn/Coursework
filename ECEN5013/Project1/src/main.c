@@ -18,9 +18,25 @@ int main(void)
 #if RUN_TESTS
 	// Test itoa
 	int32_t data = 4759392;
-	uint8_t outstr[11] = {'\0'};	
+	uint8_t outstr[33] = {'\0'};	
 	my_itoa(outstr, data, 16);	
-	printf("itoa(%d, 16) = %s\n", data, outstr);
+	printf("%s = itoa(%d, 16)\n", outstr, data);
+	my_itoa(outstr, data, 10);
+	printf("%s = itoa(%d, 10)\n", outstr, data);
+	my_itoa(outstr, data, 8);
+	printf("%s = itoa(%d, 8)\n", outstr, data);
+	my_itoa(outstr, data, 2);
+	printf("%s = itoa(%d, 2)\n", outstr, data);
+
+	data = -41835;
+	my_itoa(outstr, data, 16);
+	printf("%s = itoa(%d, 16)\n", outstr, data);
+	my_itoa(outstr, data, 10);
+	printf("%s = itoa(%d, 10)\n", outstr, data);
+	my_itoa(outstr, data, 8);
+	printf("%s = itoa(%d, 8)\n", outstr, data);
+	my_itoa(outstr, data, 2);
+	printf("%s = itoa(%d, 2)\n", outstr, data);
 
 	// Test atoi
 	uint8_t str[] = "32567\0";

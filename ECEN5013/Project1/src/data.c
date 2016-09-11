@@ -21,8 +21,9 @@
 int8_t *my_itoa(uint8_t *str, int32_t data, int32_t base)
 {
 	bool isNeg = false, leading_zero = true;
-	uint32_t i, mask;
-	uint8_t hex_nib;
+	uint32_t mask, u_data, pow10;
+	int64_t i;
+	uint8_t nib, pow10_cnt;
 
 	// Check for non-null string and valid base
 	if (str == NULL)
@@ -31,34 +32,80 @@ int8_t *my_itoa(uint8_t *str, int32_t data, int32_t base)
 	if (base != 2 && base != 8 && base != 10 && base != 16)
 		return NULL;
 
-	// Decimal number, check if negative
-	if (base == 10 && data < 0)
-		isNeg = true;
+	if (data == 0) {
+		*(str++) = ASCII_TO_INT;
+		*str = '\0';
+	}
 
 	if (base == 2) {
-
+		// Skip past any leading zeros
+		i = 31;
+		*str = '\0';
+		while (!(data & (1 << i)) && i > 0) {i--;}
+		while (i >= 0) {
+			*(str++) = ((uint8_t) ((data & (1 << i)) >> i) >= 1 ? 1 : 0) + ASCII_TO_INT;
+			i--;
+		}
 	}
 	else if (base == 8) {
-	
+		// Take care of the first two bits
+		if (data & 0xC0000000)
+			*(str++) = ((uint8_t) ((data & 0xC0000000) >> 30)) + ASCII_TO_INT;
+		i = 27;
+		while (i >= 0) {
+			nib = ((uint8_t) ((data & (0x7 << i)) >> i));
+			if (nib == 0 && leading_zero) {
+				// Do nothing
+			}
+			else {
+				leading_zero = false;
+				*(str++) = nib + ASCII_TO_INT;
+			}
+			i -= 3;
+		}			
 	}
 	else if (base == 10) {
-	
+		if (data < 0) {
+			isNeg = true;
+			*(str++) = '-';
+			u_data = (uint32_t) (-1 * data);
+		}
+		else
+			u_data = (uint32_t) data;
+
+		i = 10;
+		while (i > 1) {
+			pow10 = 10;
+			for (pow10_cnt = 0; pow10_cnt < (i-2); pow10_cnt++)
+				pow10 = 10*pow10;
+			
+			nib = u_data / pow10;
+			if (nib == 0 && leading_zero) {
+				// Do nothing
+			}
+			else {
+				leading_zero = false;
+				*(str++) = nib + ASCII_TO_INT;
+			}
+			u_data = u_data % pow10;
+			i--;
+		}
+		
+		*(str++) = u_data + ASCII_TO_INT;
 	}
 	else {
-		for (i = 7; i != 0; i--) {
+		for (i = 7; i >= 0; i--) {
 			mask = (0xF << (i*4));
-			hex_nib = (uint8_t) ((data & mask) >> (i*4));
-			if (hex_nib == 0 && leading_zero)
-			{
-				// Do nothing	
+			nib = (uint8_t) ((data & mask) >> (i*4));	
+			if (nib == 0 && leading_zero) {
+				// Do nothing
 			}
-			else
-			{
+			else {
 				leading_zero = false;
-				if (hex_nib <= 9)
-					*(str++) = hex_nib + ASCII_TO_INT;
+				if (nib <= 9)
+					*(str++) = nib + ASCII_TO_INT;
 				else
-					*(str++) = hex_nib + INT_TO_HEX_LETTER;
+					*(str++) = nib + INT_TO_HEX_LETTER;
 			}
 		}
 	}

@@ -1,14 +1,13 @@
 
 -include sources.mk
 
+OP_EXE_NAME := project
+OP_LIB_NAME := libprojec1.a
+
 CC := gcc
 CFLAGS := -Wall -g -O0 -std=c99
-LFLAGS := 
+LDFLAGS := 
 RM := rm -rf
-
-OP_EXE_NAME := project
-
-OP_LIB_NAME := libprojec1.a
 
 # No architecture defined, use the host architecture
 ifndef ($(ARCH))
@@ -35,8 +34,7 @@ else ifeq ($(ARCH),frdm)
 	OBJ_DIR := ./frdm/
 	TOOLS_BASE := /usr/bin/arm-none-eabi-
 	CC := $(TOOLS_BASE)gcc
-	CFLAGS = -mcpu=cortex-m0plus -mthumb -DFRDM
-	LFLAGS = -specs=nosys.specs
+	CFLAGS = -mcpu=cortex-m0plus -mthumb -DFRDM -specs=nosys.specs
 else
 	exit
 endif
@@ -46,7 +44,7 @@ dummy := $(shell test -d $(OBJ_DIR) || mkdir -p $(OBJ_DIR))
 
 build: compile-all 
 	@echo 'Building $(OP_EXE_NAME) for $(ARCH)'
-	$(CC) $(CFLAGS) $(INCLUDES) $(LFLAGS) -o $(OBJ_DIR)$(OP_EXE_NAME) $(OBJ_DIR)*.o 
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OBJ_DIR)$(OP_EXE_NAME) $(OBJ_DIR)*.o 
 
 preprocess:
 
@@ -68,4 +66,7 @@ clean:
 	$(RM) ./x86_64/* ./bbb/* ./frdm/*
 
 build-lib:
+	@echo 'Building $(OP_LIB_NAME) for $(ARCH)'
+	$(TOOLS_BASE)ar cr $(OBJ_DIR)$(OP_LIB_NAME) $(OBJ_DIR)*.o
+
 
