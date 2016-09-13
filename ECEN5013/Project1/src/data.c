@@ -20,7 +20,7 @@
 
 int8_t *my_itoa(uint8_t *str, int32_t data, int32_t base)
 {
-	bool isNeg = false, leading_zero = true;
+	bool leading_zero = true;
 	uint32_t mask, u_data, pow10;
 	int64_t i;
 	uint8_t nib, pow10_cnt;
@@ -66,7 +66,6 @@ int8_t *my_itoa(uint8_t *str, int32_t data, int32_t base)
 	}
 	else if (base == 10) {
 		if (data < 0) {
-			isNeg = true;
 			*(str++) = '-';
 			u_data = (uint32_t) (-1 * data);
 		}
@@ -185,7 +184,7 @@ void dump_memory(uint8_t *start, uint32_t length)
         while (i-- > 0) {
             // Print 16 bytes per line
             printf("0x%x ", *ptr8++);
-            if (line_cnt++ > DUMP_BYTES_PER_LINE) {
+            if (++line_cnt >= DUMP_BYTES_PER_LINE) {
                 line_cnt = 0;
                 printf("\n");        
             }              

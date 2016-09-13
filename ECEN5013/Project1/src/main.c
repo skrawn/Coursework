@@ -4,6 +4,7 @@
 
 #include "project_1.h"
 #include "data.h"
+#include "memory.h"
 
 #define RUN_TESTS	(1)
 
@@ -53,6 +54,35 @@ int main(void)
 	printf("big to little: 0x%x -> 0x%x\n", data, big_data);
 	uint32_t little_data = little_to_big(big_data);
 	printf("little to big: 0x%x -> 0x%x\n", big_data, little_data);
+
+	// Test memmove
+	printf("\nMemory Operations\n");
+	uint8_t data_arr[25];
+	uint8_t dst_arr[25];
+	uint8_t i;
+	for (i = 0; i < sizeof(data_arr); i++) {
+		data_arr[i] = i;
+	}
+	my_memmove(data_arr, dst_arr, sizeof(data_arr));
+	printf("\nOriginal array:\n");
+	dump_memory(data_arr, sizeof(data_arr));
+	printf("\nMoved array:\n");
+	dump_memory(dst_arr, sizeof(dst_arr));
+
+	// Test memzero
+	printf("\nBefore memzero:\n");
+	dump_memory(dst_arr, sizeof(dst_arr));
+	printf("\nAfter memzero:\n");
+	my_memzero(dst_arr, sizeof(dst_arr));
+	dump_memory(dst_arr, sizeof(dst_arr));
+
+	// Test reverse
+	printf("\nBefore reverse:\n");
+	dump_memory(data_arr, sizeof(data_arr));
+	printf("\nAfter reverse:\n");
+	my_reverse(data_arr, sizeof(data_arr));
+	dump_memory(data_arr, sizeof(data_arr));
+	printf("\n");
 
 #endif
 
