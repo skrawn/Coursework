@@ -44,13 +44,22 @@ dummy := $(shell test -d $(OBJ_DIR) || mkdir -p $(OBJ_DIR))
 
 build: compile-all 
 	@echo 'Building $(OP_EXE_NAME) for $(ARCH)'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OBJ_DIR)$(OP_EXE_NAME) $(OBJ_DIR)*.o 
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OBJ_DIR)$(OP_EXE_NAME) $(OBJ_DIR)*.o -Wl,-Map=$(OBJ_DIR)$(OP_EXE_NAME).map
+	$(TOOLS_BASE)size $(OBJ_DIR)$(OP_EXE_NAME)
+	$(TOOLS_BASE)objdump -S $(OBJ_DIR)$(OP_EXE_NAME) > $(OBJ_DIR)$(OP_EXE_NAME).objdump
 
-preprocess:
+preprocess: $(PREPROC)
+
+%.i: $(SRCS_DIR)/%.c
+	@echo 'Generating $< for $(ARCH)'
+	$(CC) $(CFLAGS) $(INCLUDES) -E $< -o $(OBJ_DIR)$@
 
 
-asm-file:
+asm-file: $(ASMS)
 
+%.s: $(SRCS_DIR)/%.c
+	@echo 'Generating $< for $(ARCH)'
+	$(CC) $(CFLAGS) $(INCLUDES) -S $< -o $(OBJ_DIR)$@
 
 %.o: $(SRCS_DIR)/%.c
 	@echo 'Building $< for $(ARCH)'

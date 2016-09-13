@@ -7,4 +7,8 @@ SRCS_DIR = ./src
 
 OBJS = $(SRCS:.c=.o)
 
+ASMS = $(SRCS:.c=.s)
+
+PREPROC = $(SRCS:.c=.i)
+
 INCLUDES = -I./inc
