@@ -54,9 +54,8 @@ preprocess: $(PREPROC)
 	@echo 'Generating $< for $(ARCH)'
 	$(CC) $(CFLAGS) $(INCLUDES) -E $< -o $(OBJ_DIR)$@
 
-
 asm-file: $(ASMS)
-
+	
 %.s: $(SRCS_DIR)/%.c
 	@echo 'Generating $< for $(ARCH)'
 	$(CC) $(CFLAGS) $(INCLUDES) -S $< -o $(OBJ_DIR)$@
@@ -66,7 +65,6 @@ asm-file: $(ASMS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(OBJ_DIR)$@
 
 compile-all: $(OBJS)
-
 
 upload:
 	scp ./bbb/$(OP_EXE_NAME) debian@$(IP_ADDR):/home/root/Project1/$(OP_EXE_NAME)
@@ -78,4 +76,4 @@ build-lib:
 	@echo 'Building $(OP_LIB_NAME) for $(ARCH)'
 	$(TOOLS_BASE)ar cr $(OBJ_DIR)$(OP_LIB_NAME) $(OBJ_DIR)*.o
 
-
+.PHONY: build preprocess asm-file compile-all upload clean build-lib
