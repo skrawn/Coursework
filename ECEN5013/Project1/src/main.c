@@ -6,9 +6,11 @@
 #include "data.h"
 #include "memory.h"
 
-#define RUN_TESTS	(1)
+#define RUN_PROJECT1_TESTS	(0)
+#define RUN_PROJECT2_TESTS	(1)
 
-#define PROJECT_1	(1)
+#define PROJECT_1			(0)
+#define PROJECT_2			(1)
 
 #if FRDM
 #define printf(...) (void)0
@@ -16,7 +18,7 @@
 
 int main(void)
 {
-#if RUN_TESTS
+#if RUN_PROJECT1_TESTS
 	// Test itoa
 	int32_t data = 4759392;
 	uint8_t outstr[33] = {'\0'};	
@@ -86,8 +88,23 @@ int main(void)
 
 #endif
 
+#if RUN_PROJECT2_TESTS
+	// Test ftoa
+	float num1 = 34.56293;
+	float num2 = -128.8929;
+	uint8_t str_num1[12] = {0}, str_num2[12] = {0};
+	ftoa(num1, str_num1, 5);
+	ftoa(num2, str_num2, 2);
+	printf("ftoa(%f) is %s\n", num1, str_num1);
+	printf("ftoa(%f) is %s\n", num2, str_num2);
+#endif
+
 #if PROJECT_1
 	project_1_report();
+#endif
+
+#if PROJECT_2
+
 #endif
 
 	return 0;

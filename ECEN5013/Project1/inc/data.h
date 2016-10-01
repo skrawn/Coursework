@@ -25,6 +25,16 @@ int8_t *my_itoa(uint8_t *str, int32_t data, int32_t base);
 int32_t my_atoi(uint8_t *str);
 
 /**
+ * @brief Converts floating point number into an ASCII string
+ * @param fp Floating point number to conver
+ * @param str Pointer string to place the result.
+ * @dplaces Number of decimal places to print. Max is 9.
+ * @return Returns the length of the floating point string. Returns less than 0
+ * 		if an error was found.
+ */
+int8_t ftoa(float fp, uint8_t *str, uint8_t dplaces);
+
+/**
  * @brief Prints a section of memory to the terminal.
  * @param start Pointer to the start of the memory section to be dumped.
  * @param length Length of the memory section to be dumped.

@@ -16,6 +16,9 @@
 #define ERR_NULLPTR				-2
 #define ERR_INVINPUT			-3
 
+#define FLOAT_EXP_BIAS			-127
+#define FLOAT_MAX_DPLACES		9
+
 #define DUMP_BYTES_PER_LINE     16
 
 int8_t *my_itoa(uint8_t *str, int32_t data, int32_t base)
@@ -173,6 +176,69 @@ int32_t my_atoi(uint8_t *str)
 		return (-1)*((int32_t) retval);	
 	else
 		return (int32_t) retval;
+}
+
+int8_t ftoa(float fp, uint8_t *str, uint8_t dplaces)
+{
+	uint32_t power = 10;
+	uint32_t int_part;
+	uint8_t i, count = 0;
+
+	// Make sure the buffer is not null
+	if (str == NULL)
+		return ERR_NULLPTR;
+
+	// If it's zero, just return 0.0
+	if (fp == 0.0) {
+		*(str++) = '0';
+		*(str++) = '.';
+		*(str++) = '0';
+		*str = '\0';
+		return 3;
+	}		
+
+	// Check for a negative
+	if (fp < -1.0) {
+		*(str++) = '-';
+		fp *= (-1.0);
+		count++;
+	}
+
+	// Get the integer part
+	int_part = (uint32_t) fp;
+	// itoa the integer part
+	my_itoa(str, int_part, 10);
+	// Iterate to the end of the integer part
+	while (*str != '\0') {
+		str++; count++;
+	}
+	// If no decimal places were specifed, only return an integer
+	if (dplaces == 0) {
+		return count;
+	}
+	
+	// Insert the decimal point
+	*(str++) = '.';
+	
+	// Subtract the integer part from the float point number
+	fp = fp - ((float) int_part);
+	// Limit the precision to 9 digits
+	if (dplaces > FLOAT_MAX_DPLACES) {
+		dplaces = FLOAT_MAX_DPLACES;
+	}
+
+	// Now multiply each of the decimal places by 10.0 to get the fractional integer
+	for (i = 1; i < dplaces; i++) {
+		power *= 10;
+	}		
+	fp *= (float) power;
+	my_itoa(str, (int32_t) fp, 10);
+
+	// Iterate to the end of the fractional part
+	while (*str != '\0') {
+		str++; count++;
+	}
+	return count;
 }
 
 void dump_memory(uint8_t *start, uint32_t length)
