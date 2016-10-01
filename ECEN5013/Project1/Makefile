@@ -44,7 +44,7 @@ dummy := $(shell test -d $(OBJ_DIR) || mkdir -p $(OBJ_DIR))
 
 build: compile-all 
 	@echo 'Building $(OP_EXE_NAME) for $(ARCH)'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OBJ_DIR)$(OP_EXE_NAME) $(OBJ_DIR)*.o -Wl,-Map=$(OBJ_DIR)$(OP_EXE_NAME).map
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OBJ_DIR)$(OP_EXE_NAME) $(OBJ_DIR)*.o -Wl,-Map=$(OBJ_DIR)$(OP_EXE_NAME).map -lm
 	$(TOOLS_BASE)size $(OBJ_DIR)$(OP_EXE_NAME)
 	$(TOOLS_BASE)objdump -S $(OBJ_DIR)$(OP_EXE_NAME) > $(OBJ_DIR)$(OP_EXE_NAME).objdump
 

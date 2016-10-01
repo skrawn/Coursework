@@ -93,8 +93,8 @@ int main(void)
 	float num1 = 34.56293;
 	float num2 = -128.8929;
 	uint8_t str_num1[12] = {0}, str_num2[12] = {0};
-	ftoa(num1, str_num1, 5);
-	ftoa(num2, str_num2, 2);
+	ftoa(num1, str_num1);
+	ftoa(num2, str_num2);
 	printf("ftoa(%f) is %s\n", num1, str_num1);
 	printf("ftoa(%f) is %s\n", num2, str_num2);
 #endif

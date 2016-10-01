@@ -1,6 +1,8 @@
 
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "data.h"
 
@@ -17,7 +19,7 @@
 #define ERR_INVINPUT			-3
 
 #define FLOAT_EXP_BIAS			-127
-#define FLOAT_MAX_DPLACES		9
+#define FLOAT_PRECISION			0.000000001
 
 #define DUMP_BYTES_PER_LINE     16
 
@@ -178,67 +180,92 @@ int32_t my_atoi(uint8_t *str)
 		return (int32_t) retval;
 }
 
-int8_t ftoa(float fp, uint8_t *str, uint8_t dplaces)
+uint8_t *ftoa(float fp, uint8_t *str)
 {
-	uint32_t power = 10;
-	uint32_t int_part;
-	uint8_t i, count = 0;
 
-	// Make sure the buffer is not null
-	if (str == NULL)
-		return ERR_NULLPTR;
+	// NOTE: This code was taken from a stack overflow post by androider
+	// http://stackoverflow.com/questions/2302969/how-to-implement-char-ftoafloat-num-without-sprintf-library-function-i
+	// A few things were fixed to make it work for this project and fit the coding standards
+	// and the comments were added by me.
 
-	// If it's zero, just return 0.0
-	if (fp == 0.0) {
-		*(str++) = '0';
-		*(str++) = '.';
-		*(str++) = '0';
-		*str = '\0';
-		return 3;
-	}		
+    int32_t digit, m, m1, useExp;
+    uint8_t *c = str;
+    int32_t neg = (fp < 0.0);
+	double weight;
 
-	// Check for a negative
-	if (fp < -1.0) {
-		*(str++) = '-';
-		fp *= (-1.0);
-		count++;
-	}
+    // handle special cases
+    if (isnan(fp)) {
+        strcpy((char *) str, "nan");
+    } 
+	else if (isinf(fp)) {
+        strcpy((char *) str, "inf");
+    } 
+	else if (fp == 0.0) {
+        strcpy((char *) str, "0.0");
+    } 
+	else {
+		
+        if (neg)
+            fp = -fp;
 
-	// Get the integer part
-	int_part = (uint32_t) fp;
-	// itoa the integer part
-	my_itoa(str, int_part, 10);
-	// Iterate to the end of the integer part
-	while (*str != '\0') {
-		str++; count++;
-	}
-	// If no decimal places were specifed, only return an integer
-	if (dplaces == 0) {
-		return count;
-	}
-	
-	// Insert the decimal point
-	*(str++) = '.';
-	
-	// Subtract the integer part from the float point number
-	fp = fp - ((float) int_part);
-	// Limit the precision to 9 digits
-	if (dplaces > FLOAT_MAX_DPLACES) {
-		dplaces = FLOAT_MAX_DPLACES;
-	}
-
-	// Now multiply each of the decimal places by 10.0 to get the fractional integer
-	for (i = 1; i < dplaces; i++) {
-		power *= 10;
-	}		
-	fp *= (float) power;
-	my_itoa(str, (int32_t) fp, 10);
-
-	// Iterate to the end of the fractional part
-	while (*str != '\0') {
-		str++; count++;
-	}
-	return count;
+        // Determine with width of the integer part. If it's
+		// bigger than what will fit in a normal integer,
+		// e notation will be used.
+        m = log10(fp);
+        useExp = (m >= 14 || (neg && m >= 9) || m <= -9);
+        if (neg)
+            *(c++) = '-';
+        // set up for scientific notation
+        if (useExp) {
+            if (m < 0)
+               m -= 1.0;
+            fp = fp / pow(10.0, m);
+            m1 = m;
+            m = 0;
+        }
+        if (m < 1.0) {
+            m = 0;
+        }
+        // convert the number
+        while (fp > FLOAT_PRECISION || m >= 0) {
+            weight = pow(10.0, m);
+            if (weight > 0 && !isinf(weight)) {
+                digit = floor(fp / weight);
+                fp -= (digit * weight);
+                *(c++) = '0' + digit;
+            }
+            if (m == 0 && fp > 0)
+                *(c++) = '.';
+            m--;
+        }
+        if (useExp) {
+            // convert the exponent
+            int i, j;
+            *(c++) = 'e';
+            if (m1 > 0) {
+                *(c++) = '+';
+            } else {
+                *(c++) = '-';
+                m1 = -m1;
+            }
+            m = 0;
+            while (m1 > 0) {
+                *(c++) = '0' + m1 % 10;
+                m1 /= 10;
+                m++;
+            }
+            c -= m;
+            for (i = 0, j = m-1; i<j; i++, j--) {
+                // swap without temporary
+                c[i] ^= c[j];
+                c[j] ^= c[i];
+                c[i] ^= c[j];
+            }
+            c += m;
+        }
+        *(c) = '\0';
+    }
+    return str;
 }
 
 void dump_memory(uint8_t *start, uint32_t length)
