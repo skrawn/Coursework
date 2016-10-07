@@ -19,10 +19,9 @@ typedef enum {
 	cb_status_full
 } cb_status_t;
 
-inline uint8_t cb_full(cb_t *cb);
-inline uint8_t cb_empty(cb_t *cb);
-inline uint8_t cb_push(cb_t *cb, uint8_t element);
-inline uint8_t cb_pop(cb_t *cb, uint8_t *element);
-
+uint8_t cb_full(cb_t *cb);
+uint8_t cb_empty(cb_t *cb);
+uint8_t cb_push(cb_t *cb, uint8_t element);
+uint8_t cb_pop(cb_t *cb, uint8_t *element);
 
 #endif

@@ -1,17 +1,17 @@
 
 #include "circ_buf.h"
 
-inline uint8_t cb_full(cb_t *cb)
+uint8_t cb_full(cb_t *cb)
 {
-	return (cb->num_items >= cb->length ? cb_status_full : cb_status_ok);
+	return (cb->num_items == cb->length ? cb_status_full : cb_status_ok);
 }
 
-inline uint8_t cb_empty(cb_t *cb)
+uint8_t cb_empty(cb_t *cb)
 {
 	return (cb->num_items == 0 ? cb_status_empty : cb_status_ok);
 }
 
-inline uint8_t cb_push(cb_t *cb, uint8_t element)
+uint8_t cb_push(cb_t *cb, uint8_t element)
 {
 	uint8_t retval = cb_status_ok;
 
@@ -33,7 +33,7 @@ inline uint8_t cb_push(cb_t *cb, uint8_t element)
 	return retval;
 }
 
-inline uint8_t cb_pop(cb_t *cb, uint8_t *element)
+uint8_t cb_pop(cb_t *cb, uint8_t *element)
 {
 	uint8_t retval = cb_status_ok;
 
