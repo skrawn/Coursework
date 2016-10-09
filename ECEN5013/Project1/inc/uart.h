@@ -9,6 +9,10 @@ typedef enum {
 } uart_status_t;
 
 void uart_init(void);
+uart_status_t uart_put_tx_buf(uint8_t *buf, uint16_t tx_size);
+uint16_t uart_pop_rx_buf(uint8_t *buf);
+uint8_t uart_tx_buffer_full(void);
+uint8_t uart_rx_buffer_not_empty(void);
 
 #endif
 

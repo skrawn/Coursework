@@ -4,6 +4,7 @@
 
 #ifdef FRDM
 #include "MKL25Z4.h"
+#include "uart.h"
 
 #define KL25Z_XTAL0_CLK_HZ	8000000
 
@@ -14,6 +15,10 @@ void proc_init(void)
 {
 #ifdef FRDM
 	frdm_init();
+	
+	// Initialize UART0
+	uart_init();
+
 #endif
 }
 
@@ -68,5 +73,6 @@ static void frdm_init(void)
 
 	// Select the MCGPLLCK/2 clock
 	SIM->SOPT2 |= SIM_SOPT2_PLLFLLSEL(1);
+
 }
 #endif

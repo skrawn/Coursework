@@ -2,6 +2,12 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "proc_init.h"
+#ifdef FRDM
+// TODO Remove later
+#include "uart.h"
+#endif
+
 #include "project_1.h"
 #include "data.h"
 #include "memory.h"
@@ -18,6 +24,8 @@
 
 int main(void)
 {
+	proc_init();
+
 #if RUN_PROJECT1_TESTS
 	// Test itoa
 	int32_t data = 4759392;
@@ -97,6 +105,15 @@ int main(void)
 	ftoa(num2, str_num2);
 	printf("ftoa(%f) is %s\n", num1, str_num1);
 	printf("ftoa(%f) is %s\n", num2, str_num2);
+
+#ifdef FRDM
+	uint8_t string[] = "Hello strang!\n";
+	uart_put_tx_buf(string, sizeof(string));
+	uint32_t i;
+	while (1) {
+		for (i = 0; i < 1000000; i++) {}
+	}
+#endif
 #endif
 
 #if PROJECT_1

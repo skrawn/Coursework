@@ -1,5 +1,4 @@
 
--include sources.mk
 
 OP_EXE_NAME := project
 OP_LIB_NAME := libprojec1.a
@@ -34,17 +33,25 @@ else ifeq ($(ARCH),frdm)
 	OBJ_DIR := ./frdm/
 	TOOLS_BASE := /usr/bin/arm-none-eabi-
 	CC := $(TOOLS_BASE)gcc
-	CFLAGS = -mcpu=cortex-m0plus -mthumb -DFRDM -specs=nosys.specs
+	CFLAGS += -mcpu=cortex-m0plus -mthumb -DFRDM -D"CPU_MKL25Z4128VFM4" -specs=nosys.specs
+	KINETIS_SDK = $(HOME)/Downloads/SDK_2.0_FRDM-KL25Z
+	INCLUDES += -I$(KINETIS_SDK)/CMSIS/Include \
+		-I$(KINETIS_SDK)/devices/MKL25Z4
+	LDFLAGS += -T "$(KINETIS_SDK)/devices/MKL25Z4/gcc/MKL25Z128xxx4_flash.ld"
+	# Call the special rule to create the startup object file
+	OBJS += startup
 else
 	exit
 endif
+
+-include sources.mk
 
 # Create the output directory if it does not exist
 dummy := $(shell test -d $(OBJ_DIR) || mkdir -p $(OBJ_DIR))
 
 build: compile-all 
 	@echo 'Building $(OP_EXE_NAME) for $(ARCH)'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OBJ_DIR)$(OP_EXE_NAME) $(OBJ_DIR)*.o -Wl,-Map=$(OBJ_DIR)$(OP_EXE_NAME).map -lm
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OBJ_DIR)$(OP_EXE_NAME) $(OBJ_DIR)*.o -Wl,-Map=$(OBJ_DIR)$(OP_EXE_NAME).map -lm $(LDFLAGS)
 	$(TOOLS_BASE)size $(OBJ_DIR)$(OP_EXE_NAME)
 	$(TOOLS_BASE)objdump -S $(OBJ_DIR)$(OP_EXE_NAME) > $(OBJ_DIR)$(OP_EXE_NAME).objdump
 
@@ -64,6 +71,9 @@ asm-file: $(ASMS)
 	@echo 'Building $< for $(ARCH)'
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(OBJ_DIR)$@
 
+startup:
+	$(CC) $(CFLAGS) $(INCLUDES) -x assembler-with-cpp -D__NO_SYSTEM_INIT -c $(KINETIS_SDK)/devices/MKL25Z4/gcc/startup_MKL25Z4.S -o $(OBJ_DIR)startup_MKL25Z4.o
+
 compile-all: $(OBJS)
 
 upload:
@@ -75,5 +85,10 @@ clean:
 build-lib:
 	@echo 'Building $(OP_LIB_NAME) for $(ARCH)'
 	$(TOOLS_BASE)ar cr $(OBJ_DIR)$(OP_LIB_NAME) $(OBJ_DIR)*.o
+
+printvar:
+	@echo 'SRCS = $(SRCS)'
+	@echo 'SRCS_DIR = $(SRCS_DIR)'
+	@echo 'OBJS = $(OBJS)'
 
 .PHONY: build preprocess asm-file compile-all upload clean build-lib

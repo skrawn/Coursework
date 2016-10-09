@@ -1,14 +1,17 @@
 SRCS += main.c \
 	data.c \
 	memory.c \
-	project_1.c
+	project_1.c \
+	uart.c \
+	circ_buf.c \
+	proc_init.c
 
-SRCS_DIR = ./src
+SRCS_DIR += ./src
 
-OBJS = $(SRCS:.c=.o)
+OBJS += $(SRCS:.c=.o)
 
-ASMS = $(SRCS:.c=.s)
+ASMS += $(SRCS:.c=.s)
 
-PREPROC = $(SRCS:.c=.i)
+PREPROC += $(SRCS:.c=.i)
 
-INCLUDES = -I./inc
+INCLUDES += -I./inc
