@@ -3,13 +3,9 @@
 #include <stdio.h>
 
 #include "proc_init.h"
-#ifdef FRDM
-// TODO Remove later
-#include "uart.h"
-#endif
-
 #include "project_1.h"
 #include "data.h"
+#include "log.h"
 #include "memory.h"
 
 #define RUN_PROJECT1_TESTS	(0)
@@ -106,14 +102,20 @@ int main(void)
 	printf("ftoa(%f) is %s\n", num1, str_num1);
 	printf("ftoa(%f) is %s\n", num2, str_num2);
 
-#ifdef FRDM
-	uint8_t string[] = "Hello strang!\n";
-	uart_put_tx_buf(string, sizeof(string));
-	uint32_t i;
-	while (1) {
-		for (i = 0; i < 1000000; i++) {}
-	}
-#endif
+	// Test logging features
+	uint8_t log_str_1[] = "Testing123, Serial Print Test, no params";
+	uint8_t log_str_2[] = "This is an integer number: ";
+	uint8_t log_str_3[] = "This is a floating point number: ";
+	uint8_t temp8 = 200; 
+	uint16_t temp16 = 4096; 
+	uint32_t temp32 = 123456; 
+	float tempf = 1543.321;
+	log_0(log_str_1, sizeof(log_str_1));	
+	log_1(log_str_2, sizeof(log_str_2), (void *) &temp8, log_uint8_t);
+	log_1(log_str_2, sizeof(log_str_2), (void *) &temp16, log_uint16_t);
+	log_1(log_str_2, sizeof(log_str_2), (void *) &temp32, log_uint32_t);
+	log_1(log_str_3, sizeof(log_str_3), (void *) &tempf, log_float_t);
+	
 #endif
 
 #if PROJECT_1
@@ -122,6 +124,16 @@ int main(void)
 
 #if PROJECT_2
 
+#endif
+
+#ifdef FRDM
+	// Wait here for a bit if the UART is still transmitting
+	uint32_t i;
+	while (!uart_tx_buf_empty()) {
+		// Also add some waiting time since uart_tx_buf_empty does disable/re-enable
+		// interrupts a bunch of times.
+		for (i = 0; i < 10000; i++) {}
+	}
 #endif
 
 	return 0;

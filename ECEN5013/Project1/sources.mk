@@ -4,7 +4,8 @@ SRCS += main.c \
 	project_1.c \
 	uart.c \
 	circ_buf.c \
-	proc_init.c
+	proc_init.c \
+	log.c
 
 SRCS_DIR += ./src
 

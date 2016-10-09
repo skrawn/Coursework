@@ -7,9 +7,6 @@
 #include "MKL25Z4.h"
 #include "uart.h"
 
-#define TX_BUFFER_LENGTH	128
-#define RX_BUFFER_LENGTH	16
-
 static inline void uart_enable_tx_interrupt(void);
 static inline void uart_disable_tx_interrupt(void);
 static inline void uart_enable_rx_interrupt(void);
@@ -112,7 +109,7 @@ uint16_t uart_pop_rx_buf(uint8_t *buf)
 	return rx_size;
 }
 
-uint8_t uart_tx_buffer_full(void)
+uint8_t uart_tx_buf_full(void)
 {
 	cb_status_t buf_status;
 	// Disable IRQs when checking the state of the buffers
@@ -122,7 +119,17 @@ uint8_t uart_tx_buffer_full(void)
 	return (buf_status == cb_status_full ? 1 : 0);
 }
 
-uint8_t uart_rx_buffer_not_empty(void)
+uint8_t uart_tx_buf_empty(void)
+{
+	cb_status_t buf_status;
+	// Disable IRQs when checking the state of the buffers
+	NVIC_EnableIRQ(UART0_IRQn);
+	buf_status = cb_empty(&tx_cb);
+	NVIC_EnableIRQ(UART0_IRQn);
+	return (buf_status == cb_status_empty ? 1 : 0);
+}
+
+uint8_t uart_rx_buf_not_empty(void)
 {
 	cb_status_t buf_status;
 	// Disable IRQs when checking the state of the buffers
