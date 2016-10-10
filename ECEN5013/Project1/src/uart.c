@@ -3,13 +3,19 @@
 // This code is only valid for the FRDM board
 #ifdef FRDM
 
+#include <stdlib.h>
+#include <string.h>
 #include "circ_buf.h"
 #include "MKL25Z4.h"
+#include "rgb_led.h"
 #include "uart.h"
 
 static inline void uart_enable_tx_interrupt(void);
 static inline void uart_disable_tx_interrupt(void);
 static inline void uart_enable_rx_interrupt(void);
+static char *my_strstr(char *buf, int character);
+
+const uint8_t INVALID_INPUT[] = "Error: Invalid input: ";
 
 cb_t tx_cb;
 uint8_t tx_buf[TX_BUFFER_LENGTH] = {0};
@@ -154,10 +160,25 @@ static inline void uart_enable_rx_interrupt(void)
 	UART0->C2 |= UART0_C2_RIE(1);
 }
 
+// Library version doesn't work?
+static char *my_strstr(char *buf, int character)
+{
+	while (*buf != '\0' && *buf != (char) character) {
+		buf++;
+	}
+	if (*buf == (char) character)
+		return buf;
+	else
+		return NULL;
+}
+
 void UART0_DriverIRQHandler(void)
 {
 	// Get and clear the current interrupts
-	uint8_t s1_flags, s2_flags, data;
+	uint8_t s1_flags, s2_flags, data, i, red, green, blue, input_valid = 1;
+	uint8_t cmd_buf[RX_BUFFER_LENGTH + 1] = {0};
+	char *str_ptr, *cmd_ptr, brightness[4] = {0};
+	int space_char = 0x20;
 	s1_flags = UART0->S1;
 	UART0->S1 = s1_flags;
 
@@ -167,7 +188,97 @@ void UART0_DriverIRQHandler(void)
 	// Check for a receive interrupt
 	if (s1_flags & UART0_S1_RDRF_MASK) {
 		data = UART0->D;
-		cb_push(&rx_cb, data);
+		// Find a return character, indicating the end of a command
+		if (data == '\r') {
+			// Dequeue the receive circular buffer into a local buffer
+			for (;;) {
+				i = 0;
+				while (cb_pop(&rx_cb, &cmd_buf[i]) != cb_status_empty && i < RX_BUFFER_LENGTH) {
+					i++;
+				}
+
+				// Find integers with spaces in between them
+				cmd_ptr = (char *) cmd_buf;
+				str_ptr = my_strstr((char *) cmd_ptr, space_char);
+				if (str_ptr == NULL) {
+					input_valid = 0;
+					break;
+				}
+
+				// If the offset from the space to the beginning of the buffer is
+				// greater than 3, it's invalid input
+				if ((str_ptr - cmd_ptr) > 3) {
+					input_valid = 0;
+					break;
+				}
+
+				// Copy the characters from the beginning of the buffer to the space
+				// to get the red value
+				memcpy(brightness, cmd_ptr, str_ptr - cmd_ptr);
+
+				// Using the standard library version because it will be faster
+				red = (uint8_t) atoi(brightness);
+
+				cmd_ptr = str_ptr + 1;
+				// Look for the green value
+				str_ptr = my_strstr((char *) cmd_ptr, ' ');
+				if (str_ptr == NULL) {
+					input_valid = 0;
+					break;
+				}
+
+				// If the offset from the space to the beginning of the buffer is
+				// greater than 3, it's invalid input
+				if ((str_ptr - cmd_ptr) > 3) {
+					input_valid = 0;
+					break;
+				}
+
+				// Copy the characters from the beginning of the buffer to the space
+				// to get the red value
+				memset(brightness, 0, sizeof(brightness));
+				memcpy(brightness, cmd_ptr, str_ptr - cmd_ptr);
+
+				// Using the standard library version because it will be faster
+				green = (uint8_t) atoi(brightness);
+
+				cmd_ptr = str_ptr + 1;
+				// For the end of the buffer
+				str_ptr = my_strstr((char *) cmd_ptr, '\0');
+				if (str_ptr == NULL) {
+					input_valid = 0;
+					break;
+				}
+
+				// If the offset from the space to the beginning of the buffer is
+				// greater than 3, it's invalid input
+				if ((str_ptr - cmd_ptr) > 3) {
+					input_valid = 0;
+					break;
+				}
+
+				// Copy the characters from the beginning of the buffer to the space
+				// to get the red value
+				memset(brightness, 0, sizeof(brightness));
+				memcpy(brightness, cmd_ptr, str_ptr - cmd_ptr);
+
+				// Using the standard library version because it will be faster
+				blue = (uint8_t) atoi(brightness);
+
+				rgb_led_set_brightness(red, green, blue);
+				break;
+
+			}
+			if (!input_valid) {
+				cmd_buf[i + 1] = '\n';
+				uart_put_tx_buf((uint8_t *) INVALID_INPUT, sizeof(INVALID_INPUT));
+				uart_put_tx_buf(cmd_buf, i + 1);
+			}
+		}
+		else {
+			// Otherwise, just put it in the RX buffer.
+			cb_push(&rx_cb, data);
+		}
 	}
 
 	// Check for a transmit data register empty interrupt
