@@ -30,7 +30,7 @@ int32_t my_atoi(uint8_t *str);
  * @param str Pointer string to place the result.
  * @return Returns a pointer to str.
  */
-uint8_t *ftoa(float fp, uint8_t *str);
+uint8_t *my_ftoa(float fp, uint8_t *str);
 
 /**
  * @brief Prints a section of memory to the terminal.

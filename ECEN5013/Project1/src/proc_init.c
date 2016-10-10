@@ -1,6 +1,7 @@
 
 #include <stdint.h>
 #include "proc_init.h"
+#include "profiler.h"
 
 #ifdef FRDM
 #include "MKL25Z4.h"
@@ -18,8 +19,9 @@ void proc_init(void)
 	
 	// Initialize UART0
 	uart_init();
-
 #endif
+
+	profiler_init();
 }
 
 #ifdef FRDM

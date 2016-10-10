@@ -38,7 +38,7 @@ void log_1(uint8_t *data, size_t len, void *param, log_data_t data_type_size)
 	// Convert the input parameter based on the data type
 	switch (data_type_size) {
 		case log_float_t:
-			ftoa(*((float *) param), param_buffer);
+			my_ftoa(*((float *) param), param_buffer);
 			break;
 
 		case log_uint8_t:

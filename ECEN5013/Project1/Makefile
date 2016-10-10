@@ -29,10 +29,16 @@ ifeq ($(ARCH),$(filter $(ARCH),x86_64 host))
 	else ifeq ($(shell uname -m),armv7l)
 		OBJ_DIR := ./bbb/
 	endif
+	CFLAGS += -D_XOPEN_SOURCE=700
+	LDFLAGS += -lrt	-lc
+	INCLUDES += -I/usr/include
 else ifeq ($(ARCH),$(filter $(ARCH),bbb armv7l))
 	OBJ_DIR := ./bbb/
 	TOOLS_BASE := /usr/bin/arm-linux-gnueabihf-
 	CC := $(TOOLS_BASE)gcc
+	CFLAGS += -D_XOPEN_SOURCE=700
+	LDFLAGS += -lrt	-lc
+	INCLUDES += -I/usr/include
 else ifeq ($(ARCH),frdm)
 	OBJ_DIR := ./frdm/
 	TOOLS_BASE := /usr/bin/arm-none-eabi-

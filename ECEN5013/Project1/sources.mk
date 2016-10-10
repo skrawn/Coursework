@@ -6,7 +6,9 @@ SRCS += main.c \
 	circ_buf.c \
 	proc_init.c \
 	log.c \
-	rgb_led.c
+	rgb_led.c \
+	profiler.c \
+	project_2.c
 
 SRCS_DIR += ./src
 

@@ -91,7 +91,7 @@ int8_t *my_itoa(uint8_t *str, int32_t data, int32_t base)
 				leading_zero = false;
 				*(str++) = nib + ASCII_TO_INT;
 			}
-			u_data = u_data % pow10;
+			u_data = u_data % pow10;			
 			i--;
 		}
 		
@@ -180,7 +180,7 @@ int32_t my_atoi(uint8_t *str)
 		return (int32_t) retval;
 }
 
-uint8_t *ftoa(float fp, uint8_t *str)
+uint8_t *my_ftoa(float fp, uint8_t *str)
 {
 
 	// NOTE: This code was taken from a stack overflow post by androider

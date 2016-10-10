@@ -4,6 +4,7 @@
 
 #include "proc_init.h"
 #include "project_1.h"
+#include "project_2.h"
 #include "data.h"
 #include "log.h"
 #include "memory.h"
@@ -98,10 +99,10 @@ int main(void)
 	float num1 = 34.56293;
 	float num2 = -128.8929;
 	uint8_t str_num1[12] = {0}, str_num2[12] = {0};
-	ftoa(num1, str_num1);
-	ftoa(num2, str_num2);
-	printf("ftoa(%f) is %s\n", num1, str_num1);
-	printf("ftoa(%f) is %s\n", num2, str_num2);
+	my_ftoa(num1, str_num1);
+	my_ftoa(num2, str_num2);
+	printf("my_ftoa(%f) is %s\n", num1, str_num1);
+	printf("my_ftoa(%f) is %s\n", num2, str_num2);
 
 	// Test logging features
 	uint8_t log_str_1[] = "Testing123, Serial Print Test, no params";
@@ -124,7 +125,7 @@ int main(void)
 #endif
 
 #if PROJECT_2
-
+	project_2_report();
 #endif
 
 #ifdef FRDM
