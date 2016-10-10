@@ -13,6 +13,10 @@ ifndef ($(ARCH))
 	ARCH := $(shell uname -m)
 endif
 
+ifdef ($(VERBOSE))
+	CFLAGS += -DVERBOSE
+endif
+
 # No IP address was given for upload. Use default
 ifndef ($(IP_ADDR))
 	IP_ADDR := 192.168.1.111

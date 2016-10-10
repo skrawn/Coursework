@@ -1,5 +1,30 @@
 
+#include <stdlib.h>
 #include "circ_buf.h"
+
+cb_t *cb_alloc(size_t num_items)
+{
+	cb_t *cb;
+	// Allocate memory from the heap for a cb_t
+	cb = malloc(sizeof(cb_t));
+	if (cb == NULL)
+		return NULL;
+
+	// Allocate memory for the buffer
+	cb->buf = malloc(num_items);
+	if (cb->buf == NULL) {
+		free((void *) cb);
+		return NULL;
+	}
+
+	return cb;		
+} 
+
+void cb_destroy(cb_t *cb)
+{
+	free((void *) cb->buf);
+	free((void *) cb);
+}
 
 uint8_t cb_full(cb_t *cb)
 {

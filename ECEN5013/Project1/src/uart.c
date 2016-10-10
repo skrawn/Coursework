@@ -72,6 +72,7 @@ void uart_init(void)
 uart_status_t uart_put_tx_buf(uint8_t *buf, uint16_t tx_size)
 {
 	int8_t return_val = 0;
+#ifdef VERBOSE
 	uint8_t tx_byte;
 
 	// Disable IRQs when loading the transmit buffer
@@ -96,6 +97,7 @@ uart_status_t uart_put_tx_buf(uint8_t *buf, uint16_t tx_size)
 		txOnGoing = 1;
 	}
 	NVIC_EnableIRQ(UART0_IRQn);
+#endif
 
 	return return_val;
 }

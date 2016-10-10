@@ -19,6 +19,8 @@ typedef enum {
 	cb_status_full
 } cb_status_t;
 
+cb_t *cb_alloc(size_t num_items);
+void cb_destroy(cb_t *cb); 
 uint8_t cb_full(cb_t *cb);
 uint8_t cb_empty(cb_t *cb);
 uint8_t cb_push(cb_t *cb, uint8_t element);
