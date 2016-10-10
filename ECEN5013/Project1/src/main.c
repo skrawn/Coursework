@@ -7,6 +7,7 @@
 #include "data.h"
 #include "log.h"
 #include "memory.h"
+#include "uart.h"
 
 #define RUN_PROJECT1_TESTS	(0)
 #define RUN_PROJECT2_TESTS	(1)

@@ -1,4 +1,6 @@
 
+#ifdef FRDM
+
 #include "rgb_led.h"
 #include "MKL25Z4.h"
 
@@ -94,3 +96,5 @@ void rgb_led_set_brightness(uint8_t red, uint8_t green, uint8_t blue)
 	TPM2->CONTROLS[RED_TPM0_CH].CnV = red_cnv_val;
 	TPM2->CONTROLS[GREEN_TPM0_CH].CnV = green_cnv_val;
 }
+
+#endif
