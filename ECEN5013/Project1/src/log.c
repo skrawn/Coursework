@@ -11,7 +11,7 @@
 
 #define NEWLINE_BYTE			1
 #define LINUX_BUFFER_SIZE		1024
-#define PARAM_BUFFER_SIZE		32
+#define PARAM_BUFFER_SIZE		40
 
 void log_0(uint8_t *data, size_t len)
 {
@@ -64,6 +64,10 @@ void log_1(uint8_t *data, size_t len, void *param, log_data_t data_type_size)
 		case log_int32_t:
 			my_itoa(param_buffer, (int32_t) *((int32_t *) param), 10);
 			break;		
+
+		case log_string_t:
+			strcpy((char *) param_buffer, (char *) param);
+			break;
 
 		default:
 			// Assume everything else is a char

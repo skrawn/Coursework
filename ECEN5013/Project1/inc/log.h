@@ -9,6 +9,7 @@ typedef enum {
 	log_int16_t,
 	log_int32_t,
 	log_char_t,
+	log_string_t,
 	log_float_t
 } log_data_t;
 

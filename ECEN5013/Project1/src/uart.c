@@ -147,6 +147,14 @@ uint8_t uart_rx_buf_not_empty(void)
 	return (buf_status == cb_status_empty ? 0 : 1);
 }
 
+void uart_wait_tx_buf_empty(void)
+{
+	uint32_t i;
+	while (!uart_tx_buf_empty()) {
+		for (i = 0; i < 10000; i++) {}
+	}
+}
+
 static inline void uart_enable_tx_interrupt(void)
 {
 	UART0->C2 |= UART0_C2_TIE(1);

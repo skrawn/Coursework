@@ -18,13 +18,62 @@ static void xtox_profiling(void);
 static void memopts_profiling(void);
 static void ftoa(float fl, char *output);
 static void itoa(int integer, char *output, int base);
-static void frdm_wait_tx_buf_empty(void);
 
 uint8_t buffer_5000[5000];
 uint8_t dest_arr[5000];
 
 void project_2_report(void)
 {
+	uint32_t start_time, end_time, time_diff;
+
+	log_0((uint8_t *) "\nPART1: ftoa\n", sizeof("\nPART1: ftoa\n"));
+	log_0((uint8_t *) "test cases: ", sizeof("test cases: "));
+
+	float num = 1245.25;
+	uint8_t float_string[40] = {0};
+	my_ftoa(num, float_string);
+	log_1((uint8_t *) "1245.25: ", sizeof("1245.25: "), (void *) &float_string, log_string_t);
+
+	memset(float_string, 0, 40);	
+	num = 34.56293; 
+	my_ftoa(num, float_string);
+	log_1((uint8_t *) "34.56293: ", sizeof("34.56293: "), (void *) &float_string, log_string_t);
+
+	memset(float_string, 0, 40);	
+	num = -128.8929;
+	uart_wait_tx_buf_empty();
+	start_time = profiler_get_time();
+	my_ftoa(num, float_string);
+	end_time = profiler_get_time();
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "-128.8929: ", sizeof("-128.8929: "), (void *) &float_string, log_string_t);
+	log_1((uint8_t *) "my_ftoa runtime for -128.8929: ", sizeof("my_ftoa runtime for -128.8929: "), 
+		(void *) &time_diff, log_uint32_t);
+	uart_wait_tx_buf_empty();
+
+	memset(float_string, 0, 40);	
+	start_time = profiler_get_time();
+	sprintf((char *) float_string, "%f", num);
+	end_time = profiler_get_time();
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "sprintf float runtime for -128.8929: ", sizeof("sprintf float runtime for -128.8929: "), 
+		(void *) &time_diff, log_uint32_t);
+	uart_wait_tx_buf_empty();
+
+	log_0((uint8_t *) "\nPART2: Circular Buffer Init Tests\n", sizeof("\nPART2: Circular Buffer Init Tests\n"));
+	uart_wait_tx_buf_empty();	
+#ifdef UNIT_TEST
+	cb_ut_create();
+	unit_test_run();
+#else
+	log_0((uint8_t *) "Unit tests not enabled. Skipping", sizeof("Unit tests not enabled. Skipping"));
+#endif
+
+	log_0((uint8_t *) "\nPART3: UART Circular Buffer\n", sizeof("\nPART3: UART Circular Buffer\n"));
+	log_0((uint8_t *) "See https://www.youtube.com/watch?v=Tz-G2oc5RRU\n", 
+		sizeof("See https://www.youtube.com/watch?v=Tz-G2oc5RRU\n"));
+	uart_wait_tx_buf_empty();	
+
 	log_0((uint8_t *) "\nPART4: Profiling\n", sizeof("\nPART4: Profiling\n"));
 	memmove_profiling();
 	memzero_profiling();
@@ -39,14 +88,14 @@ static void memmove_profiling(void)
 
 	log_0((uint8_t *) "memmove", sizeof("memmove"));
 	
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 	start_time = profiler_get_time();
 	memmove(buffer_5000, dest_arr, 10);
 	end_time = profiler_get_time();
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "memmove 10 bytes: ", sizeof("memmove 10 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	memmove(buffer_5000, dest_arr, 100);
@@ -54,7 +103,7 @@ static void memmove_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "memmove 100 bytes: ", sizeof("memmove 100 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	memmove(buffer_5000, dest_arr, 1000);
@@ -62,7 +111,7 @@ static void memmove_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "memmove 1000 bytes: ", sizeof("memmove 1000 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	memmove(buffer_5000, dest_arr, sizeof(buffer_5000));
@@ -70,10 +119,10 @@ static void memmove_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "memmove 5000 bytes: ", sizeof("memmove 5000 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	log_0((uint8_t *) "\nmy_memmove", sizeof("\n my_memmove"));
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	my_memmove(buffer_5000, dest_arr, 10);
@@ -81,7 +130,7 @@ static void memmove_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_memmove 10 bytes: ", sizeof("my_memmove 10 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	my_memmove(buffer_5000, dest_arr, 100);
@@ -89,7 +138,7 @@ static void memmove_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_memmove 100 bytes: ", sizeof("my_memmove 100 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	my_memmove(buffer_5000, dest_arr, 1000);
@@ -97,7 +146,7 @@ static void memmove_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_memmove 1000 bytes: ", sizeof("my_memmove 1000 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	my_memmove(buffer_5000, dest_arr, sizeof(buffer_5000));
@@ -105,7 +154,7 @@ static void memmove_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_memmove 5000 bytes: ", sizeof("my_memmove 5000 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 }
 
 static void memzero_profiling(void)
@@ -114,14 +163,14 @@ static void memzero_profiling(void)
 
 	log_0((uint8_t *) "\nmemset", sizeof("\nmemset"));
 	
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 	start_time = profiler_get_time();
 	memset(buffer_5000, 0, 10);
 	end_time = profiler_get_time();
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "memset 10 bytes: ", sizeof("memset 10 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	memset(buffer_5000, 0, 100);
@@ -129,7 +178,7 @@ static void memzero_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "memset 100 bytes: ", sizeof("memset 100 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	memset(buffer_5000, 0, 1000);
@@ -137,7 +186,7 @@ static void memzero_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "memset 1000 bytes: ", sizeof("memset 1000 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	memset(buffer_5000, 0, sizeof(buffer_5000));
@@ -145,10 +194,10 @@ static void memzero_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "memset 5000 bytes: ", sizeof("memset 5000 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	log_0((uint8_t *) "\nmy_memzero", sizeof("\nmy_memzero"));
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	my_memzero(buffer_5000, 10);
@@ -156,7 +205,7 @@ static void memzero_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_memzero 10 bytes: ", sizeof("my_memzero 10 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	my_memzero(buffer_5000, 100);
@@ -164,7 +213,7 @@ static void memzero_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_memzero 100 bytes: ", sizeof("my_memzero 100 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	my_memzero(buffer_5000, 1000);
@@ -172,7 +221,7 @@ static void memzero_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_memzero 1000 bytes: ", sizeof("my_memzero 1000 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	my_memzero(buffer_5000, sizeof(buffer_5000));
@@ -180,7 +229,7 @@ static void memzero_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_memzero 5000 bytes: ", sizeof("my_memzero 5000 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 }
 
 static void reverse_profiling(void)
@@ -189,14 +238,14 @@ static void reverse_profiling(void)
 
 	log_0((uint8_t *) "\nreverse", sizeof("\nreverse"));
 	
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 	/*start_time = profiler_get_time();
 	reverse(buffer_5000, 10);
 	end_time = profiler_get_time();
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "reverse 10 bytes: ", sizeof("reverse 10 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	reverse(buffer_5000, 100);
@@ -204,7 +253,7 @@ static void reverse_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "reverse 100 bytes: ", sizeof("reverse 100 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	reverse(buffer_5000, 1000);
@@ -212,7 +261,7 @@ static void reverse_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "reverse 1000 bytes: ", sizeof("reverse 1000 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	reverse(buffer_5000, sizeof(buffer_5000));
@@ -220,10 +269,10 @@ static void reverse_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "reverse 5000 bytes: ", sizeof("reverse 5000 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();*/
+	uart_wait_tx_buf_empty();*/
 
 	log_0((uint8_t *) "\nmy_reverse", sizeof("\nmy_reverse"));
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	my_reverse(buffer_5000, 10);
@@ -231,7 +280,7 @@ static void reverse_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_reverse 10 bytes: ", sizeof("my_reverse 10 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	my_reverse(buffer_5000, 100);
@@ -239,7 +288,7 @@ static void reverse_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_reverse 100 bytes: ", sizeof("my_reverse 100 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	my_reverse(buffer_5000, 1000);
@@ -247,7 +296,7 @@ static void reverse_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_reverse 1000 bytes: ", sizeof("my_reverse 1000 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	my_reverse(buffer_5000, sizeof(buffer_5000));
@@ -255,7 +304,7 @@ static void reverse_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_reverse 5000 bytes: ", sizeof("my_reverse 5000 bytes: "), 
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 }
 
 static void xtox_profiling(void)
@@ -269,7 +318,7 @@ static void xtox_profiling(void)
 	int32_t output_int;
 
 	log_0((uint8_t *) " ", 1);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 #ifndef FRDM
 	start_time = profiler_get_time();
@@ -297,14 +346,14 @@ static void xtox_profiling(void)
 	end_time = profiler_get_time();
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_itoa: ", sizeof("my_itoa: "), (void *) &time_diff, log_uint32_t);	
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 	
 	start_time = profiler_get_time();
 	my_ftoa(test_float, (uint8_t *) output_array);
 	end_time = profiler_get_time();
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_ftoa: ", sizeof("my_ftoa: "), (void *) &time_diff, log_uint32_t);	
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 	
 	start_time = profiler_get_time();
 	output_int = my_atoi((uint8_t *) ascii_int);
@@ -312,7 +361,7 @@ static void xtox_profiling(void)
 	output_int++;	// Make the compiler stop complaining
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_atoi: ", sizeof("my_atoi: "), (void *) &time_diff, log_uint32_t);	
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 }
 
 static void memopts_profiling(void)
@@ -321,7 +370,7 @@ static void memopts_profiling(void)
 	uint8_t *malloc_ptr;
 
 	log_0((uint8_t *) "\nmemory operations", sizeof("\nmemory operations"));
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	malloc_ptr = malloc(10);
@@ -330,7 +379,7 @@ static void memopts_profiling(void)
 	log_1((uint8_t *) "malloc - empty - 10: ", sizeof("malloc - empty - 10: "),
 		(void *) &time_diff, log_uint32_t);
 	free(malloc_ptr);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	malloc_ptr = malloc(100);
@@ -339,7 +388,7 @@ static void memopts_profiling(void)
 	log_1((uint8_t *) "malloc - empty - 100: ", sizeof("malloc - empty - 100: "),
 		(void *) &time_diff, log_uint32_t);
 	free(malloc_ptr);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	malloc_ptr = malloc(500);
@@ -348,7 +397,7 @@ static void memopts_profiling(void)
 	log_1((uint8_t *) "malloc - empty - 500: ", sizeof("malloc - empty - 500: "),
 		(void *) &time_diff, log_uint32_t);
 	free(malloc_ptr);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	malloc_ptr = malloc(1000);
@@ -356,7 +405,7 @@ static void memopts_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "malloc - empty - 1000: ", sizeof("malloc - empty - 1000: "),
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	uint8_t *dummy1, *dummy2;
 
@@ -370,7 +419,7 @@ static void memopts_profiling(void)
 	log_1((uint8_t *) "malloc - not empty - 10: ", sizeof("malloc - not empty - 10: "),
 		(void *) &time_diff, log_uint32_t);
 	free(malloc_ptr);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	malloc_ptr = malloc(100);
@@ -379,7 +428,7 @@ static void memopts_profiling(void)
 	log_1((uint8_t *) "malloc - not empty - 100: ", sizeof("malloc - not empty - 100: "),
 		(void *) &time_diff, log_uint32_t);
 	free(malloc_ptr);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	malloc_ptr = malloc(500);
@@ -388,7 +437,7 @@ static void memopts_profiling(void)
 	log_1((uint8_t *) "malloc - not empty - 500: ", sizeof("malloc - not empty - 500: "),
 		(void *) &time_diff, log_uint32_t);
 	free(malloc_ptr);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	malloc_ptr = malloc(1000);
@@ -396,7 +445,7 @@ static void memopts_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "malloc - not empty - 1000: ", sizeof("malloc - not empty - 1000: "),
 		(void *) &time_diff, log_uint32_t);	
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	free(malloc_ptr);	
@@ -405,7 +454,7 @@ static void memopts_profiling(void)
 	log_1((uint8_t *) "free: ", sizeof("free: "),
 		(void *) &time_diff, log_uint32_t);
 	free(dummy1); free(dummy2);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	// Create a circular buffer
 	cb_t *circ_buf = cb_alloc(10);
@@ -415,7 +464,7 @@ static void memopts_profiling(void)
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "circ buf - add item: ", sizeof("circ buf - add item: "),
 		(void *) &time_diff, log_uint32_t);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
 	uint8_t data;
@@ -425,16 +474,16 @@ static void memopts_profiling(void)
 	log_1((uint8_t *) "circ buf - remove item: ", sizeof("circ buf - remove item: "),
 		(void *) &time_diff, log_uint32_t);
 	cb_destroy(circ_buf);
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 
 #ifdef FRDM
 	start_time = profiler_get_time();		
-	log_0("log_0 test");
+	log_0((uint8_t *) "log_0 test", sizeof("log_0 test"));
 	end_time = profiler_get_time();
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "log_0 runtime: ", sizeof("log_0 runtime: "),
 		(void *) &time_diff, log_uint32_t);	
-	frdm_wait_tx_buf_empty();
+	uart_wait_tx_buf_empty();
 #else
 	start_time = profiler_get_time();
 	printf("20 character string!");
@@ -481,15 +530,4 @@ static void itoa(int integer, char *output, int base)
 	sprintf(output, "%d", integer);
 }
 
-// Wait for things to finish printing on FRDM board before 
-// profiling so the time measurements are accurate.
-static void frdm_wait_tx_buf_empty(void)
-{
-#ifdef FRDM
-	uint32_t i;
-	while (!uart_tx_buf_empty()) {
-		for (i = 0; i < 10000; i++) {}
-	}
-#endif
-}
 

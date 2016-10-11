@@ -4,7 +4,7 @@ OP_EXE_NAME := project
 OP_LIB_NAME := libprojec1.a
 
 CC := gcc
-CFLAGS := -Wall -g -O0 -std=c99
+CFLAGS += -Wall -g -O0 -std=c99
 LDFLAGS := 
 RM := rm -rf
 
@@ -13,8 +13,12 @@ ifndef ($(ARCH))
 	ARCH := $(shell uname -m)
 endif
 
-ifdef ($(VERBOSE))
+ifeq ($(VERBOSE), 1)
 	CFLAGS += -DVERBOSE
+endif
+
+ifeq ($(UNIT_TEST), 1)
+	CFLAGS += -DUNIT_TEST
 endif
 
 # No IP address was given for upload. Use default

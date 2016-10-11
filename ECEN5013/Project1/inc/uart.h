@@ -18,5 +18,11 @@ uint8_t uart_tx_buf_full(void);
 uint8_t uart_tx_buf_empty(void);
 uint8_t uart_rx_buf_not_empty(void);
 
+#ifdef FRDM
+void uart_wait_tx_buf_empty(void);
+#else
+static inline void uart_wait_tx_buf_empty(void) {}
+#endif
+
 #endif
 

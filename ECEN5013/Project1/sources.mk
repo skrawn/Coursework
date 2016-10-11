@@ -8,7 +8,8 @@ SRCS += main.c \
 	log.c \
 	rgb_led.c \
 	profiler.c \
-	project_2.c
+	project_2.c \
+	unit_test.c
 
 SRCS_DIR += ./src
 
