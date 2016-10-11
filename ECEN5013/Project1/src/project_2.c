@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "circ_buf.h"
 #include "data.h"
 #include "log.h"
 #include "memory.h"
@@ -14,6 +15,7 @@ static void memmove_profiling(void);
 static void memzero_profiling(void);
 static void reverse_profiling(void);
 static void xtox_profiling(void);
+static void memopts_profiling(void);
 static void ftoa(float fl, char *output);
 static void itoa(int integer, char *output, int base);
 static void frdm_wait_tx_buf_empty(void);
@@ -23,11 +25,12 @@ uint8_t dest_arr[5000];
 
 void project_2_report(void)
 {
-	log_0((uint8_t *) "PART4: Profiling\n", sizeof("PART4: Profiling\n"));
+	log_0((uint8_t *) "\nPART4: Profiling\n", sizeof("\nPART4: Profiling\n"));
 	memmove_profiling();
 	memzero_profiling();
 	reverse_profiling();
 	xtox_profiling();
+	memopts_profiling();
 }
 
 static void memmove_profiling(void)
@@ -266,6 +269,8 @@ static void xtox_profiling(void)
 	int32_t output_int;
 
 	log_0((uint8_t *) " ", 1);
+	frdm_wait_tx_buf_empty();
+
 #ifndef FRDM
 	start_time = profiler_get_time();
 	itoa(test_int, output_array, 10);
@@ -292,22 +297,180 @@ static void xtox_profiling(void)
 	end_time = profiler_get_time();
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_itoa: ", sizeof("my_itoa: "), (void *) &time_diff, log_uint32_t);	
+	frdm_wait_tx_buf_empty();
 	
 	start_time = profiler_get_time();
-	my_ftoa(test_float, output_array);
+	my_ftoa(test_float, (uint8_t *) output_array);
 	end_time = profiler_get_time();
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_ftoa: ", sizeof("my_ftoa: "), (void *) &time_diff, log_uint32_t);	
+	frdm_wait_tx_buf_empty();
 	
 	start_time = profiler_get_time();
-	output_int = my_atoi(ascii_int);
+	output_int = my_atoi((uint8_t *) ascii_int);
 	end_time = profiler_get_time();
 	output_int++;	// Make the compiler stop complaining
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_atoi: ", sizeof("my_atoi: "), (void *) &time_diff, log_uint32_t);	
-
+	frdm_wait_tx_buf_empty();
 }
 
+static void memopts_profiling(void)
+{
+	uint32_t start_time, end_time, time_diff;
+	uint8_t *malloc_ptr;
+
+	log_0((uint8_t *) "\nmemory operations", sizeof("\nmemory operations"));
+	frdm_wait_tx_buf_empty();
+
+	start_time = profiler_get_time();
+	malloc_ptr = malloc(10);
+	end_time = profiler_get_time();
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "malloc - empty - 10: ", sizeof("malloc - empty - 10: "),
+		(void *) &time_diff, log_uint32_t);
+	free(malloc_ptr);
+	frdm_wait_tx_buf_empty();
+
+	start_time = profiler_get_time();
+	malloc_ptr = malloc(100);
+	end_time = profiler_get_time();
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "malloc - empty - 100: ", sizeof("malloc - empty - 100: "),
+		(void *) &time_diff, log_uint32_t);
+	free(malloc_ptr);
+	frdm_wait_tx_buf_empty();
+
+	start_time = profiler_get_time();
+	malloc_ptr = malloc(500);
+	end_time = profiler_get_time();
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "malloc - empty - 500: ", sizeof("malloc - empty - 500: "),
+		(void *) &time_diff, log_uint32_t);
+	free(malloc_ptr);
+	frdm_wait_tx_buf_empty();
+
+	start_time = profiler_get_time();
+	malloc_ptr = malloc(1000);
+	end_time = profiler_get_time();
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "malloc - empty - 1000: ", sizeof("malloc - empty - 1000: "),
+		(void *) &time_diff, log_uint32_t);
+	frdm_wait_tx_buf_empty();
+
+	uint8_t *dummy1, *dummy2;
+
+	// Allocate some more from heap on weird boundaries
+	dummy1 = malloc(13); dummy2 = malloc(7);
+
+	start_time = profiler_get_time();
+	malloc_ptr = malloc(10);
+	end_time = profiler_get_time();
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "malloc - not empty - 10: ", sizeof("malloc - not empty - 10: "),
+		(void *) &time_diff, log_uint32_t);
+	free(malloc_ptr);
+	frdm_wait_tx_buf_empty();
+
+	start_time = profiler_get_time();
+	malloc_ptr = malloc(100);
+	end_time = profiler_get_time();
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "malloc - not empty - 100: ", sizeof("malloc - not empty - 100: "),
+		(void *) &time_diff, log_uint32_t);
+	free(malloc_ptr);
+	frdm_wait_tx_buf_empty();
+
+	start_time = profiler_get_time();
+	malloc_ptr = malloc(500);
+	end_time = profiler_get_time();
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "malloc - not empty - 500: ", sizeof("malloc - not empty - 500: "),
+		(void *) &time_diff, log_uint32_t);
+	free(malloc_ptr);
+	frdm_wait_tx_buf_empty();
+
+	start_time = profiler_get_time();
+	malloc_ptr = malloc(1000);
+	end_time = profiler_get_time();
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "malloc - not empty - 1000: ", sizeof("malloc - not empty - 1000: "),
+		(void *) &time_diff, log_uint32_t);	
+	frdm_wait_tx_buf_empty();
+
+	start_time = profiler_get_time();
+	free(malloc_ptr);	
+	end_time = profiler_get_time();
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "free: ", sizeof("free: "),
+		(void *) &time_diff, log_uint32_t);
+	free(dummy1); free(dummy2);
+	frdm_wait_tx_buf_empty();
+
+	// Create a circular buffer
+	cb_t *circ_buf = cb_alloc(10);
+	start_time = profiler_get_time();
+	cb_push(circ_buf, 123);
+	end_time = profiler_get_time();
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "circ buf - add item: ", sizeof("circ buf - add item: "),
+		(void *) &time_diff, log_uint32_t);
+	frdm_wait_tx_buf_empty();
+
+	start_time = profiler_get_time();
+	uint8_t data;
+	cb_pop(circ_buf, &data);
+	end_time = profiler_get_time();
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "circ buf - remove item: ", sizeof("circ buf - remove item: "),
+		(void *) &time_diff, log_uint32_t);
+	cb_destroy(circ_buf);
+	frdm_wait_tx_buf_empty();
+
+#ifdef FRDM
+	start_time = profiler_get_time();		
+	log_0("log_0 test");
+	end_time = profiler_get_time();
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "log_0 runtime: ", sizeof("log_0 runtime: "),
+		(void *) &time_diff, log_uint32_t);	
+	frdm_wait_tx_buf_empty();
+#else
+	start_time = profiler_get_time();
+	printf("20 character string!");
+	end_time = profiler_get_time();
+	printf("\n");
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "printf - 20 characters: ", sizeof("printf - 20 characters: "),
+		(void *) &time_diff, log_uint32_t);	
+
+	start_time = profiler_get_time();
+	printf("%d", 219305325);
+	end_time = profiler_get_time();
+	printf("\n");
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "printf - 1 integer: ", sizeof("printf - 1 integer: "),
+		(void *) &time_diff, log_uint32_t);	
+
+	start_time = profiler_get_time();
+	printf("%d %d", 219305325, 10294185);
+	end_time = profiler_get_time();
+	printf("\n");
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "printf - 2 integers: ", sizeof("printf - 2 integers: "),
+		(void *) &time_diff, log_uint32_t);	
+
+	start_time = profiler_get_time();
+	printf("%d %d %d", 219305325, 10294185, 391591);
+	end_time = profiler_get_time();
+	printf("\n");
+	time_diff = profiler_get_time_diff(start_time, end_time);
+	log_1((uint8_t *) "printf - 3 integers: ", sizeof("printf - 3 integers: "),
+		(void *) &time_diff, log_uint32_t);	
+#endif	
+}
+
+// Library versions of these do not exist?
 static void ftoa(float fl, char *output)
 {
 	sprintf(output, "%f", fl);
