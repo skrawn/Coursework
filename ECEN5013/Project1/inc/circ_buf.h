@@ -19,11 +19,49 @@ typedef enum {
 	cb_status_full
 } cb_status_t;
 
+/**
+ * @brief Allocates a circular buffer on the heap.
+ * @param num_items Number of bytes to allocate for the buffer/
+ * @return Pointer to circular buffer in dynamic memory.
+ */
 cb_t *cb_alloc(size_t num_items);
+
+/**
+ * @brief Frees a circular buffer from the heap.
+ * @param cb Pointer to the circular buffer to free.
+ */
 void cb_destroy(cb_t *cb); 
+
+/**
+ * @brief Checks if the circular buffer is full.
+ * @param cb Pointer to the circular buffer.
+ * @return Returns cb_status_full if full.
+ */ 
 uint8_t cb_full(cb_t *cb);
+
+/**
+ * @brief Checks if the circular buffer is empty.
+ * @param cb Pointer to the circular buffer.
+ * @return Returns cb_status_empty if empty.
+ */ 
 uint8_t cb_empty(cb_t *cb);
+
+/**
+ * @brief Puts an element into the circular buffer
+ * @param cb Pointer to the circular buffer.
+ * @param element Element to put in the circular buffer.
+ * @return Returns cb_status_ok if the item was queued and the
+ * buffer is not full.
+ */ 
 uint8_t cb_push(cb_t *cb, uint8_t element);
+
+/**
+ * @brief Pulls an element out of the circular buffer
+ * @param cb Pointer to the circular buffer.
+ * @param element Pointer to the byte to store the returned data.
+ * @return Returns cb_status_ok if the item was returned and 
+ * buffer is not empty.
+ */ 
 uint8_t cb_pop(cb_t *cb, uint8_t *element);
 
 #ifdef UNIT_TEST
