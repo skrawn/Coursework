@@ -3,6 +3,7 @@
 #include "circ_buf.h"
 
 #ifdef UNIT_TEST
+#include <malloc.h>
 #include "unit_test.h"
 #endif
 
@@ -223,15 +224,19 @@ ut_result_t cb_ut_buffer_create(void)
 
 ut_result_t cb_ut_buffer_destroy(void)
 {
-	cb_t *cb = cb_alloc(5), *old_cb;
+	cb_t *cb = cb_alloc(5);
 	ut_result_t result;
 
-	old_cb = cb;
+	// Use mallinfo to show that the number of free blocks
+	// changes when the circular buffer is freed.
+	struct mallinfo info = mallinfo();
+	int freeblocks = info.fordblks;
 
-	// cb_destroy should change what cb is pointing to, indicating
-	// it was freed from the heap.
 	cb_destroy(cb);
-	if (cb != old_cb)
+
+	info = mallinfo();
+
+	if (freeblocks != info.fordblks)
 		result = ut_result_pass;
 	else
 		result = ut_result_fail;
