@@ -1,3 +1,9 @@
+/**
+ * @file data.c
+ * @author Sean Donohue
+ * @date 12 Sep 2016
+ * @brief Custom implementation of various library functions.
+ */
 
 #include <math.h>
 #include <stdbool.h>
@@ -6,7 +12,7 @@
 
 #include "data.h"
 
-#if FRDM
+#ifdef FRDM
 #define printf(...) (void)0
 #endif
 

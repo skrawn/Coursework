@@ -1,6 +1,10 @@
+/**
+ * @file uart.c
+ * @author Sean Donohue
+ * @date 12 Sep 2016
+ * @brief Functions to control UART0 on the KL25Z
+ */
 
-
-// This code is only valid for the FRDM board
 #ifdef FRDM
 
 #include <stdlib.h>

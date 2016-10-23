@@ -1,8 +1,8 @@
-/*
- * rgb_led.h
- *
- *  Created on: Oct 9, 2016
- *      Author: Sean
+/**
+ * @file rgb_led.h
+ * @author Sean Donohue
+ * @date 12 Sep 2016
+ * @brief Functions to control the RGB LED on the KL25Z
  */
 
 #ifndef SOURCE_RGB_LED_H_

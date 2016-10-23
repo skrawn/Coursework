@@ -1,4 +1,3 @@
-
 /**
  * @file data.h
  * @author Sean Donohue

@@ -1,3 +1,9 @@
+/**
+ * @file uart.h
+ * @author Sean Donohue
+ * @date 12 Sep 2016
+ * @brief Functions to control UART0 on the KL25Z
+ */
 
 #ifndef _UART_H_
 #define _UART_H_

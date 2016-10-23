@@ -1,9 +1,16 @@
+/**
+ * @file proc_init.c
+ * @author Sean Donohue
+ * @date 12 Sep 2016
+ * @brief Processor specific initialization functions
+ */
 
 #include <stdint.h>
 #include "proc_init.h"
 #include "profiler.h"
 
 #ifdef FRDM
+#include "dma.h"
 #include "MKL25Z4.h"
 #include "uart.h"
 
@@ -19,6 +26,8 @@ void proc_init(void)
 	
 	// Initialize UART0
 	uart_init();
+
+	dma_init();
 #endif
 
 	profiler_init();

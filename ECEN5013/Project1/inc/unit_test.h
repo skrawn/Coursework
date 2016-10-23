@@ -1,3 +1,9 @@
+/**
+ * @file unit_test.h
+ * @author Sean Donohue
+ * @date 12 Sep 2016
+ * @brief Unit testing framework
+ */
 
 #ifndef _UNIT_TEST_H_
 #define _UNIT_TEST_H_

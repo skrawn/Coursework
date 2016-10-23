@@ -1,3 +1,9 @@
+/**
+ * @file unit_test.c
+ * @author Sean Donohue
+ * @date 12 Sep 2016
+ * @brief Unit testing framework
+ */
 
 #include <stdio.h>
 #include <stdlib.h>

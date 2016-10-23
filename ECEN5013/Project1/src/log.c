@@ -1,3 +1,9 @@
+/**
+ * @file log.c
+ * @author Sean Donohue
+ * @date 12 Sep 2016
+ * @brief Architecture independent logging.
+ */
 
 #include <stdio.h>
 #include <string.h>

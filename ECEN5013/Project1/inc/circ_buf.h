@@ -1,3 +1,9 @@
+/**
+ * @file log.h
+ * @author Sean Donohue
+ * @date 12 Sep 2016
+ * @brief Architecture independent circular buffer.
+ */
 
 #ifndef _CIRC_BUF_H_
 #define _CIRC_BUF_H_

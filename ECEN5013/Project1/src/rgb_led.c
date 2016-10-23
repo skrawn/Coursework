@@ -1,3 +1,9 @@
+/**
+ * @file rgb_led.c
+ * @author Sean Donohue
+ * @date 12 Sep 2016
+ * @brief Functions to control the RGB LED on the KL25Z
+ */
 
 #ifdef FRDM
 
@@ -8,13 +14,6 @@
 #define RED_TPM0_CH		0
 #define GREEN_TPM0_CH	1
 #define BLUE_TPM0_CH	1
-
-
-// TPMx_CONF TRGSEL options:
-// 0b1000 = TPM0 overflow
-// 0b1001 = TPM1 overflow
-// 0b1010 = TPM2 overflow
-
 
 void rgb_led_init(void)
 {

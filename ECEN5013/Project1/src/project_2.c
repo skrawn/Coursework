@@ -1,3 +1,9 @@
+/**
+ * @file project_2.c
+ * @author Sean Donohue
+ * @date 12 Sep 2016
+ * @brief Output for project 2
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,12 +25,15 @@ static void memopts_profiling(void);
 static void ftoa(float fl, char *output);
 static void itoa(int integer, char *output, int base);
 
-uint8_t buffer_5000[5000];
-uint8_t dest_arr[5000];
+uint8_t *buffer_5000;
+uint8_t *dest_arr;
 
 void project_2_report(void)
 {
 	uint32_t start_time, end_time, time_diff;
+
+	buffer_5000 = malloc(5000);
+	dest_arr = malloc(5000);
 
 	log_0((uint8_t *) "\nPART1: ftoa\n", sizeof("\nPART1: ftoa\n"));
 	log_0((uint8_t *) "test cases: ", sizeof("test cases: "));
@@ -80,6 +89,9 @@ void project_2_report(void)
 	reverse_profiling();
 	xtox_profiling();
 	memopts_profiling();
+
+	free(buffer_5000);
+	free(dest_arr);
 }
 
 static void memmove_profiling(void)

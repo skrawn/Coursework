@@ -1,3 +1,9 @@
+/**
+ * @file project_1.c
+ * @author Sean Donohue
+ * @date 12 Sep 2016
+ * @brief Output for project 1
+ */
 
 #include <stdint.h>
 #include <stdio.h>
