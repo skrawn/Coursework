@@ -18,12 +18,25 @@ uint32_t zeros = 0x00000000;
 
 int8_t my_memmove(uint8_t *src, uint8_t *dst, uint32_t length)
 {
+	uint32_t *src32, *dst32;
+
 	if (src == NULL || dst == NULL || length == 0)
 		return -1;
 
-	while (length > 0) {
+	// Do the first few transfer on byte boundaries so the
+	// remainder of the transfers can be done on 4-byte
+	// boundaries
+	while (length % 4 > 0) {
 		*(dst++) = *(src++);
 		length--;
+	}
+
+	dst32 = (uint32_t *) dst;
+	src32 = (uint32_t *) src;
+
+	while (length > 0) {
+		*(dst32++) = *(src32++);
+		length -= 4;
 	}
 		
 	return 0;
@@ -31,12 +44,24 @@ int8_t my_memmove(uint8_t *src, uint8_t *dst, uint32_t length)
 
 int8_t my_memzero(uint8_t *src, uint32_t length)
 {
+	uint32_t *src32;
+
 	if (src == NULL || length == 0)
 		return -1;
 
-	while (length > 0) {
+	// Do the first few transfer on byte boundaries so the
+	// remainder of the transfers can be done on 4-byte
+	// boundaries
+	while (length % 4 > 0) {
 		*(src++) = 0;
 		length--;
+	}
+
+	src32 = (uint32_t *) src;
+
+	while (length > 0) {
+		*(src32++) = 0;
+		length -= 4;
 	}	
 
 	return 0;

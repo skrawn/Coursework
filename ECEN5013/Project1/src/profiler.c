@@ -1,3 +1,9 @@
+/**
+ * @file profiler.c
+ * @author Sean Donohue
+ * @date 12 Sep 2016
+ * @brief Code profiling functions
+ */
 
 #include "profiler.h"
 
@@ -11,6 +17,8 @@
 #define NSEC_PER_USEC 	1000
 #define TIMER_FREQUENCY	1000000
 #define TIMER_MOD_VAL	0x7FFF
+
+uint32_t start_time, end_time;
 
 void profiler_init(void)
 {
@@ -69,4 +77,19 @@ uint32_t profiler_get_time_diff(uint32_t start, uint32_t end)
 	}
 	else
 		return end-start;
+}
+
+void profiler_start(void)
+{
+	start_time = profiler_get_time();
+}
+
+void profiler_stop(void)
+{
+	end_time = profiler_get_time();
+}
+
+uint32_t profiler_get_result(void)
+{
+	return profiler_get_time_diff(start_time, end_time);
 }
