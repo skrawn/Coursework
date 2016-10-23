@@ -23,20 +23,28 @@ int8_t my_memmove(uint8_t *src, uint8_t *dst, uint32_t length)
 	if (src == NULL || dst == NULL || length == 0)
 		return -1;
 
-	// Do the first few transfer on byte boundaries so the
-	// remainder of the transfers can be done on 4-byte
-	// boundaries
-	while (length % 4 > 0) {
+	// Check that the source and destination addresses are on 4-byte boundaries.
+	// Do byte transfers until they align.
+	while (length > 0 && (((uint32_t) src) % 4 > 0) && (((uint32_t) dst) % 4 > 0)) {
 		*(dst++) = *(src++);
 		length--;
 	}
 
+	// Do the remainder of the transfers on 4-byte boundaries
 	dst32 = (uint32_t *) dst;
 	src32 = (uint32_t *) src;
 
-	while (length > 0) {
+	while (length >= 4) {
 		*(dst32++) = *(src32++);
 		length -= 4;
+	}
+
+	// Finish any remaining transfers with byte transfers
+	dst = (uint8_t *) dst32;
+	src = (uint8_t *) src32;
+	while (length > 0) {
+		*(dst++) = *(src++);
+		length--;
 	}
 		
 	return 0;
@@ -49,20 +57,27 @@ int8_t my_memzero(uint8_t *src, uint32_t length)
 	if (src == NULL || length == 0)
 		return -1;
 
-	// Do the first few transfer on byte boundaries so the
-	// remainder of the transfers can be done on 4-byte
-	// boundaries
-	while (length % 4 > 0) {
+	// Check that the source and destination addresses are on 4-byte boundaries.
+	// Do byte transfers until they align.
+	while (length > 0 && (((uint32_t) src) % 4 > 0)) {
 		*(src++) = 0;
 		length--;
 	}
 
 	src32 = (uint32_t *) src;
 
-	while (length > 0) {
+	// Do the remainder of the transfers on 4-byte boundaries
+	while (length >= 4) {
 		*(src32++) = 0;
 		length -= 4;
-	}	
+	}
+
+	// Finish any remaining transfers with byte transfers
+	src = (uint8_t *) src32;
+	while (length > 0) {
+		*(src++) = 0;
+		length--;
+	}
 
 	return 0;
 }
