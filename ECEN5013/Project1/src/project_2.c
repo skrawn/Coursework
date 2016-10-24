@@ -126,7 +126,7 @@ static void memmove_profiling(void)
 	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
-	memmove(buffer_5000, dest_arr, sizeof(buffer_5000));
+	memmove(buffer_5000, dest_arr, 5000);
 	end_time = profiler_get_time();
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "memmove 5000 bytes: ", sizeof("memmove 5000 bytes: "), 
@@ -161,7 +161,7 @@ static void memmove_profiling(void)
 	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
-	my_memmove(buffer_5000, dest_arr, sizeof(buffer_5000));
+	my_memmove(buffer_5000, dest_arr, 5000);
 	end_time = profiler_get_time();
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_memmove 5000 bytes: ", sizeof("my_memmove 5000 bytes: "), 
@@ -201,7 +201,7 @@ static void memzero_profiling(void)
 	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
-	memset(buffer_5000, 0, sizeof(buffer_5000));
+	memset(buffer_5000, 0, 5000);
 	end_time = profiler_get_time();
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "memset 5000 bytes: ", sizeof("memset 5000 bytes: "), 
@@ -236,7 +236,7 @@ static void memzero_profiling(void)
 	uart_wait_tx_buf_empty();
 
 	start_time = profiler_get_time();
-	my_memzero(buffer_5000, sizeof(buffer_5000));
+	my_memzero(buffer_5000, 5000);
 	end_time = profiler_get_time();
 	time_diff = profiler_get_time_diff(start_time, end_time);
 	log_1((uint8_t *) "my_memzero 5000 bytes: ", sizeof("my_memzero 5000 bytes: "), 

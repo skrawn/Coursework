@@ -47,7 +47,7 @@ void unit_test_run()
 		if (pass_count == active_suite->num_tests)
 			result_size = sprintf(result_buf, "%s SUITE: PASS", active_suite->suite_name);
 		else
-			result_size = sprintf(result_buf, "%s SUITE: FAIL (%u/%u PASS)", active_suite->suite_name,
+			result_size = sprintf(result_buf, "%s SUITE: FAIL (%lu/%lu PASS)", active_suite->suite_name,
 					pass_count, active_suite->num_tests);
 
 		log_0((uint8_t *) result_buf, result_size);
@@ -124,11 +124,11 @@ static void unit_test_run_test(ut_suite_t *suite, ut_test_t *test)
 	test->result = result;
 	
 	if (result == ut_result_pass) {
-		result_length = sprintf(result_buf, "%s: %u/%u - %s ... PASS", suite->suite_name,
+		result_length = sprintf(result_buf, "%s: %lu/%lu - %s ... PASS", suite->suite_name,
 			test->test_number, suite->num_tests, test->test_name);
 	}
 	else {
-		result_length = sprintf(result_buf, "%s: %u/%u - %s ... FAIL", suite->suite_name,
+		result_length = sprintf(result_buf, "%s: %lu/%lu - %s ... FAIL", suite->suite_name,
 			test->test_number, suite->num_tests, test->test_name);
 	}
 	log_0((uint8_t *) result_buf, result_length);

@@ -11,13 +11,7 @@
 
 #include "dma.h"
 
-// Handle all general purpose DMA transactions
-// on channel 3.
-#define MEM_DMA_CH		3
-
 #define DMA_MAX_BYTES	0xFFFFF
-
-#define DMA_BOUND_16B
 
 const uint8_t DMA_IRQ_NUMS[] = {
 	DMA0_IRQn, DMA1_IRQn, DMA2_IRQn, DMA3_IRQn

@@ -10,14 +10,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include "circ_buf.h"
+#include "log.h"
 #include "MKL25Z4.h"
 #include "rgb_led.h"
 #include "uart.h"
+
+#define SPACE_CHAR		0x20
 
 static inline void uart_enable_tx_interrupt(void);
 static inline void uart_disable_tx_interrupt(void);
 static inline void uart_enable_rx_interrupt(void);
 static char *my_strstr(char *buf, int character);
+static inline void decode_ci_msg(CI_Msg *msg);
+
+// Command handlers
+static void uart_config_led(uint8_t *data, uint8_t length);
 
 const uint8_t INVALID_INPUT[] = "Error: Invalid input: ";
 
@@ -27,6 +34,18 @@ cb_t rx_cb;
 uint8_t rx_buf[RX_BUFFER_LENGTH] = {0};
 
 volatile uint8_t txOnGoing = 0;
+
+typedef struct {
+	Cmds cmd;
+	void (*handler)(uint8_t *data, uint8_t len);
+} uart_cmd_t;
+
+const uart_cmd_t uart_cmds[] = {
+	{GET_TEMP,		NULL},
+	{SET_SPEED, 	NULL},
+	{LED_CONFIG, 	uart_config_led},
+	{CMD_NONE, 		NULL},
+};
 
 void uart_init(void)
 {
@@ -186,13 +205,41 @@ static char *my_strstr(char *buf, int character)
 		return NULL;
 }
 
+static inline void decode_ci_msg(CI_Msg *msg)
+{
+	uint8_t i = 0;
+
+	while (uart_cmds[i].cmd != NULL) {
+		if (uart_cmds[i].cmd == msg->command) {
+			if (uart_cmds[i].handler != NULL) {
+				uart_cmds[i].handler(msg->data, msg->length);
+				goto out;
+			}
+		}
+		i++;
+	}
+
+	log_1((uint8_t *) "\nNo handler for command ID ", sizeof("\nNo handler for command ID "),
+		(void *) &msg->command, log_uint8_t);
+
+out:
+	return;
+}
+
+static void uart_config_led(uint8_t *data, uint8_t length)
+{
+	rgb_led_set_brightness(data[0], data[1], data[2]);
+}
+
 void UART0_DriverIRQHandler(void)
 {
 	// Get and clear the current interrupts
-	uint8_t s1_flags, s2_flags, data, i, red, green, blue, input_valid = 1;
+	uint8_t s1_flags, s2_flags, data, i = 0, j, k = 0, input_valid = 1;
 	uint8_t cmd_buf[RX_BUFFER_LENGTH + 1] = {0};
-	char *str_ptr, *cmd_ptr, brightness[4] = {0};
-	int space_char = 0x20;
+	uint16_t checksum = 0;
+	char *str_ptr, *cmd_ptr, temp[4] = {0};
+	CI_Msg msg;
+
 	s1_flags = UART0->S1;
 	UART0->S1 = s1_flags;
 
@@ -204,84 +251,46 @@ void UART0_DriverIRQHandler(void)
 		data = UART0->D;
 		// Find a return character, indicating the end of a command
 		if (data == '\r') {
-			// Dequeue the receive circular buffer into a local buffer
 			for (;;) {
-				i = 0;
+				// Dequeue the receive circular buffer into a local buffer
 				while (cb_pop(&rx_cb, &cmd_buf[i]) != cb_status_empty && i < RX_BUFFER_LENGTH) {
 					i++;
 				}
 
-				// Find integers with spaces in between them
-				cmd_ptr = (char *) cmd_buf;
-				str_ptr = my_strstr((char *) cmd_ptr, space_char);
-				if (str_ptr == NULL) {
+				msg.command = cmd_buf[0];
+				msg.length = cmd_buf[1];
+
+				if (msg.length < CHECKSUM_LEN + CMD_BYTE_LEN + LENGTH_LEN) {
 					input_valid = 0;
 					break;
 				}
 
-				// If the offset from the space to the beginning of the buffer is
-				// greater than 3, it's invalid input
-				if ((str_ptr - cmd_ptr) > 3) {
+				// Extract all of the data
+				i = msg.length - CHECKSUM_LEN - CMD_BYTE_LEN - LENGTH_LEN;
+				j = CMD_BYTE_LEN + LENGTH_LEN;
+				while (i > 0) {
+					msg.data[k++] = cmd_buf[j++];
+				}
+
+				msg.checksum = ((uint16_t) cmd_buf[msg.length - CHECKSUM_LEN]) << 8 |
+						(uint16_t) cmd_buf[msg.length - 1];
+
+				// Validate the checksum
+				i = 0;
+				while (i < (msg.length - CHECKSUM_LEN)) {
+					checksum += cmd_buf[i++];
+				}
+
+				if (checksum != msg.checksum) {
 					input_valid = 0;
 					break;
 				}
 
-				// Copy the characters from the beginning of the buffer to the space
-				// to get the red value
-				memcpy(brightness, cmd_ptr, str_ptr - cmd_ptr);
+				// Change the length field of the buffer to the length of the data
+				msg.length -= (CHECKSUM_LEN + CMD_BYTE_LEN + LENGTH_LEN);
 
-				// Using the standard library version because it will be faster
-				red = (uint8_t) atoi(brightness);
-
-				cmd_ptr = str_ptr + 1;
-				// Look for the green value
-				str_ptr = my_strstr((char *) cmd_ptr, ' ');
-				if (str_ptr == NULL) {
-					input_valid = 0;
-					break;
-				}
-
-				// If the offset from the space to the beginning of the buffer is
-				// greater than 3, it's invalid input
-				if ((str_ptr - cmd_ptr) > 3) {
-					input_valid = 0;
-					break;
-				}
-
-				// Copy the characters from the beginning of the buffer to the space
-				// to get the red value
-				memset(brightness, 0, sizeof(brightness));
-				memcpy(brightness, cmd_ptr, str_ptr - cmd_ptr);
-
-				// Using the standard library version because it will be faster
-				green = (uint8_t) atoi(brightness);
-
-				cmd_ptr = str_ptr + 1;
-				// For the end of the buffer
-				str_ptr = my_strstr((char *) cmd_ptr, '\0');
-				if (str_ptr == NULL) {
-					input_valid = 0;
-					break;
-				}
-
-				// If the offset from the space to the beginning of the buffer is
-				// greater than 3, it's invalid input
-				if ((str_ptr - cmd_ptr) > 3) {
-					input_valid = 0;
-					break;
-				}
-
-				// Copy the characters from the beginning of the buffer to the space
-				// to get the red value
-				memset(brightness, 0, sizeof(brightness));
-				memcpy(brightness, cmd_ptr, str_ptr - cmd_ptr);
-
-				// Using the standard library version because it will be faster
-				blue = (uint8_t) atoi(brightness);
-
-				rgb_led_set_brightness(red, green, blue);
+				decode_ci_msg(&msg);
 				break;
-
 			}
 			if (!input_valid) {
 				cmd_buf[i + 1] = '\n';
