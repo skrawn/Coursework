@@ -78,6 +78,8 @@ void rgb_led_init(void)
 	// Start the timers
 	TPM0->SC = (TPM0->SC & ~TPM_SC_CMOD_MASK) | TPM_SC_CMOD(1);
 	TPM2->SC = (TPM2->SC & ~TPM_SC_CMOD_MASK) | TPM_SC_CMOD(1);
+
+	rgb_led_set_brightness(0, 0, 0);
 }
 
 void rgb_led_set_brightness(uint8_t red, uint8_t green, uint8_t blue)
