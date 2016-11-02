@@ -21,16 +21,16 @@ typedef enum {
 void spi_init(void);
 
 
-spi_status_t spi_transfer_buf(SPI_Type *spi, uint8_t *tx_buf, size_t tx_len, uint8_t *rx_buf);
+spi_status_t spi_transfer_buf(uint8_t *tx_buf, size_t tx_len, uint8_t *rx_buf);
 
 
-spi_status_t spi_send_buf(SPI_Type *spi, uint8_t *tx_buf, size_t tx_len);
+spi_status_t spi_send_buf(uint8_t *tx_buf, size_t tx_len);
 
 
-spi_status_t spi_transfer_byte(SPI_Type *spi, uint8_t tx_byte, uint8_t *rx_byte);
+spi_status_t spi_transfer_byte(uint8_t tx_byte, uint8_t *rx_byte);
 
 
-spi_status_t spi_send_byte(SPI_Type *spi, uint8_t tx_byte, uint8_t *rx_byte);
+spi_status_t spi_send_byte(uint8_t tx_byte);
 
 
 #endif /* INC_SPI_H_ */

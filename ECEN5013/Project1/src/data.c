@@ -310,3 +310,33 @@ int32_t little_to_big(int32_t data)
 {
     return big_to_little(data);
 }
+
+size_t itoa_hexstring(uint8_t *int_array, size_t int_array_len, uint8_t *hex_string)
+{
+	uint8_t nib1, nib2;
+	size_t i = 0;
+	size_t str_len = 0;
+
+	if (int_array == NULL || hex_string == NULL)
+		return ERR_NULLPTR;
+	if (int_array_len <= 0)
+		return ERR_INVINPUT;
+
+	while (int_array_len > 0) {
+		nib1 = (*(int_array + i) & 0xF0) >> 4;
+		nib2 = (*(int_array + i++) & 0x0F);
+
+		if (nib1 <= 9)
+			*(hex_string++) = nib1 + ASCII_TO_INT;
+		else
+			*(hex_string++) = nib1 + INT_TO_HEX_LETTER;
+
+		if (nib2 <= 9)
+			*(hex_string++) = nib2 + ASCII_TO_INT;
+		else
+			*(hex_string++) = nib2 + INT_TO_HEX_LETTER;
+		str_len += 2;
+		int_array_len--;
+	}
+	return str_len;
+}

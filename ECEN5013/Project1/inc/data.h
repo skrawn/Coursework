@@ -53,3 +53,11 @@ int32_t big_to_little(int32_t data);
  */
 int32_t little_to_big(int32_t data);
 
+/**
+ * @brief Converts an integer byte array to a hex string
+ * @param int_array Pointer to the integer array
+ * @param int_array_len Length of the integer array
+ * @param hex_string Pointer to the storage location of the hex string
+ * @return Returns the length of the hex string.
+ */
+size_t itoa_hexstring(uint8_t *int_array, size_t int_array_len, uint8_t *hex_string);

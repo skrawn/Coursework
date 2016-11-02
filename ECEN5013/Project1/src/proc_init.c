@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include "proc_init.h"
 #include "profiler.h"
+#include "spi.h"
 
 #ifdef FRDM
 #include "dma.h"
@@ -31,6 +32,8 @@ void proc_init(void)
 #endif
 
 	profiler_init();
+
+	spi_init();
 }
 
 #ifdef FRDM
