@@ -276,8 +276,7 @@ uint8_t *my_ftoa(float fp, uint8_t *str)
 
 void dump_memory(uint8_t *start, uint32_t length)
 {
-    uint32_t i = length;
-    uint8_t *ptr8 = start;
+    uint32_t i = length;    
     uint8_t line_cnt = 0;
     if (start != NULL && length > 0) {
         while (i-- > 0) {

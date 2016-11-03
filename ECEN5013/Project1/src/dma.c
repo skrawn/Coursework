@@ -45,7 +45,7 @@ int8_t dma_mem_transfer(dma_desc_t *desc)
 	uint8_t *src8 = (uint8_t *) desc->src_addr;
 	uint8_t *dst8 = (uint8_t *) desc->dst_addr;
 
-	if (desc->dst_addr == NULL || desc->src_addr == NULL || desc->num_bytes == 0)
+	if (desc->dst_addr == 0 || desc->src_addr == 0 || desc->num_bytes == 0)
 		return DMA_ERR_DESC;
 
 	// Check num bytes is within the transfer size
@@ -83,6 +83,7 @@ int8_t dma_mem_transfer(dma_desc_t *desc)
 
 	// Start the transfer
 	DMA0->DMA[MEM_DMA_CH].DCR |= DMA_DCR_START(1);
+	return 0;
 }
 
 void DMA3_IRQHandler(void)

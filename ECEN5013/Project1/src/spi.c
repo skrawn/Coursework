@@ -159,10 +159,8 @@ static spi_status_t spi_write_byte(uint8_t byte)
 	// Wait for the transmit register to be empty
 	while (!(SPI1->S & SPI_S_SPTEF_MASK) && !spi_timeout()) {}
 
-	if (spi_timeout()) {
-		log_0("SPI TO\n", sizeof("SPI TO\n"));
-		return SPI_STATUS_TIMEOUT;
-	}
+	if (spi_timeout()) 
+		return SPI_STATUS_TIMEOUT;	
 
 	// Write a byte to the transmit register
 	SPI1->D = byte;
@@ -175,10 +173,8 @@ static spi_status_t spi_read_byte(uint8_t *byte)
 
 	while (!(SPI1->S & SPI_S_SPRF_MASK) && !spi_timeout()) {}
 
-	if (spi_timeout()) {
-		log_0("SPI TO\n", sizeof("SPI TO\n"));
+	if (spi_timeout()) 
 		return SPI_STATUS_TIMEOUT;
-	}
 
 	*byte = SPI1->D;
 	return SPI_STATUS_OK;

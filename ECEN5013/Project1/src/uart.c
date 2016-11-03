@@ -209,7 +209,7 @@ static inline void decode_ci_msg(CI_Msg *msg)
 {
 	uint8_t i = 0;
 
-	while (uart_cmds[i].cmd != NULL) {
+	while (uart_cmds[i].cmd != CMD_NONE) {
 		if (uart_cmds[i].cmd == msg->command) {
 			if (uart_cmds[i].handler != NULL) {
 				uart_cmds[i].handler(msg->data, msg->length);
@@ -236,8 +236,7 @@ void UART0_DriverIRQHandler(void)
 	// Get and clear the current interrupts
 	uint8_t s1_flags, s2_flags, data, i = 0, j, k = 0, input_valid = 1;
 	uint8_t cmd_buf[RX_BUFFER_LENGTH + 1] = {0};
-	uint16_t checksum = 0;
-	char *str_ptr, *cmd_ptr, temp[4] = {0};
+	uint16_t checksum = 0;	
 	CI_Msg msg;
 
 	s1_flags = UART0->S1;

@@ -9,7 +9,10 @@ SRCS += main.c \
 	rgb_led.c \
 	profiler.c \
 	project_2.c \
-	unit_test.c
+	unit_test.c \
+	spi.c \
+	nRF24L01.c \
+	dma.c
 
 SRCS_DIR += ./src
 
