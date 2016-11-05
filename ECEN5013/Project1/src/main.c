@@ -5,16 +5,18 @@
 #include "proc_init.h"
 #include "project_1.h"
 #include "project_2.h"
+#include "project_3.h"
 #include "data.h"
 #include "log.h"
 #include "memory.h"
 #include "uart.h"
 
 #define RUN_PROJECT1_TESTS	(0)
-#define RUN_PROJECT2_TESTS	(1)
+#define RUN_PROJECT2_TESTS	(0)
 
 #define PROJECT_1			(0)
-#define PROJECT_2			(1)
+#define PROJECT_2			(0)
+#define PROJECT_3			(1)
 
 #if FRDM
 #define printf(...) (void)0
@@ -116,8 +118,7 @@ int main(void)
 	log_1(log_str_2, sizeof(log_str_2), (void *) &temp8, log_uint8_t);
 	log_1(log_str_2, sizeof(log_str_2), (void *) &temp16, log_uint16_t);
 	log_1(log_str_2, sizeof(log_str_2), (void *) &temp32, log_uint32_t);
-	log_1(log_str_3, sizeof(log_str_3), (void *) &tempf, log_float_t);
-	
+	log_1(log_str_3, sizeof(log_str_3), (void *) &tempf, log_float_t);	
 #endif
 
 #if PROJECT_1
@@ -126,6 +127,10 @@ int main(void)
 
 #if PROJECT_2
 	project_2_report();
+#endif
+
+#if PROJECT_3
+	project_3_report();
 #endif
 
 #ifdef FRDM

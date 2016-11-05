@@ -5,14 +5,17 @@
  * @brief SPI functions for the KL25Z
  */
 
-#ifdef FRDM
-
-#include "MKL25Z4.h"
-#include "profiler.h"
 #include "spi.h"
 
 #define CS_LOW		0
 #define CS_HI		1
+
+#ifdef FRDM
+
+#include "MKL25Z4.h"
+#include "profiler.h"
+
+
 
 #define SPI_TIMEOUT		1000	// timeout after 1000us = 1ms
 #define CSN_PIN_NUM		17
@@ -219,34 +222,191 @@ void PORTD_IRQHandler(void)
 
 #elif defined(BBB)
 
-#include <stdint.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-#include <linux/types.h>
 #include <linux/spi/spidev.h>
 
-static const char *device = "/dev/spidev1.0";
+#define TRANSFER_DELAY		1	//us
+#define CS_GPIO_NUM			115
+
+static void spi_set_cs(uint8_t high);
+
+static const char *device = "/dev/spidev2.1";
+static const char *cs_gpio_dir = "/sys/class/gpio/gpio115/direction";
+static const char *cs_gpio_val = "/sys/class/gpio/gpio115/value";
+static int spi_fd, gpio_fd;
+
+// Mode is configured to defaults:
+// CPHA = 0, CPOL = 0, Active low CS, etc...
+static uint32_t mode = 0;
+static uint32_t bits = 8;
+static uint32_t speed = 1000000;	
 
 void spi_init(void)
 {
+	int ret;
+	char buf[10] = {0};
 
+	spi_fd = open(device, O_RDWR);
+	if (spi_fd < 0) {
+		perror("Cannot open spidev1.0");
+		abort();
+	}
+
+	ret = ioctl(spi_fd, SPI_IOC_WR_MODE32, &mode);
+	if (ret == -1) {
+		perror("Cannot set SPI mode");
+		abort();
+	}
+
+	ret = ioctl(spi_fd, SPI_IOC_WR_BITS_PER_WORD, &bits);
+	if (ret == -1) {
+		perror("Cannot set SPI bits");
+		abort();
+	}
+
+	ret = ioctl(spi_fd, SPI_IOC_WR_MAX_SPEED_HZ, &speed);
+	if (ret == -1) {
+		perror("Cannot set SPI speed");
+		abort();
+	}
+
+	gpio_fd = open("/sys/class/gpio/export", O_WRONLY);
+	if (gpio_fd < 0) {
+		perror("Failed to open export");
+		abort();
+	}
+	sprintf(buf, "%d", CS_GPIO_NUM);
+	write(gpio_fd, buf, strlen(buf));
+	close(gpio_fd);
+
+	gpio_fd = open(cs_gpio_dir, O_WRONLY);
+	write(gpio_fd, "out", 3);
+	close(gpio_fd);
+
+	gpio_fd = open(cs_gpio_val, O_WRONLY);
+	write(gpio_fd, "1", 1);
+	// Leave the file descriptor active
+	//close(gpio_fd);
 }
 
+spi_status_t spi_transfer_buf(uint8_t *tx_buf, size_t tx_len, uint8_t *rx_buf)
+{
+	struct spi_ioc_transfer tr;
+	int ret;
 
-spi_status_t spi_transfer_buf(uint8_t *tx_buf, size_t tx_len, uint8_t *rx_buf);
+	tr.tx_buf = (unsigned long) tx_buf;
+	tr.rx_buf = (unsigned long) rx_buf;
+	tr.len = tx_len;
+	tr.delay_usecs = TRANSFER_DELAY;
+	tr.speed_hz = speed;
+	tr.bits_per_word = bits;
+	tr.cs_change = 1;
 
+	spi_set_cs(CS_LOW);
+	ret = ioctl(spi_fd, SPI_IOC_MESSAGE(1), &tr);
+	spi_set_cs(CS_HI);
+	if (ret < 1) {
+		perror("Failed to send spi message");
+		return SPI_STATUS_ERROR;		
+	}
+	return SPI_STATUS_OK;
+}
 
-spi_status_t spi_send_buf(uint8_t *tx_buf, size_t tx_len);
+spi_status_t spi_send_buf(uint8_t *tx_buf, size_t tx_len)
+{
+	struct spi_ioc_transfer tr;
+	int ret;
 
+	tr.tx_buf = (unsigned long) tx_buf;
+	tr.rx_buf = (unsigned long) NULL;
+	tr.len = tx_len;
+	tr.delay_usecs = TRANSFER_DELAY;
+	tr.speed_hz = speed;
+	tr.bits_per_word = bits;
+	tr.cs_change = 1;
 
-spi_status_t spi_transfer_byte(uint8_t tx_byte, uint8_t *rx_byte);
+	spi_set_cs(CS_LOW);
+	ret = ioctl(spi_fd, SPI_IOC_MESSAGE(1), &tr);
+	spi_set_cs(CS_HI);
+	if (ret < 1) {
+		perror("Failed to send spi message");
+		return SPI_STATUS_ERROR;		
+	}
+	return SPI_STATUS_OK;
+}
 
+spi_status_t spi_transfer_byte(uint8_t tx_byte, uint8_t *rx_byte)
+{
+	struct spi_ioc_transfer tr;
+	int ret;
 
-spi_status_t spi_send_byte(uint8_t tx_byte, uint8_t *rx_byte);
+	tr.tx_buf = (unsigned long) &tx_byte;
+	tr.rx_buf = (unsigned long) rx_byte;
+	tr.len = 1;
+	tr.delay_usecs = TRANSFER_DELAY;
+	tr.speed_hz = speed;
+	tr.bits_per_word = bits;
+	tr.cs_change = 1;
+
+	spi_set_cs(CS_LOW);
+	ret = ioctl(spi_fd, SPI_IOC_MESSAGE(1), &tr);
+	spi_set_cs(CS_HI);
+	if (ret < 1) {
+		perror("Failed to transfer spi byte");
+		return SPI_STATUS_ERROR;		
+	}
+	return SPI_STATUS_OK;
+}
+
+spi_status_t spi_send_byte(uint8_t tx_byte)
+{
+	struct spi_ioc_transfer tr;
+	int ret;
+
+	tr.tx_buf = (unsigned long) &tx_byte;
+	tr.rx_buf = (unsigned long) NULL;
+	tr.len = 1;
+	tr.delay_usecs = TRANSFER_DELAY;
+	tr.speed_hz = speed;
+	tr.bits_per_word = bits;
+	tr.cs_change = 1;
+
+	spi_set_cs(CS_LOW);
+	ret = ioctl(spi_fd, SPI_IOC_MESSAGE(1), &tr);
+	spi_set_cs(CS_HI);
+	if (ret < 1) {
+		perror("Failed to send spi byte");
+		return SPI_STATUS_ERROR;		
+	}
+	return SPI_STATUS_OK;
+}
+
+static void spi_set_cs(uint8_t high)
+{
+	if (high)
+		write(gpio_fd, "1", 1);
+	else
+		write(gpio_fd, "0", 1);
+}
+
+#else
+
+void spi_init(void) {}
+
+spi_status_t spi_transfer_buf(uint8_t *tx_buf, size_t tx_len, uint8_t *rx_buf) 
+{ return SPI_STATUS_NO_SUPPORT; }
+
+spi_status_t spi_send_buf(uint8_t *tx_buf, size_t tx_len)
+{ return SPI_STATUS_NO_SUPPORT; }
+
+spi_status_t spi_transfer_byte(uint8_t tx_byte, uint8_t *rx_byte)
+{ return SPI_STATUS_NO_SUPPORT; }
+
+spi_status_t spi_send_byte(uint8_t tx_byte)
+{ return SPI_STATUS_NO_SUPPORT; }
 
 #endif
 

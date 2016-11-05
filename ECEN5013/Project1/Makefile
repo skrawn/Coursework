@@ -40,9 +40,10 @@ else ifeq ($(ARCH),$(filter $(ARCH),bbb armv7l))
 	OBJ_DIR := ./bbb/
 	TOOLS_BASE := /usr/bin/arm-linux-gnueabihf-
 	CC := $(TOOLS_BASE)gcc
-	CFLAGS += -D_XOPEN_SOURCE=700
+	CFLAGS += -D_XOPEN_SOURCE=700 -DBBB
 	LDFLAGS += -lrt	-lc
-	INCLUDES += -I/usr/include
+	INCLUDES += -I/usr/include \
+	     -I/home/skrawn/Documents/Yocto/bbb/build/tmp/sysroots/beaglebone/usr/include
 else ifeq ($(ARCH),frdm)
 	OBJ_DIR := ./frdm/
 	TOOLS_BASE := /usr/bin/arm-none-eabi-
@@ -91,7 +92,7 @@ startup:
 compile-all: $(OBJS)
 
 upload:
-	scp ./bbb/$(OP_EXE_NAME) debian@$(IP_ADDR):/home/root/Project1/$(OP_EXE_NAME)
+	scp ./bbb/$(OP_EXE_NAME) root@$(IP_ADDR):/home/root/Project1/$(OP_EXE_NAME)
 
 clean:
 	$(RM) ./x86_64/* ./bbb/* ./frdm/*

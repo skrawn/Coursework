@@ -278,6 +278,8 @@ void dump_memory(uint8_t *start, uint32_t length)
 {
     uint32_t i = length;    
     uint8_t line_cnt = 0;
+    uint8_t *ptr8 = start;
+
     if (start != NULL && length > 0) {
         while (i-- > 0) {
             // Print 16 bytes per line

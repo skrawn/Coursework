@@ -15,8 +15,8 @@ typedef enum {
 	SPI_STATUS_OK = 0,
 	SPI_STATUS_NO_SUPPORT = -1,
 	SPI_STATUS_TIMEOUT = -2,
+	SPI_STATUS_ERROR = 3,
 } spi_status_t;
-
 
 void spi_init(void);
 

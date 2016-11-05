@@ -12,7 +12,8 @@ SRCS += main.c \
 	unit_test.c \
 	spi.c \
 	nRF24L01.c \
-	dma.c
+	dma.c \
+	project_3.c
 
 SRCS_DIR += ./src
 

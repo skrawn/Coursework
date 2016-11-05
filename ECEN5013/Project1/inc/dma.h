@@ -9,7 +9,10 @@
 #define INC_DMA_H_
 
 #include <stdint.h>
+
+#ifdef FRDM
 #include "MKL25Z4.h"
+#endif
 
 #define DMAMUX_SRC_DMAMUX0		60
 #define DMAMUX_SRC_DMAMUX1		61
@@ -41,9 +44,11 @@ typedef struct {
 void dma_init(void);
 int8_t dma_mem_transfer(dma_desc_t *desc);
 
+#ifdef FRDM
 static inline uint8_t dma_transfer_done(uint8_t dma_ch_num)
 {
 	return ((DMA0->DMA[dma_ch_num].DSR_BCR & DMA_DSR_BCR_DONE_MASK) >> DMA_DSR_BCR_DONE_SHIFT);
 }
+#endif
 
 #endif /* INC_DMA_H_ */
