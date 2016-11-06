@@ -85,22 +85,87 @@ typedef struct {
 	void (*gpio_irq_handler)(void);
 } nrf_t;
 
+/**
+ * @brief Initializes nRF24L01
+ * @param config Pointer to the nrf_config_t configuration
+ * @param pwr Transmit power level
+ * @param tx_addr Pointer to the transmit address
+ * @param tx_addr_len Length of the transmit address
+ * @return Returns nrf_t handle.
+ */
 nrf_t *nrf_init(nrf_config_t *config, nrf_pwr_t pwr, uint8_t *tx_addr, uint8_t tx_addr_len);
 
+/**
+ * @brief Turns the transceiver on or off
+ * @param nrf Pointer to the nrf_t handle
+ * @param power_on Turns the transceiver on if true
+ * @return Returns NRF_STATUS_OK if there were no errors.
+ */
 nrf_status_t nrf_set_power(nrf_t *nrf, uint8_t power_on);
 
+/**
+ * @brief Writes to a nRF24L01 register
+ * @param nrf Pointer to the nrf_t handle
+ * @param reg Register to write to.
+ * @param buf Pointer to the data to write to the register
+ * @param buf_len Length of the data to write
+ * @return Returns NRF_STATUS_OK if there were no errors.
+ */
 nrf_status_t nrf_write_register(nrf_t *nrf, uint8_t reg, uint8_t *buf, size_t buf_len);
 
+/**
+ * @brief Reads from a nRF24L01 register
+ * @param nrf Pointer to the nrf_t handle
+ * @param reg Register to write to.
+ * @param buf Pointer to the data to read from the register
+ * @param buf_len Length of the data to read
+ * @return Returns NRF_STATUS_OK if there were no errors.
+ */
 nrf_status_t nrf_read_register(nrf_t *nrf, uint8_t reg, uint8_t *buf, size_t buf_len);
 
+/**
+ * @brief Transmits a stream of data
+ * @param nrf Pointer to the nrf_t handle
+ * @param tx_buf Pointer to the data to write to the transmit FIFO
+ * @param tx_len Length of the data to transmit
+ * @return Returns NRF_STATUS_OK if there were no errors.
+ */
 nrf_status_t nrf_tx_data(nrf_t *nrf, uint8_t *tx_buf, size_t tx_len);
 
+/**
+ * @brief Receives a stream of data from a receiver
+ * @param nrf Pointer to the nrf_t handle
+ * @param rx_buf Pointer to the data to read from the nRF24L01
+ * @param rx_len Pointer to the received data length
+ * @param index Receiver index.
+ * @return Returns NRF_STATUS_OK if there were no errors.
+ */
 nrf_status_t nrf_rx_data(nrf_t *nrf, uint8_t *rx_buf, size_t *rx_len, uint8_t index);
 
+/**
+ * @brief Flushes the transmit FIFO
+ * @param nrf Pointer to the nrf_t handle
+ * @return Returns NRF_STATUS_OK if there were no errors.
+ */
 nrf_status_t nrf_flush_tx_fifo(nrf_t *nrf);
 
+/**
+ * @brief Sets the transmit address
+ * @param nrf Pointer to the nrf_t handle
+ * @param tx_addr Pointer to the new transmit address
+ * @param tx_add_len Length of the new transmit address
+ * @return Returns NRF_STATUS_OK if there were no errors.
+ */
 nrf_status_t nrf_set_tx_address(nrf_t *nrf, uint8_t *tx_addr, uint8_t tx_addr_len);
 
+/**
+ * @brief Sets a receiver address
+ * @param nrf Pointer to the nrf_t handle
+ * @param rx_addr Pointer to the new receiver address
+ * @param rx_add_len Length of the new receiver address
+ * @param index Receiver index.
+ * @return Returns NRF_STATUS_OK if there were no errors.
+ */
 nrf_status_t nrf_set_rx_address(nrf_t *nrf, uint8_t *rx_addr, uint8_t rx_addr_len, uint8_t index);
 
 

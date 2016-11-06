@@ -41,10 +41,24 @@ typedef struct {
 	dma_inc_t dst_increment;
 } dma_desc_t;
 
+/**
+ * @brief Initializes DMA
+ */
 void dma_init(void);
+
+/**
+ * @brief Performs a DMA memory transfer
+ * @param dma_desc_t Pointer to the DMA descriptor
+ * @return Returns 0 if there were no errors.
+ */
 int8_t dma_mem_transfer(dma_desc_t *desc);
 
 #ifdef FRDM
+/**
+ * @brief Checks if the specified DMA channel has finished
+ * @param dma_ch_num DMA channel number
+ * @return Returns 1 if the DMA channel is complete.
+ */
 static inline uint8_t dma_transfer_done(uint8_t dma_ch_num)
 {
 	return ((DMA0->DMA[dma_ch_num].DSR_BCR & DMA_DSR_BCR_DONE_MASK) >> DMA_DSR_BCR_DONE_SHIFT);

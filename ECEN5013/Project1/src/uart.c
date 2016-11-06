@@ -259,7 +259,8 @@ void UART0_DriverIRQHandler(void)
 				msg.command = cmd_buf[0];
 				msg.length = cmd_buf[1];
 
-				if (msg.length < CHECKSUM_LEN + CMD_BYTE_LEN + LENGTH_LEN) {
+				if (msg.length < (CHECKSUM_LEN + CMD_BYTE_LEN + LENGTH_LEN) ||
+						msg.length < i) {
 					input_valid = 0;
 					break;
 				}
@@ -267,7 +268,7 @@ void UART0_DriverIRQHandler(void)
 				// Extract all of the data
 				i = msg.length - CHECKSUM_LEN - CMD_BYTE_LEN - LENGTH_LEN;
 				j = CMD_BYTE_LEN + LENGTH_LEN;
-				while (i > 0) {
+				while (i-- > 0) {
 					msg.data[k++] = cmd_buf[j++];
 				}
 
