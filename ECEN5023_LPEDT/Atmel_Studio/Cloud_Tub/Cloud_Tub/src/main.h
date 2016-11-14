@@ -45,9 +45,11 @@
 extern "C" {
 #endif
 
+#include "wifi_pass.h"
+
 /** Wi-Fi settings. */
-#define MAIN_WLAN_SSID                                  "The Cinco Innernet"
-#define MAIN_WLAN_PSK                                   "parachutepants"
+#define MAIN_WLAN_SSID                                  "Moisten Your Chrimbus Bush"
+#define MAIN_WLAN_PSK                                   WIFI_PASS
 #define MAIN_WLAN_AUTH                                  M2M_WIFI_SEC_WPA_PSK
 
 /** PubNub settings. */
@@ -56,6 +58,7 @@ extern "C" {
 #define MAIN_PUBNUB_CHANNEL						        "WINC1500_00:00" /**< Do not change - last digits will be updated with MAC address. */
 #define MAIN_PUBNUB_PUBLISH_INTERVAL                    (3000)
 #define MAIN_PUBNUB_SUBSCRIBE_INTERVAL                  (1000)
+#define MAIN_100HZ_TASK_INTERVAL                        (100)
 
 #ifdef __cplusplus
 }

@@ -114,6 +114,14 @@
 #define IPV4_BYTE(val, index) ((val >> (index * 8)) & 0xFF)
 #define HEX2ASCII(x) (((x) >= 10) ? (((x) - 10) + 'A') : ((x) + '0'))
 
+/*#define TASK_3S_PRIORITY        (tskIDLE_PRIORITY + 1)
+#define TASK_1S_PRIORITY        (tskIDLE_PRIORITY + 1)
+#define TASK_100HZ_PRIORITY     (tskIDLE_PRIORITY + 2)*/
+
+#define TASK_3S_PRIORITY        (tskIDLE_PRIORITY + 1)
+#define TASK_1S_PRIORITY        (tskIDLE_PRIORITY + 1)
+#define TASK_100HZ_PRIORITY     (tskIDLE_PRIORITY + 1)
+
 typedef enum wifi_status {
 	WifiStateInit,
 	WifiStateWaitingProv,
@@ -302,12 +310,122 @@ static void configure_light_sensor(void)
 	adc_enable(&adc_instance);
 }
 
-/*
- * \brief SysTick handler used to measure precise delay.
- */
-void SysTick_Handler(void)
+
+static void task_3s(void *args)
 {
-	gu32MsTicks++;
+    double temperature = 0;
+    uint16_t light = 0;
+    char buf[256] = {0};
+    TickType_t lastTimer;
+    TickType_t delay_time = pdMS_TO_TICKS(3000);
+
+    lastTimer = xTaskGetTickCount();
+    for ( ;; )
+    {
+        vTaskDelayUntil(&lastTimer, delay_time);
+
+        if (gWifiState == WifiStateConnected) {
+            gu32publishDelay = gu32MsTicks;
+            adc_start_conversion(&adc_instance);
+            temperature = at30tse_read_temperature();
+            //temperature = 0;
+            adc_read(&adc_instance, &light);
+            sprintf(buf, "{\"device\":\"%s\", \"temperature\":\"%d.%d\", \"light\":\"%d\", \"led\":\"%s\"}",
+            PubNubChannel,
+            (int)temperature, (int)((int)(temperature * 100) % 100),
+            (((4096 - light) * 100) / 4096),
+            port_pin_get_output_level(LED0_PIN) ? "0" : "1");
+            printf("main: publish event: {%s}\r\n", buf);
+            close(pPubNubCfg->tcp_socket);
+            pPubNubCfg->state = PS_IDLE;
+            pPubNubCfg->last_result = PNR_IO_ERROR;
+            pubnub_publish(pPubNubCfg, PubNubChannel, buf);            
+        }        
+    }
+}
+
+static void task_1s(void *args)
+{
+    TickType_t lastTimer;
+
+    lastTimer = xTaskGetTickCount();
+    TickType_t delay_time = pdMS_TO_TICKS(1000);
+
+    while (1) {
+        vTaskDelayUntil(&lastTimer, delay_time);
+
+        /* Device is connected to AP. */
+        if (gWifiState == WifiStateConnected) {
+            /* PubNub: read event from the cloud. */
+            if (pPubNubCfg->state == PS_IDLE) {
+                /* Subscribe at the beginning and re-subscribe after every publish. */
+                if ((pPubNubCfg->trans == PBTT_NONE) ||
+                (pPubNubCfg->trans == PBTT_PUBLISH && pPubNubCfg->last_result == PNR_OK)) {
+                    printf("main: subscribe event, PNR_OK\r\n");
+                    pubnub_subscribe(pPubNubCfg, PubNubChannel);
+                }
+
+                /* Process any received messages from the channel we subscribed. */
+                while (1) {
+                    char const *msg = pubnub_get(pPubNubCfg);
+                    if (NULL == msg) {
+                        /* No more message to process. */
+                        break;
+                    }
+
+                    if (0 == (strncmp(&msg[2], "led", strlen("led")))) {
+                        /* LED control message. */
+                        printf("main: received LED control message: %s\r\n", msg);
+                        if (0 == (strncmp(&msg[8], "on", strlen("on")))) {
+                            port_pin_set_output_level(LED0_PIN, LED0_ACTIVE);
+                            } else if (0 == (strncmp(&msg[8], "off", strlen("off")))) {
+                            port_pin_set_output_level(LED0_PIN, LED0_INACTIVE);
+                        }
+                        } else {
+                        /* Any other type of JSON message. */
+                        printf("main: received message: %s\r\n", msg);
+                    }
+                }
+
+                /* Subscribe to receive pending messages. */
+                if (gu32MsTicks - gu32subscribeDelay > MAIN_PUBNUB_SUBSCRIBE_INTERVAL) {
+                    gu32subscribeDelay = gu32MsTicks;
+                    printf("main: subscribe event, interval.\r\n");
+                    pubnub_subscribe(pPubNubCfg, PubNubChannel);
+                }
+            }
+        }        
+    }
+
+}
+
+static void task_100Hz(void *args)
+{
+    TickType_t lastTimer;
+    TickType_t delay_time = pdMS_TO_TICKS(100);
+
+    lastTimer = xTaskGetTickCount();
+    while(1) {
+        vTaskDelayUntil(&lastTimer, delay_time);
+
+       //m2m_wifi_handle_events(NULL);        
+    }
+
+}
+
+/*void vApplicationIdleHook(void);
+void vApplicationIdleHook(void)
+{
+   
+   // NOTE: NO BLOCKING FUNCTIONS MAY GO IN THE IDLE HOOK
+
+}*/
+
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
+{
+    printf("Stack overflow!: %s\n\r", pcTaskName);
+    while (1) {}
 }
 
 /**
@@ -323,10 +441,7 @@ int main(void)
 	tstrWifiInitParam wifiInitParam;
 	int8_t s8InitStatus;
 	uint8 mac_addr[6];
-	uint8 u8IsMacAddrValid;
-	double temperature = 0;
-	uint16_t light = 0;
-	char buf[256] = {0};
+	uint8 u8IsMacAddrValid;	
 
 	/* Initialize the board. */
 	system_init();
@@ -339,13 +454,6 @@ int main(void)
 
 	/* Initialize the delay driver. */
 	delay_init();
-
-	/* Enable SysTick interrupt for non busy wait delay. */
-	if (SysTick_Config(system_cpu_clock_get_hz() / 1000)) {
-		puts("main: SysTick configuration error!");
-		while (1) {
-		}
-	}
 
 	/* Initialize the Temperature Sensor. */
 	at30tse_init();
@@ -400,69 +508,13 @@ int main(void)
 	m2m_wifi_connect((char *)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID),
 			MAIN_WLAN_AUTH, (char *)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
 
-	while (1) {
-		m2m_wifi_handle_events(NULL);
+    xTaskCreate(task_3s, "task_3s", configMINIMAL_STACK_SIZE + 412, 0, TASK_3S_PRIORITY, NULL);
+    xTaskCreate(task_1s, "task_1s", configMINIMAL_STACK_SIZE, 0, TASK_1S_PRIORITY, NULL);
+    xTaskCreate(task_100Hz, "task_100Hz", configMINIMAL_STACK_SIZE, 0, TASK_100HZ_PRIORITY, NULL);
 
-		/* Device is connected to AP. */
-		if (gWifiState == WifiStateConnected) {
-			/* PubNub: read event from the cloud. */
-			if (pPubNubCfg->state == PS_IDLE) {
-				/* Subscribe at the beginning and re-subscribe after every publish. */
-				if ((pPubNubCfg->trans == PBTT_NONE) ||
-				    (pPubNubCfg->trans == PBTT_PUBLISH && pPubNubCfg->last_result == PNR_OK)) {
-					printf("main: subscribe event, PNR_OK\r\n");
-					pubnub_subscribe(pPubNubCfg, PubNubChannel);				
-				}
+    vTaskStartScheduler();
 
-				/* Process any received messages from the channel we subscribed. */
-				while (1) {
-					char const *msg = pubnub_get(pPubNubCfg);
-					if (NULL == msg) {
-						/* No more message to process. */
-						break;
-					}
-
-					if (0 == (strncmp(&msg[2], "led", strlen("led")))) {
-						/* LED control message. */
-						printf("main: received LED control message: %s\r\n", msg);
-						if (0 == (strncmp(&msg[8], "on", strlen("on")))) {
-							port_pin_set_output_level(LED0_PIN, LED0_ACTIVE);
-						} else if (0 == (strncmp(&msg[8], "off", strlen("off")))) {
-							port_pin_set_output_level(LED0_PIN, LED0_INACTIVE);
-						}
-					} else {
-						/* Any other type of JSON message. */
-						printf("main: received message: %s\r\n", msg);
-					}
-				}
-
-				/* Subscribe to receive pending messages. */
-				if (gu32MsTicks - gu32subscribeDelay > MAIN_PUBNUB_SUBSCRIBE_INTERVAL) {
-					gu32subscribeDelay = gu32MsTicks;
-					printf("main: subscribe event, interval.\r\n");
-					pubnub_subscribe(pPubNubCfg, PubNubChannel);
-				}
-			}
-
-			/* Publish the temperature measurements periodically. */
-			if (gu32MsTicks - gu32publishDelay > MAIN_PUBNUB_PUBLISH_INTERVAL) {
-				gu32publishDelay = gu32MsTicks;
-				adc_start_conversion(&adc_instance);
-				temperature = at30tse_read_temperature();
-				adc_read(&adc_instance, &light);
-				sprintf(buf, "{\"device\":\"%s\", \"temperature\":\"%d.%d\", \"light\":\"%d\", \"led\":\"%s\"}",
-						PubNubChannel,
-						(int)temperature, (int)((int)(temperature * 100) % 100),
-						(((4096 - light) * 100) / 4096),
-						port_pin_get_output_level(LED0_PIN) ? "0" : "1");
-				printf("main: publish event: {%s}\r\n", buf);
-				close(pPubNubCfg->tcp_socket);
-				pPubNubCfg->state = PS_IDLE;
-				pPubNubCfg->last_result = PNR_IO_ERROR;
-				pubnub_publish(pPubNubCfg, PubNubChannel, buf);
-			}
-		}
-	}
+    while(1) {}
 
 	return 0;
 }
