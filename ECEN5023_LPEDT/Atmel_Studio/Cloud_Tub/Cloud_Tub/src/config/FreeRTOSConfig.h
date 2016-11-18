@@ -13,14 +13,14 @@ void assert_triggered( const char * file, uint32_t line );
 #endif
 
 #define configUSE_PREEMPTION                    1 
-#define configUSE_IDLE_HOOK                     0
+#define configUSE_IDLE_HOOK                     1
 #define configUSE_TICK_HOOK                     0
 #define configPRIO_BITS                         2
 #define configCPU_CLOCK_HZ                      ( 48000000 )
 #define configTICK_RATE_HZ                      ( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES                    ( ( uint32_t ) 5 )
-//#define configMINIMAL_STACK_SIZE                ( ( uint16_t ) 256 )
-#define configMINIMAL_STACK_SIZE                ( ( uint16_t ) 100 )
+#define configMINIMAL_STACK_SIZE                ( ( uint16_t ) 256 )
+//#define configMINIMAL_STACK_SIZE                ( ( uint16_t ) 100 )
 /* configTOTAL_HEAP_SIZE is not used when heap_3.c is used. */
 #define configTOTAL_HEAP_SIZE                   ( ( size_t ) ( 15000 ) )
 #define configMAX_TASK_NAME_LEN                 ( 12 )

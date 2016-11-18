@@ -2,6 +2,10 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
+src\thermal.c
+
+src\tm1640.c
+
 src\ASF\common2\services\delay\sam0\systick_counter.c
 
 src\ASF\common\components\wifi\winc1500\bsp\source\nm_bsp_samd21.c
