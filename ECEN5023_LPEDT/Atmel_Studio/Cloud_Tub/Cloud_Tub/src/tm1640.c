@@ -17,9 +17,21 @@
 #ifndef XPLAINED
 #define TM1640_SERCOM       SERCOM4
 #define TM1640_IRQ          SERCOM4_IRQn
+
+#define TM1640_PINMUX_PAD0  PINMUX_UNUSED
+#define TM1640_PINMUX_PAD1  PINMUX_UNUSED
+#define TM1640_PINMUX_PAD2  PINMUX_PB10D_SERCOM4_PAD2
+#define TM1640_PINMUX_PAD3  PINMUX_PB11D_SERCOM4_PAD3
+
 #else
 #define TM1640_SERCOM       SERCOM1
 #define TM1640_IRQ          SERCOM1_IRQn
+
+#define TM1640_PINMUX_PAD0
+#define TM1640_PINMUX_PAD1
+#define TM1640_PINMUX_PAD2
+#define TM1640_PINMUX_PAD3
+
 #endif
 
 #define DATA_CMD_ADDR_INC   0x40
@@ -106,29 +118,19 @@ void tm1640_init(void)
     config.select_slave_low_detect_enable = false;
 #ifndef XPLAINED
     config.mux_setting = SPI_SIGNAL_MUX_SETTING_E;    
-
-    //config.pinmux_pad0 = (uint32_t) PORT->Group[1].PMUX[10/2];
-    
-    // PB10 - DO, PB11 - SCK
-    do_pin.mux_position = 0x3;
-    sck_pin.mux_position = 0x3;
-    system_pinmux_pin_set_config(32 + 10, &do_pin);
-    system_pinmux_pin_set_config(32 + 11, &sck_pin);
 #else
     //config.mux_setting = SPI_SIGNAL_MUX_SETTING_O;
     config.mux_setting = SPI_SIGNAL_MUX_SETTING_E;
-
-    // PA16 - DO, PA19 - SCK
-    do_pin.mux_position = 0x2;    
-    sck_pin.mux_position = 0x2;
-    //system_pinmux_pin_set_config(16, &do_pin);
-    //system_pinmux_pin_set_config(19, &sck_pin);
 #endif
     config.receiver_enable = false;
     config.master_slave_select_enable = false;
     config.run_in_standby = true;
     config.mode_specific.master.baudrate = TM1640_BAUD_RATE;
     config.generator_source = GCLK_GENERATOR_0;
+    config.pinmux_pad0 = TM1640_PINMUX_PAD0;
+    config.pinmux_pad1 = TM1640_PINMUX_PAD1;
+    config.pinmux_pad2 = TM1640_PINMUX_PAD2;
+    config.pinmux_pad3 = TM1640_PINMUX_PAD3;
 
     if (spi_init(&spi_module, TM1640_SERCOM, &config)) {
         printf("Failed to initialize TM1640_SERCOM!\n");

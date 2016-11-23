@@ -6,6 +6,8 @@ src\thermal.c
 
 src\tm1640.c
 
+src\wtc6508.c
+
 src\ASF\common2\services\delay\sam0\systick_counter.c
 
 src\ASF\common\components\wifi\winc1500\bsp\source\nm_bsp_samd21.c
@@ -45,8 +47,6 @@ src\ASF\common\components\wifi\winc1500\spi_flash\source\spi_flash.c
 src\ASF\common\utils\interrupt\interrupt_sam_nvic.c
 
 src\ASF\sam0\boards\samw25_xplained_pro\board_init.c
-
-src\ASF\sam0\components\sensor\at30tse75x\at30tse75x.c
 
 src\ASF\sam0\drivers\adc\adc_sam_d_r\adc.c
 

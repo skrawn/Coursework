@@ -107,6 +107,7 @@
 #include "PubNub.h"
 
 #include "tm1640.h"
+#include "wtc6508.h"
 
 #define STRING_EOL    "\r\n"
 #define STRING_HEADER "-- SAMW25 PubNub example --"STRING_EOL	\
@@ -122,7 +123,7 @@
 
 #define TASK_3S_PRIORITY        (tskIDLE_PRIORITY + 1)
 #define TASK_1S_PRIORITY        (tskIDLE_PRIORITY + 1)
-#define TASK_100HZ_PRIORITY     (tskIDLE_PRIORITY + 1)
+#define TASK_50HZ_PRIORITY     (tskIDLE_PRIORITY + 2)
 
 typedef enum wifi_status {
 	WifiStateInit,
@@ -328,9 +329,8 @@ static void task_3s(void *args)
 
         if (gWifiState == WifiStateConnected) {
             gu32publishDelay = gu32MsTicks;
-            adc_start_conversion(&adc_instance);
-            temperature = at30tse_read_temperature();
-            //temperature = 0;
+            adc_start_conversion(&adc_instance);            
+            temperature = 0;
             adc_read(&adc_instance, &light);
             sprintf(buf, "{\"device\":\"%s\", \"temperature\":\"%d.%d\", \"light\":\"%d\", \"led\":\"%s\"}",
             PubNubChannel,
@@ -399,6 +399,20 @@ static void task_1s(void *args)
         }        
     }
 
+}
+
+static void task_50Hz(void *args)
+{
+    TickType_t lastTimer;
+
+    lastTimer = xTaskGetTickCount();
+    TickType_t delay_time = pdMS_TO_TICKS(20);    
+
+    while(1) {
+        vTaskDelayUntil(&lastTimer, delay_time);
+
+
+    }
 }
 
 void vApplicationIdleHook(void);
@@ -509,8 +523,13 @@ int main(void)
     disp.grid[7] = SEG_7;
     enum status_code ret = tm1640_set_display(&disp, BRIGHT_5);
 
+    wtc6508_init();
+    uint8_t status;
+    wtc6508_read(&status);
+
     xTaskCreate(task_3s, "task_3s", configMINIMAL_STACK_SIZE + 256, 0, TASK_3S_PRIORITY, NULL);
     xTaskCreate(task_1s, "task_1s", configMINIMAL_STACK_SIZE, 0, TASK_1S_PRIORITY, NULL);    
+    xTaskCreate(task_50Hz, "task_50Hz", configMINIMAL_STACK_SIZE, 0, TASK_50HZ_PRIORITY, NULL); 
 
     vTaskStartScheduler();
 
