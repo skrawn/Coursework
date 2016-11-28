@@ -20,12 +20,12 @@ typedef enum {
 
     // Individual Segment Controls
     SEG_a = 0x01,
-    SEB_b = 0x02,
-    SEB_c = 0x04,
-    SEB_d = 0x08,
-    SEB_e = 0x10,
-    SEB_f = 0x20,
-    SEB_g = 0x40,
+    SEG_b = 0x02,
+    SEG_c = 0x04,
+    SEG_d = 0x08,
+    SEG_e = 0x10,
+    SEG_f = 0x20,
+    SEG_g = 0x40,
 
     // Numbers
     SEG_0 = 0x1F,

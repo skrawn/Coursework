@@ -276,7 +276,7 @@ uint32_t ulSetInterruptMaskFromISR( void )
 				  );
 
 	/* To avoid compiler warnings.  This line will never be reached. */
-	return 0;
+	//return 0;
 }
 /*-----------------------------------------------------------*/
 
@@ -288,7 +288,7 @@ void vClearInterruptMaskFromISR( uint32_t ulMask )
 				  );
 
 	/* Just to avoid compiler warning. */
-	( void ) ulMask;
+	//( void ) ulMask;
 }
 /*-----------------------------------------------------------*/
 

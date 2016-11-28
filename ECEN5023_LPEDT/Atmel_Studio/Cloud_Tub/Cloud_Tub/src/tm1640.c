@@ -7,12 +7,15 @@
  * Titan Micro Electronics TM1640 LED Drive Control Driver
  */ 
 
+#include "main.h"
 #include "pinmux.h"
 #include "spi.h"
 #include "spi_interrupt.h"
 #include "tm1640.h"
 
-#define TM1640_BAUD_RATE    200000
+#define DISPLAY_MUTEX_TIMEOUT     pdMS_TO_TICKS(5)
+
+#define TM1640_BAUD_RATE    15000
 
 #ifndef XPLAINED
 #define TM1640_SERCOM       SERCOM4
@@ -21,7 +24,7 @@
 #define TM1640_PINMUX_PAD0  PINMUX_UNUSED
 #define TM1640_PINMUX_PAD1  PINMUX_UNUSED
 #define TM1640_PINMUX_PAD2  PINMUX_PB10D_SERCOM4_PAD2
-#define TM1640_PINMUX_PAD3  PINMUX_PB11D_SERCOM4_PAD3
+#define TM1640_PINMUX_PAD3  PINMUX_UNUSED
 
 #else
 #define TM1640_SERCOM       SERCOM1
@@ -57,6 +60,8 @@ typedef enum {
 } tm1640_state_t;
 
 volatile tm1640_state_t tm1640_state;
+volatile uint8_t transfer_complete = 1;
+SemaphoreHandle_t tm1640_sem;
 
 static tm1640_state_t tm1640_get_state(void)
 {    
@@ -71,7 +76,10 @@ static tm1640_state_t tm1640_get_state(void)
 
 static void spi_cb_buffer_transmitted(struct spi_module *const module) 
 {
+    static BaseType_t wakeTask;
+
     // This function will be called from an interrupt context
+    wakeTask = pdFALSE;
     switch (tm1640_state) {
     case STATE_SET_DATA:
         tm1640_state = STATE_SET_ADDR;
@@ -86,9 +94,12 @@ static void spi_cb_buffer_transmitted(struct spi_module *const module)
 
     case STATE_CONTROL:
     default:
-        tm1640_state = STATE_IDLE;
+        tm1640_state = STATE_IDLE;        
+        xSemaphoreGiveFromISR(tm1640_sem, &wakeTask);
         break;
     }
+
+    portYIELD_FROM_ISR(wakeTask);
 }
 
 static void spi_cb_error(struct spi_module *const module) 
@@ -100,16 +111,6 @@ static void spi_cb_error(struct spi_module *const module)
 void tm1640_init(void)
 {
     struct spi_config config;
-    struct system_pinmux_config do_pin;
-    struct system_pinmux_config sck_pin;
-
-    do_pin.powersave = false;
-    do_pin.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-    do_pin.input_pull = SYSTEM_PINMUX_PIN_PULL_UP;
-
-    sck_pin.powersave = false;
-    sck_pin.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-    sck_pin.input_pull = SYSTEM_PINMUX_PIN_PULL_UP;
 
     config.character_size = SPI_CHARACTER_SIZE_8BIT;
     config.data_order = SPI_DATA_ORDER_LSB;
@@ -125,8 +126,8 @@ void tm1640_init(void)
     config.receiver_enable = false;
     config.master_slave_select_enable = false;
     config.run_in_standby = true;
-    config.mode_specific.master.baudrate = TM1640_BAUD_RATE;
-    config.generator_source = GCLK_GENERATOR_0;
+    config.mode_specific.master.baudrate = TM1640_BAUD_RATE;    
+    config.generator_source = GCLK_GENERATOR_4;
     config.pinmux_pad0 = TM1640_PINMUX_PAD0;
     config.pinmux_pad1 = TM1640_PINMUX_PAD1;
     config.pinmux_pad2 = TM1640_PINMUX_PAD2;
@@ -144,6 +145,8 @@ void tm1640_init(void)
 
     NVIC_EnableIRQ(TM1640_IRQ);
     spi_enable(&spi_module);
+
+    tm1640_sem = xSemaphoreCreateBinary();
 }
 
 enum status_code tm1640_set_display(tm1640_display_t *disp, tm1640_brightness_t brightness)
@@ -160,17 +163,31 @@ enum status_code tm1640_set_display(tm1640_display_t *disp, tm1640_brightness_t 
         tm1640_display_pkt.set_addr = ADDR_CMD_ADDR0;
         tm1640_display_pkt.set_data = DATA_CMD_ADDR_INC;
         tm1640_display_pkt.brigtness = brightness;
+       
+        // Take the display bus mutex
+        if (!xSemaphoreTake(display_mutex, portMAX_DELAY)) {
+            // Timeout waiting for semaphore. Just return
+            return STATUS_ERR_TIMEOUT;
+        }
+
+        transfer_complete = 0;
 
         status = spi_write_buffer_job(&spi_module, &tm1640_display_pkt.set_data, 1);
 
         // First byte needs to be started manually
-        if (!status) 
-            return spi_write(&spi_module, (uint16_t) tm1640_display_pkt.set_data);
-        else
-            return status;
+        if (!status) {
+            status = spi_write(&spi_module, (uint16_t) tm1640_display_pkt.set_data);
+            if (!status) {
+                xSemaphoreTake(tm1640_sem, portMAX_DELAY);
+            }            
+            // ISR will handle the rest of the transactions. TM1640 can give back the mutex after
+            // the semaphore is given back by the ISR.            
+        }   
+                        
+        xSemaphoreGive(display_mutex);     
+        return status;
     }
     else
         return STATUS_BUSY;
 }
-
 

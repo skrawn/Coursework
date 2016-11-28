@@ -45,6 +45,7 @@
 extern "C" {
 #endif
 
+#include "asf.h"
 #include "wifi_pass.h"
 
 /** Wi-Fi settings. */
@@ -59,6 +60,10 @@ extern "C" {
 #define MAIN_PUBNUB_PUBLISH_INTERVAL                    (3000)
 #define MAIN_PUBNUB_SUBSCRIBE_INTERVAL                  (1000)
 #define MAIN_100HZ_TASK_INTERVAL                        (100)
+
+#define MAIN_OTA_URL                                    "http://192.168.1.100/m2m_ota_3ao.bin"
+
+SemaphoreHandle_t                                       display_mutex;
 
 #ifdef __cplusplus
 }

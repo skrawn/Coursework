@@ -154,6 +154,7 @@ SUBDIRS :=  \
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
+../src/display.c \
 ../src/thermal.c \
 ../src/tm1640.c \
 ../src/wtc6508.c \
@@ -223,6 +224,7 @@ ASM_SRCS +=
 
 
 OBJS +=  \
+src/display.o \
 src/thermal.o \
 src/tm1640.o \
 src/wtc6508.o \
@@ -285,6 +287,7 @@ src/main.o \
 src/PubNub.o
 
 OBJS_AS_ARGS +=  \
+src/display.o \
 src/thermal.o \
 src/tm1640.o \
 src/wtc6508.o \
@@ -347,6 +350,7 @@ src/main.o \
 src/PubNub.o
 
 C_DEPS +=  \
+src/display.d \
 src/thermal.d \
 src/tm1640.d \
 src/wtc6508.d \
@@ -409,6 +413,7 @@ src/main.d \
 src/PubNub.d
 
 C_DEPS_AS_ARGS +=  \
+src/display.d \
 src/thermal.d \
 src/tm1640.d \
 src/wtc6508.d \
@@ -485,6 +490,8 @@ LINKER_SCRIPT_DEP+=  \
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

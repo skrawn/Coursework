@@ -2,6 +2,8 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
+src\display.c
+
 src\thermal.c
 
 src\tm1640.c

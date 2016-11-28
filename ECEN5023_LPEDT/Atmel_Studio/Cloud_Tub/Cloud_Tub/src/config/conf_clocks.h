@@ -163,11 +163,11 @@
 #  define CONF_CLOCK_GCLK_4_OUTPUT_ENABLE         true
 
 /* Configure GCLK generator 5 */
-#  define CONF_CLOCK_GCLK_5_ENABLE                false
+#  define CONF_CLOCK_GCLK_5_ENABLE                true
 #  define CONF_CLOCK_GCLK_5_RUN_IN_STANDBY        false
 #  define CONF_CLOCK_GCLK_5_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_OSC8M
-#  define CONF_CLOCK_GCLK_5_PRESCALER             1
-#  define CONF_CLOCK_GCLK_5_OUTPUT_ENABLE         false
+#  define CONF_CLOCK_GCLK_5_PRESCALER             16
+#  define CONF_CLOCK_GCLK_5_OUTPUT_ENABLE         true
 
 /* Configure GCLK generator 6 */
 #  define CONF_CLOCK_GCLK_6_ENABLE                false
