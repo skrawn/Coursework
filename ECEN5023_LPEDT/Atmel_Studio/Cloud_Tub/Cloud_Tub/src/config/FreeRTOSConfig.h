@@ -26,16 +26,18 @@ void assert_triggered( const char * file, uint32_t line );
 #define configMAX_TASK_NAME_LEN                 ( 12 )
 #define configUSE_TRACE_FACILITY                0
 #define configUSE_16_BIT_TICKS                  0
-#define configIDLE_SHOULD_YIELD                 1
+//#define configIDLE_SHOULD_YIELD                 1
+#define configIDLE_SHOULD_YIELD                 0
 #define configUSE_MUTEXES                       1
-#define configQUEUE_REGISTRY_SIZE               0
+#define configQUEUE_REGISTRY_SIZE               5
 #define configCHECK_FOR_STACK_OVERFLOW          1
-#define configUSE_RECURSIVE_MUTEXES             1
+#define configUSE_RECURSIVE_MUTEXES             0
 #define configUSE_MALLOC_FAILED_HOOK            0
-#define configUSE_COUNTING_SEMAPHORES           1
+#define configUSE_COUNTING_SEMAPHORES           0
 #define configUSE_QUEUE_SETS                    1
 #define configGENERATE_RUN_TIME_STATS           0
 #define configENABLE_BACKWARD_COMPATIBILITY     0
+#define configUSE_TIME_SLICING                  0
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES                   0

@@ -12,6 +12,7 @@
 #include "spi.h"
 #include "spi_interrupt.h"
 #include "tm1640.h"
+#include "wtc6508.h"
 
 #define DISPLAY_MUTEX_TIMEOUT     pdMS_TO_TICKS(5)
 
@@ -25,6 +26,7 @@
 #define TM1640_PINMUX_PAD1  PINMUX_UNUSED
 #define TM1640_PINMUX_PAD2  PINMUX_PB10D_SERCOM4_PAD2
 #define TM1640_PINMUX_PAD3  PINMUX_UNUSED
+//#define TM1640_PINMUX_PAD3  PINMUX_PB11D_SERCOM4_PAD3
 
 #else
 #define TM1640_SERCOM       SERCOM1
@@ -43,7 +45,7 @@
 
 #define ADDR_CMD_ADDR0      0xC0
 
-struct spi_module spi_module;
+struct spi_module tm1640_module;
 
 struct {
     uint8_t set_data;
@@ -62,6 +64,7 @@ typedef enum {
 volatile tm1640_state_t tm1640_state;
 volatile uint8_t transfer_complete = 1;
 SemaphoreHandle_t tm1640_sem;
+uint8_t wtc_bus_dummy_data[TM1640_GRIDS + 1] = {0};
 
 static tm1640_state_t tm1640_get_state(void)
 {    
@@ -83,13 +86,21 @@ static void spi_cb_buffer_transmitted(struct spi_module *const module)
     switch (tm1640_state) {
     case STATE_SET_DATA:
         tm1640_state = STATE_SET_ADDR;
-        spi_write_buffer_job(&spi_module, &tm1640_display_pkt.set_addr, TM1640_GRIDS + 1);
-        spi_write(&spi_module, (uint16_t) tm1640_display_pkt.set_data);
+        spi_write_buffer_job(&tm1640_module, &tm1640_display_pkt.set_addr, TM1640_GRIDS + 1);
+        spi_write_buffer_job(&wtc6508_module, wtc_bus_dummy_data, TM1640_GRIDS + 1);
+        spi_write(&tm1640_module, (uint16_t) tm1640_display_pkt.set_addr);
+        spi_write(&wtc6508_module, (uint16_t) wtc_bus_dummy_data[0]);
         break;
 
     case STATE_SET_ADDR:
         tm1640_state = STATE_CONTROL;
-        spi_write_buffer_job(&spi_module, &tm1640_display_pkt.brigtness, 1);
+                       
+        tm1640_module.dir = SPI_DIRECTION_WRITE;
+        tm1640_module.hw->SPI.INTFLAG.reg = 0x1F;
+        tm1640_module.hw->SPI.INTENSET.reg |= SPI_INTERRUPT_FLAG_TX_COMPLETE;
+        
+        spi_write(&tm1640_module, (uint16_t) tm1640_display_pkt.brigtness);
+        spi_write(&wtc6508_module, 0);
         break;
 
     case STATE_CONTROL:
@@ -133,18 +144,18 @@ void tm1640_init(void)
     config.pinmux_pad2 = TM1640_PINMUX_PAD2;
     config.pinmux_pad3 = TM1640_PINMUX_PAD3;
 
-    if (spi_init(&spi_module, TM1640_SERCOM, &config)) {
+    if (spi_init(&tm1640_module, TM1640_SERCOM, &config)) {
         printf("Failed to initialize TM1640_SERCOM!\n");
         return;
     }
 
-    spi_register_callback(&spi_module, spi_cb_buffer_transmitted, SPI_CALLBACK_BUFFER_TRANSMITTED);      
-    spi_enable_callback(&spi_module, SPI_CALLBACK_BUFFER_TRANSMITTED);  
-    spi_register_callback(&spi_module, spi_cb_error, SPI_CALLBACK_ERROR);    
-    spi_enable_callback(&spi_module, SPI_CALLBACK_ERROR);
+    spi_register_callback(&tm1640_module, spi_cb_buffer_transmitted, SPI_CALLBACK_BUFFER_TRANSMITTED);      
+    spi_enable_callback(&tm1640_module, SPI_CALLBACK_BUFFER_TRANSMITTED);  
+    spi_register_callback(&tm1640_module, spi_cb_error, SPI_CALLBACK_ERROR);    
+    spi_enable_callback(&tm1640_module, SPI_CALLBACK_ERROR);
 
     NVIC_EnableIRQ(TM1640_IRQ);
-    spi_enable(&spi_module);
+    spi_enable(&tm1640_module);
 
     tm1640_sem = xSemaphoreCreateBinary();
 }
@@ -152,6 +163,8 @@ void tm1640_init(void)
 enum status_code tm1640_set_display(tm1640_display_t *disp, tm1640_brightness_t brightness)
 {
     enum status_code status;
+    struct port_config di_conf;    
+    struct system_pinmux_config pin_conf;
 
     // Transactions have to be broken up into 3 segments because the data and clock need to go high
     // for a period of time between the data command, the address/display data, and the display control.
@@ -172,18 +185,35 @@ enum status_code tm1640_set_display(tm1640_display_t *disp, tm1640_brightness_t 
 
         transfer_complete = 0;
 
-        status = spi_write_buffer_job(&spi_module, &tm1640_display_pkt.set_data, 1);
+        system_pinmux_get_config_defaults(&pin_conf);
+        pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+        pin_conf.mux_position = PINMUX_PA08C_SERCOM0_PAD0 & 0xFFFF;
 
-        // First byte needs to be started manually
+        // Data input pin for the WTC6508 needs to be set to a GPIO so it isn't driven
+        // when the clock is generated for the TM1640
+        di_conf.direction = PORT_PIN_DIR_INPUT;
+        di_conf.input_pull = PORT_PIN_PULL_UP;
+        di_conf.powersave = false;
+        port_pin_set_config(WTC6508_DI_GPIO, &di_conf);
+        
+        SercomSpi *const hw = &tm1640_module.hw->SPI;
+        hw->INTFLAG.reg = 0x1F;
+        tm1640_module.dir = SPI_DIRECTION_WRITE;
+        hw->INTENSET.reg |= SPI_INTERRUPT_FLAG_TX_COMPLETE;                
+
+        status = spi_write(&tm1640_module, (uint16_t) tm1640_display_pkt.set_data);
+        spi_write(&wtc6508_module, 0);
+
         if (!status) {
-            status = spi_write(&spi_module, (uint16_t) tm1640_display_pkt.set_data);
-            if (!status) {
-                xSemaphoreTake(tm1640_sem, portMAX_DELAY);
-            }            
-            // ISR will handle the rest of the transactions. TM1640 can give back the mutex after
-            // the semaphore is given back by the ISR.            
-        }   
-                        
+            xSemaphoreTake(tm1640_sem, portMAX_DELAY);
+        }
+ 
+        // Ensure the WTC6508 bus has finished transmitting before giving it up
+        while (!(wtc6508_module.hw->SPI.INTFLAG.reg & SPI_INTERRUPT_FLAG_TX_COMPLETE)) {}
+
+        // Restore pin function to the WTC6508 SPI
+        system_pinmux_pin_set_config(PINMUX_PA08C_SERCOM0_PAD0 >> 16, &pin_conf);                        
+
         xSemaphoreGive(display_mutex);     
         return status;
     }

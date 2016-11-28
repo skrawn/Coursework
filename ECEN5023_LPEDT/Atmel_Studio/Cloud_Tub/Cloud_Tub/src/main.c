@@ -121,7 +121,7 @@
 
 #define TASK_3S_PRIORITY        (tskIDLE_PRIORITY + 1)
 #define TASK_1S_PRIORITY        (tskIDLE_PRIORITY + 1)
-#define TASK_50HZ_PRIORITY     (tskIDLE_PRIORITY + 2)
+#define TASK_50HZ_PRIORITY     (tskIDLE_PRIORITY + 1)
 
 typedef enum wifi_status {
 	WifiStateInit,
@@ -323,7 +323,7 @@ static void task_3s(void *args)
     lastTimer = xTaskGetTickCount();
     for ( ;; )
     {
-        vTaskDelayUntil(&lastTimer, delay_time);
+        vTaskDelayUntil(&lastTimer, delay_time);        
 
         if (gWifiState == WifiStateConnected) {
             gu32publishDelay = gu32MsTicks;
@@ -413,6 +413,38 @@ static void task_50Hz(void *args)
 
         display_update_50Hz();
 
+    }
+}
+
+static void task_Buzzer(void *args)
+{
+    struct tc_module buzz_module;
+    struct tc_config buzz_config;
+
+    TickType_t lastTimer;
+
+    tc_get_config_defaults(&buzz_config);
+    buzz_config.clock_source = GCLK_GENERATOR_5; // ~500kHz
+    buzz_config.run_in_standby = true;
+    buzz_config.counter_size = TC_COUNTER_SIZE_8BIT;
+    buzz_config.pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].enabled = true;
+    buzz_config.pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].pin_out = (PINMUX_PB11E_TC5_WO1) >> 16;
+    buzz_config.pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].pin_mux = PINMUX_PB11E_TC5_WO1;
+    buzz_config.counter_8_bit.period = (500000 / BUZZER_FREQUENCY) / 2;
+    buzz_config.counter_8_bit.value = 0;
+
+    tc_init(&buzz_module, TC5, &buzz_config);    
+
+    while(1) {
+        xSemaphoreTake(buzzer_sem, portMAX_DELAY);
+
+        // When another task gives up the semaphore, the buzzer will run 
+        // for the set delay time.
+        tc_set_count_value(&buzz_module, 0);
+        tc_enable(&buzz_module);
+        lastTimer = xTaskGetTickCount();
+        vTaskDelayUntil(&lastTimer, pdMS_TO_TICKS(BUZZER_ON_TIME));
+        tc_disable(&buzz_module);
     }
 }
 
@@ -510,7 +542,9 @@ int main(void)
     xTaskCreate(task_3s, "task_3s", configMINIMAL_STACK_SIZE + 256, 0, TASK_3S_PRIORITY, NULL);
     xTaskCreate(task_1s, "task_1s", configMINIMAL_STACK_SIZE + 256, 0, TASK_1S_PRIORITY, NULL);    
     xTaskCreate(task_50Hz, "task_50Hz", configMINIMAL_STACK_SIZE + 256, 0, TASK_50HZ_PRIORITY, NULL); 
+    xTaskCreate(task_Buzzer, "task_Buzzer", 100, 0, tskIDLE_PRIORITY, NULL);
     display_mutex = xSemaphoreCreateMutex();
+    buzzer_sem = xSemaphoreCreateBinary();
 
     vTaskStartScheduler();
 

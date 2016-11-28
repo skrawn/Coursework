@@ -61,9 +61,13 @@ extern "C" {
 #define MAIN_PUBNUB_SUBSCRIBE_INTERVAL                  (1000)
 #define MAIN_100HZ_TASK_INTERVAL                        (100)
 
+#define BUZZER_FREQUENCY                                4000    // Hz
+#define BUZZER_ON_TIME                                  500     // ms
+
 #define MAIN_OTA_URL                                    "http://192.168.1.100/m2m_ota_3ao.bin"
 
 SemaphoreHandle_t                                       display_mutex;
+SemaphoreHandle_t                                       buzzer_sem;
 
 #ifdef __cplusplus
 }

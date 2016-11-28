@@ -10,7 +10,6 @@
 #include "delay.h"
 #include "main.h"
 #include "pinmux.h"
-#include "spi.h"
 #include "wtc6508.h"
 
 #define WTC65808_SERCOM         SERCOM0
@@ -21,15 +20,12 @@
 #define WTC6508_PINMUX_PAD3     PINMUX_UNUSED
 
 #define WTC6508_CLK_GPIO        PIN_PA09
-#define WTC6508_DI_GPIO         PIN_PA08
 
 #define WTC6508_BAUD            15000  // Hz
 
 #define N_NOP_PER_US            48
 
 #define DISPLAY_MUTEX_TIMEOUT     pdMS_TO_TICKS(5)
-
-struct spi_module wtc6508_module;
 
 // Must run at 2kHz to 20kHz with at least 15 ms between transactions
 
@@ -84,7 +80,7 @@ enum status_code wtc6508_read(uint8_t *status)
     system_pinmux_get_config_defaults(&pin_conf);
     pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
 
-    // Take the display bus semaphore
+    // Take the display bus mutex
     if (!xSemaphoreTake(display_mutex, portMAX_DELAY)) {
         // Timeout waiting for semaphore. Just return
         return STATUS_ERR_TIMEOUT;
@@ -100,8 +96,7 @@ enum status_code wtc6508_read(uint8_t *status)
     // Need a 10us - 22us clock pulse. Delay low for 6us
     port_pin_set_output_level(WTC6508_CLK_GPIO, 0);        
     delay_us_nop(3);
-    port_pin_set_output_level(WTC6508_CLK_GPIO, 1);    
-    //delay_us_nop(3);
+    port_pin_set_output_level(WTC6508_CLK_GPIO, 1);        
 
     // Give pin control back to SPI module again 
     pin_conf.mux_position = WTC6508_PINMUX_PAD0 & 0xFFFF;
@@ -117,14 +112,13 @@ enum status_code wtc6508_read(uint8_t *status)
     // Need a 10us - 22us clock pulse. Delay low for 6us
     port_pin_set_output_level(WTC6508_CLK_GPIO, 0);    
     delay_us_nop(3);
-    port_pin_set_output_level(WTC6508_CLK_GPIO, 1);
-    //delay_us_nop(3);
+    port_pin_set_output_level(WTC6508_CLK_GPIO, 1);    
 
     // Give pin control back to SPI module again
     pin_conf.mux_position = WTC6508_PINMUX_PAD0 & 0xFFFF;
     system_pinmux_pin_set_config(WTC6508_PINMUX_PAD0 >> 16, &pin_conf);
     pin_conf.mux_position = WTC6508_PINMUX_PAD1 & 0xFFFF;
-    system_pinmux_pin_set_config(WTC6508_PINMUX_PAD1 >> 16, &pin_conf);    
+    system_pinmux_pin_set_config(WTC6508_PINMUX_PAD1 >> 16, &pin_conf);        
 
     xTaskResumeAll();
 

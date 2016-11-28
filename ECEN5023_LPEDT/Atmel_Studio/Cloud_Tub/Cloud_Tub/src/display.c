@@ -121,3 +121,10 @@ void display_led_test_1Hz(void)
 
 #endif
 }
+
+void display_buzzer_beep(void)
+{
+
+
+
+}
