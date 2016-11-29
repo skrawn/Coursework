@@ -64,14 +64,16 @@ enum status_code wtc6508_read(uint8_t *status)
     pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
 
     // Take the display bus mutex
-    if (!xSemaphoreTake(display_mutex, portMAX_DELAY)) {
+    /*if (!xSemaphoreTake(display_mutex, portMAX_DELAY)) {
         // Timeout waiting for semaphore. Just return
         return STATUS_ERR_TIMEOUT;
-    }
+    }*/
+
+    taskENTER_CRITICAL();
 
     // Start and stop bits need to be manually sent. Switch the data and clock
     // lines to GPIOs. Timing is critical here, so suspend all other tasks
-    vTaskSuspendAll();
+    //vTaskSuspendAll();
 
     port_pin_set_config(WTC6508_CLK_GPIO, &clk_conf);
     port_pin_set_config(WTC6508_DI_GPIO, &di_conf);
@@ -103,10 +105,11 @@ enum status_code wtc6508_read(uint8_t *status)
     pin_conf.mux_position = WTC6508_PINMUX_PAD1 & 0xFFFF;
     system_pinmux_pin_set_config(WTC6508_PINMUX_PAD1 >> 16, &pin_conf);        
 
-    xTaskResumeAll();
+    //xTaskResumeAll();
 
     // Give the display mutex back
-    xSemaphoreGive(display_mutex);
+    //xSemaphoreGive(display_mutex);
+    taskEXIT_CRITICAL();
 
     return ret;
 }

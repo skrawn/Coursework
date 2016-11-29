@@ -7,7 +7,9 @@
 
 #include <stdio.h>
 
+#include "asf.h"
 #include "display.h"
+#include "main.h"
 #include "tm1640.h"
 #include "wtc6508.h"
 
@@ -17,6 +19,8 @@
 #define BUTTON_AIR_PUMP         0x04
 #define BUTTON_DOWN             0x02
 #define BUTTON_UP               0x01
+
+#define TOUCH_DETECT_DELAY      5
 
 #define DISPLAY_TEST_MODE       (1)
 
@@ -74,21 +78,30 @@ void display_init(void)
 
 void display_update_50Hz(void)
 {
+    static uint8_t touch_detect_delay = 0;
+
     uint8_t status = 0;
     uint8_t button_mask = 0x1;
     
-    // Check for user input
-    if (wtc6508_read(&status)) {
-        printf("Error! Unable to read button status\n");
-        status = 0;
-    }
+    if (!touch_detect_delay) {
+        // Check for user input
+        if (wtc6508_read(&status)) {
+            printf("Error! Unable to read button status\n");
+            status = 0;
+        }
 
-    // Handle user input
-    if (status) {
-        if (status & button_mask) {
+        // Handle user input
+        if (status) {
+            touch_detect_delay = TOUCH_DETECT_DELAY;
+            xSemaphoreGive(buzzer_sem);
 
+            if (status & button_mask) {
+
+            }
         }
     }
+    else
+        touch_detect_delay--;
 
 #if !DISPLAY_TEST_MODE    
     // Get temperature and error statuses

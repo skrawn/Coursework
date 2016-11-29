@@ -18,6 +18,8 @@
 
 #define TM1640_BAUD_RATE    15000
 
+#define TM1640_BIT_TIME     1   // us
+
 #ifndef XPLAINED
 #define TM1640_SERCOM       SERCOM4
 #define TM1640_IRQ          SERCOM4_IRQn
@@ -29,6 +31,7 @@
 //#define TM1640_PINMUX_PAD3  PINMUX_PB11D_SERCOM4_PAD3
 
 #define TM1640_DOUT_PIN     PIN_PB10
+#define TM1640_CLK_PIN      PIN_PA09
 
 #else
 #define TM1640_SERCOM       SERCOM1
@@ -44,6 +47,7 @@
 #define CTRL_CMD            0x80
 #define CTRL_CMD_DISP_ON    0x08
 #define CTRL_CMD_DISP_OFF   0x00
+#define CTRL_CMD_MASK       0xC0
 
 #define DATA_CMD_ADDR_INC   0x40
 #define DATA_CMD_FIXED      0x44
@@ -127,69 +131,91 @@ static void spi_cb_error(struct spi_module *const module)
 
 static inline void tm1640_start(void)
 {
-    // Switch the DO and CLK pins over to GPIOs
+    // Switch the CLK pin over to GPIO
     struct port_config gpio_conf;  
     gpio_conf.direction = PORT_PIN_DIR_OUTPUT;
     gpio_conf.input_pull = PORT_PIN_PULL_UP;
     gpio_conf.powersave = false;
+    
+    port_pin_set_config(TM1640_CLK_PIN, &gpio_conf);
 
-    struct system_pinmux_config do_conf;        
-    struct system_pinmux_config clk_conf;        
-    system_pinmux_get_config_defaults(&do_conf);
-    system_pinmux_get_config_defaults(&clk_conf);
-    do_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
-    do_conf.mux_position = TM1640_PINMUX_PAD2 & 0xFFFF;
-    clk_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
-    clk_conf.mux_position = WTC6508_PINMUX_PAD1 & 0xFFFF;
-
-    // Bring DOUT and CLK low for 1us each
-    port_pin_set_config(TM1640_DOUT_PIN, &gpio_conf);
-    port_pin_set_config(WTC6508_CLK_GPIO, &gpio_conf);
+    // Bring DOUT and CLK low for 1us each    
     port_pin_set_output_level(TM1640_DOUT_PIN, 0);
-    delay_us_nop(3);
-    port_pin_set_output_level(WTC6508_CLK_GPIO, 0);
-    //delay_us_nop(1);
-
-    // Restore peripheral control
-    system_pinmux_pin_set_config(WTC6508_PINMUX_PAD1 >> 16, &clk_conf);
-    system_pinmux_pin_set_config(TM1640_PINMUX_PAD2 >> 16, &do_conf);
+    delay_us(TM1640_BIT_TIME);
+    port_pin_set_output_level(TM1640_CLK_PIN, 0);
+    //delay_us(1);
 }
 
 static inline void tm1640_stop(void)
 {
-    // Switch the DO and CLK pins over to GPIOs
-    struct port_config gpio_conf;
-    gpio_conf.direction = PORT_PIN_DIR_OUTPUT;
-    gpio_conf.input_pull = PORT_PIN_PULL_UP;
-    gpio_conf.powersave = false;
-
-    struct system_pinmux_config do_conf;
-    struct system_pinmux_config clk_conf;
-    system_pinmux_get_config_defaults(&do_conf);
-    system_pinmux_get_config_defaults(&clk_conf);
-    do_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
-    do_conf.mux_position = TM1640_PINMUX_PAD2 & 0xFFFF;
-    clk_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
-    clk_conf.mux_position = WTC6508_PINMUX_PAD1 & 0xFFFF;
-
-    // Bring DOUT low for 1us, then bring DOUT and CLK high for 1us each
-    port_pin_set_config(TM1640_DOUT_PIN, &gpio_conf);
-    port_pin_set_config(WTC6508_CLK_GPIO, &gpio_conf);
+    // Switch the DO and CLK pins over to GPIOs    
+    struct system_pinmux_config clk_conf;        
+        
+    // Bring DOUT low for 1us, then bring DOUT and CLK high for 1us each    
     port_pin_set_output_level(TM1640_DOUT_PIN, 0);
-    delay_us_nop(3);
+    delay_us(TM1640_BIT_TIME);
     port_pin_set_output_level(WTC6508_CLK_GPIO, 1);
-    delay_us_nop(3);
+    delay_us(TM1640_BIT_TIME);
     port_pin_set_output_level(TM1640_DOUT_PIN, 1);
-    //delay_us_nop(1);
+    //delay_us(1);
 
     // Restore peripheral control
-    system_pinmux_pin_set_config(WTC6508_PINMUX_PAD1 >> 16, &clk_conf);
-    system_pinmux_pin_set_config(TM1640_PINMUX_PAD2 >> 16, &do_conf);
+    system_pinmux_get_config_defaults(&clk_conf);
+    clk_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+    clk_conf.mux_position = WTC6508_PINMUX_PAD1 & 0xFFFF;
+    system_pinmux_pin_set_config(WTC6508_PINMUX_PAD1 >> 16, &clk_conf);    
+}
+
+static inline void tm1640_write(uint8_t byte)
+{
+    uint8_t bit;
+
+    // TM1640 requires LSB to be transmitted first
+    for (bit = 0; bit < 8; bit++) {
+        if ((byte >> bit) & 0x01) 
+            port_pin_set_output_level(TM1640_DOUT_PIN, 1);    
+        else
+            port_pin_set_output_level(TM1640_DOUT_PIN, 0);    
+
+        delay_us(TM1640_BIT_TIME);
+        port_pin_set_output_level(TM1640_CLK_PIN, 1);
+        delay_us(TM1640_BIT_TIME);
+        port_pin_set_output_level(TM1640_CLK_PIN, 0);
+        delay_us(TM1640_BIT_TIME);
+    }
+}
+
+
+static enum status_code tm1640_write_cmd(uint8_t cmd, uint8_t data)
+{
+    taskENTER_CRITICAL();
+
+    // Take the display bus mutex
+    /*if (!xSemaphoreTake(display_mutex, portMAX_DELAY)) {
+        // Timeout waiting for semaphore. Just return
+        return STATUS_ERR_TIMEOUT;
+    }*/
+    
+    // Timing is critical here, so suspend all other tasks
+    //vTaskSuspendAll();
+    
+    tm1640_start();
+    tm1640_write((cmd & CTRL_CMD_MASK) | (data & ~CTRL_CMD_MASK));
+    tm1640_stop();
+
+    //xTaskResumeAll();
+
+    // Give the display mutex back
+    //xSemaphoreGive(display_mutex);
+
+    taskEXIT_CRITICAL();
+
+    return STATUS_OK;
 }
 
 void tm1640_init(void)
 {
-    struct spi_config config;
+    /*struct spi_config config;
 
     config.character_size = SPI_CHARACTER_SIZE_8BIT;
     config.data_order = SPI_DATA_ORDER_LSB;
@@ -224,14 +250,25 @@ void tm1640_init(void)
     NVIC_EnableIRQ(TM1640_IRQ);
     spi_enable(&tm1640_module);
 
-    tm1640_sem = xSemaphoreCreateBinary();
+    tm1640_sem = xSemaphoreCreateBinary(); */
 
-    // Turn on the display
-    uint8_t display_on = CTRL_CMD | CTRL_CMD_DISP_ON | BRIGHT_3;
-    tm1640_start();
-    spi_write(&tm1640_module, (uint16_t) display_on);
-    spi_write(&wtc6508_module, 0);
-    tm1640_stop();
+    struct port_config gpio_conf;
+    gpio_conf.direction = PORT_PIN_DIR_OUTPUT;
+    gpio_conf.input_pull = PORT_PIN_PULL_UP;
+    gpio_conf.powersave = false;
+    port_pin_set_config(TM1640_DOUT_PIN, &gpio_conf);
+    port_pin_set_output_level(TM1640_DOUT_PIN, 1);
+}
+
+
+enum status_code tm1640_display_on(uint8_t on)
+{
+    uint8_t display_on = CTRL_CMD_DISP_OFF;
+
+    if (on) 
+        display_on = CTRL_CMD_DISP_ON | BRIGHT_3; 
+
+    return tm1640_write_cmd(CTRL_CMD, display_on); 
 }
 
 enum status_code tm1640_set_display(tm1640_display_t *disp, tm1640_brightness_t brightness)

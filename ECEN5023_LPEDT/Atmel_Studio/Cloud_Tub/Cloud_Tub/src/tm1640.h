@@ -67,5 +67,6 @@ typedef enum {
 
 void tm1640_init(void);
 enum status_code tm1640_set_display(tm1640_display_t *disp, tm1640_brightness_t brightness);
+enum status_code tm1640_display_on(uint8_t on);
 
 #endif /* TM1640_H_ */

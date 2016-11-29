@@ -62,7 +62,7 @@ extern "C" {
 #define MAIN_100HZ_TASK_INTERVAL                        (100)
 
 #define BUZZER_FREQUENCY                                4000    // Hz
-#define BUZZER_ON_TIME                                  500     // ms
+#define BUZZER_ON_TIME                                  250     // ms
 
 #define MAIN_OTA_URL                                    "http://192.168.1.100/m2m_ota_3ao.bin"
 

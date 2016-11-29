@@ -327,9 +327,9 @@ static void task_3s(void *args)
 
         if (gWifiState == WifiStateConnected) {
             gu32publishDelay = gu32MsTicks;
-            adc_start_conversion(&adc_instance);            
+            //adc_start_conversion(&adc_instance);            
             temperature = 0;
-            adc_read(&adc_instance, &light);
+            //adc_read(&adc_instance, &light);
             sprintf(buf, "{\"device\":\"%s\", \"temperature\":\"%d.%d\", \"light\":\"%d\", \"led\":\"%s\"}",
             PubNubChannel,
             (int)temperature, (int)((int)(temperature * 100) % 100),
@@ -401,12 +401,16 @@ static void task_1s(void *args)
 
 }
 
+#include "tm1640.h"
 static void task_50Hz(void *args)
 {
     TickType_t lastTimer;
 
+    // Turn on the display
+    tm1640_display_on(1);
+
     lastTimer = xTaskGetTickCount();
-    TickType_t delay_time = pdMS_TO_TICKS(30);    
+    TickType_t delay_time = pdMS_TO_TICKS(30);        
 
     while(1) {
         vTaskDelayUntil(&lastTimer, delay_time);
@@ -443,7 +447,7 @@ static void task_Buzzer(void *args)
         tc_set_count_value(&buzz_module, 0);
         tc_enable(&buzz_module);
         lastTimer = xTaskGetTickCount();
-        vTaskDelayUntil(&lastTimer, pdMS_TO_TICKS(BUZZER_ON_TIME));
+        vTaskDelay(pdMS_TO_TICKS(BUZZER_ON_TIME));
         tc_disable(&buzz_module);
     }
 }
@@ -461,6 +465,14 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
     printf("Stack overflow!: %s\n\r", pcTaskName);
     while (1) {}
 }
+
+void vApplicationMallocFailedHook(void);
+void vApplicationMallocFailedHook(void)
+{
+    printf("Malloc failed!\n\r");
+    while(1) {}
+}
+
 
 /**
  * \brief Main application function.
@@ -539,9 +551,9 @@ int main(void)
 	m2m_wifi_connect((char *)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID),
 			MAIN_WLAN_AUTH, (char *)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);    
 
-    xTaskCreate(task_3s, "task_3s", configMINIMAL_STACK_SIZE + 256, 0, TASK_3S_PRIORITY, NULL);
-    xTaskCreate(task_1s, "task_1s", configMINIMAL_STACK_SIZE + 256, 0, TASK_1S_PRIORITY, NULL);    
-    xTaskCreate(task_50Hz, "task_50Hz", configMINIMAL_STACK_SIZE + 256, 0, TASK_50HZ_PRIORITY, NULL); 
+    xTaskCreate(task_3s, "task_3s", configMINIMAL_STACK_SIZE, 0, TASK_3S_PRIORITY, NULL);
+    xTaskCreate(task_1s, "task_1s", configMINIMAL_STACK_SIZE, 0, TASK_1S_PRIORITY, NULL);    
+    xTaskCreate(task_50Hz, "task_50Hz", configMINIMAL_STACK_SIZE, 0, TASK_50HZ_PRIORITY, NULL); 
     xTaskCreate(task_Buzzer, "task_Buzzer", 100, 0, tskIDLE_PRIORITY, NULL);
     display_mutex = xSemaphoreCreateMutex();
     buzzer_sem = xSemaphoreCreateBinary();
@@ -552,3 +564,14 @@ int main(void)
 
 	return 0;
 }
+
+void HardFault_Handler(void)
+{
+    __asm volatile
+    (
+        "mrs r0,psp         \n"
+        "ldr r1,[r0,#24]    \n"    // r1 will contain the address where the hard fault occurred
+    );    
+}
+
+
