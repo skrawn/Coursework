@@ -66,6 +66,8 @@ extern "C" {
 
 #define MAIN_OTA_URL                                    "http://192.168.1.100/m2m_ota_3ao.bin"
 
+#define N_NOP_PER_US            48
+
 SemaphoreHandle_t                                       display_mutex;
 SemaphoreHandle_t                                       buzzer_sem;
 

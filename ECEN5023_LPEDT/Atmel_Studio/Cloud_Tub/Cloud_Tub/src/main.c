@@ -396,7 +396,7 @@ static void task_1s(void *args)
             }
         }    
         
-       display_led_test_1Hz();
+       //display_led_test_1Hz();
     }
 
 }
@@ -502,42 +502,42 @@ int main(void)
 	memset((uint8_t *)&wifiInitParam, 0, sizeof(tstrWifiInitParam));
 	wifiInitParam.pfAppWifiCb = m2m_wifi_state;
 
-    //gu32connectStartTime = gu32MsTicks;
-	///* Initialize WINC1500 Wi-Fi driver with data and status callbacks. */
-	//s8InitStatus = m2m_wifi_init(&wifiInitParam);
-	//if (M2M_SUCCESS != s8InitStatus) {
-		//printf("main: m2m_wifi_init call error!\r\n");
-		//while (1) {
-		//}
-	//}
-//
-	///* Initialize Socket API. */
-	//socketInit();
-	//registerSocketCallback(m2m_tcp_socket_handler, socket_resolve_cb);
-//
-	///* Read MAC address to customize device name and AP name if enabled. */
-	//m2m_wifi_get_otp_mac_address(mac_addr, &u8IsMacAddrValid);
-	//if (!u8IsMacAddrValid) {
-		//printf("main: MAC address fuse bit has not been configured!\r\n");
-		//printf("main: Use m2m_wifi_set_mac_address() API to set MAC address via software.\r\n");
-		//while (1) {
-		//}
-	//}
-	//m2m_wifi_get_mac_address(mac_addr);
-	//set_dev_name_to_mac((uint8 *)PubNubChannel, mac_addr);
-	//printf("\r\n");
-//
-	///* Initialize PubNub API. */
-	//printf("main: PubNub configured with following settings:\r\n");
-	//printf("main:  - Publish key: \"%s\", Subscribe key: \"%s\", Channel: \"%s\".\r\n\r\n",
-	//PubNubPublishKey, PubNubSubscribeKey, PubNubChannel);
-	//pPubNubCfg = pubnub_get_ctx(0);
-	//pubnub_init(pPubNubCfg, PubNubPublishKey, PubNubSubscribeKey);
-//
-	///* Connect to AP using Wi-Fi settings from main.h. */
-	//printf("main: Wi-Fi connecting to AP using hardcoded credentials...\r\n");
-	//m2m_wifi_connect((char *)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID),
-			//MAIN_WLAN_AUTH, (char *)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);    
+    gu32connectStartTime = gu32MsTicks;
+	/* Initialize WINC1500 Wi-Fi driver with data and status callbacks. */
+	s8InitStatus = m2m_wifi_init(&wifiInitParam);
+	if (M2M_SUCCESS != s8InitStatus) {
+		printf("main: m2m_wifi_init call error!\r\n");
+		while (1) {
+		}
+	}
+
+	/* Initialize Socket API. */
+	socketInit();
+	registerSocketCallback(m2m_tcp_socket_handler, socket_resolve_cb);
+
+	/* Read MAC address to customize device name and AP name if enabled. */
+	m2m_wifi_get_otp_mac_address(mac_addr, &u8IsMacAddrValid);
+	if (!u8IsMacAddrValid) {
+		printf("main: MAC address fuse bit has not been configured!\r\n");
+		printf("main: Use m2m_wifi_set_mac_address() API to set MAC address via software.\r\n");
+		while (1) {
+		}
+	}
+	m2m_wifi_get_mac_address(mac_addr);
+	set_dev_name_to_mac((uint8 *)PubNubChannel, mac_addr);
+	printf("\r\n");
+
+	/* Initialize PubNub API. */
+	printf("main: PubNub configured with following settings:\r\n");
+	printf("main:  - Publish key: \"%s\", Subscribe key: \"%s\", Channel: \"%s\".\r\n\r\n",
+	PubNubPublishKey, PubNubSubscribeKey, PubNubChannel);
+	pPubNubCfg = pubnub_get_ctx(0);
+	pubnub_init(pPubNubCfg, PubNubPublishKey, PubNubSubscribeKey);
+
+	/* Connect to AP using Wi-Fi settings from main.h. */
+	printf("main: Wi-Fi connecting to AP using hardcoded credentials...\r\n");
+	m2m_wifi_connect((char *)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID),
+			MAIN_WLAN_AUTH, (char *)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);    
 
     xTaskCreate(task_3s, "task_3s", configMINIMAL_STACK_SIZE + 256, 0, TASK_3S_PRIORITY, NULL);
     xTaskCreate(task_1s, "task_1s", configMINIMAL_STACK_SIZE + 256, 0, TASK_1S_PRIORITY, NULL);    

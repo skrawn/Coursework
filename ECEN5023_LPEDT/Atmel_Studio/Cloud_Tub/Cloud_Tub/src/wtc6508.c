@@ -14,18 +14,10 @@
 
 #define WTC65808_SERCOM         SERCOM0
 #define WTC6508_IRQ             SERCOM0_IRQn
-#define WTC6508_PINMUX_PAD0     PINMUX_PA08C_SERCOM0_PAD0
-#define WTC6508_PINMUX_PAD1     PINMUX_PA09C_SERCOM0_PAD1
-#define WTC6508_PINMUX_PAD2     PINMUX_UNUSED
-#define WTC6508_PINMUX_PAD3     PINMUX_UNUSED
-
-#define WTC6508_CLK_GPIO        PIN_PA09
 
 #define WTC6508_BAUD            15000  // Hz
 
-#define N_NOP_PER_US            48
-
-#define DISPLAY_MUTEX_TIMEOUT     pdMS_TO_TICKS(5)
+#define DISPLAY_MUTEX_TIMEOUT   pdMS_TO_TICKS(5)
 
 // Must run at 2kHz to 20kHz with at least 15 ms between transactions
 
@@ -51,15 +43,6 @@ void wtc6508_init(void)
     }
 
     spi_enable(&wtc6508_module);
-}
-
-static void delay_us_nop(uint32_t us_delay)
-{
-    uint32_t delay_ticks = us_delay * N_NOP_PER_US;
-
-    while (delay_ticks-- > 0) {
-        nop();
-    }
 }
 
 enum status_code wtc6508_read(uint8_t *status)
@@ -95,7 +78,7 @@ enum status_code wtc6508_read(uint8_t *status)
 
     // Need a 10us - 22us clock pulse. Delay low for 6us
     port_pin_set_output_level(WTC6508_CLK_GPIO, 0);        
-    delay_us_nop(3);
+    delay_us(3);
     port_pin_set_output_level(WTC6508_CLK_GPIO, 1);        
 
     // Give pin control back to SPI module again 
@@ -111,7 +94,7 @@ enum status_code wtc6508_read(uint8_t *status)
 
     // Need a 10us - 22us clock pulse. Delay low for 6us
     port_pin_set_output_level(WTC6508_CLK_GPIO, 0);    
-    delay_us_nop(3);
+    delay_us(3);
     port_pin_set_output_level(WTC6508_CLK_GPIO, 1);    
 
     // Give pin control back to SPI module again

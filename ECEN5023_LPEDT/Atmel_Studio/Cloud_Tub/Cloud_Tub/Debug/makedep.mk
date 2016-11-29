@@ -2,6 +2,8 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
+src\ASF\common2\services\delay\sam0\cycle_counter.c
+
 src\ASF\sam0\drivers\tc\tc_interrupt.c
 
 src\ASF\sam0\drivers\tc\tc_sam_d_r\tc.c
@@ -13,8 +15,6 @@ src\thermal.c
 src\tm1640.c
 
 src\wtc6508.c
-
-src\ASF\common2\services\delay\sam0\systick_counter.c
 
 src\ASF\common\components\wifi\winc1500\bsp\source\nm_bsp_samd21.c
 

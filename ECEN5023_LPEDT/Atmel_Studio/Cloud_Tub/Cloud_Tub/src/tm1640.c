@@ -28,6 +28,8 @@
 #define TM1640_PINMUX_PAD3  PINMUX_UNUSED
 //#define TM1640_PINMUX_PAD3  PINMUX_PB11D_SERCOM4_PAD3
 
+#define TM1640_DOUT_PIN     PIN_PB10
+
 #else
 #define TM1640_SERCOM       SERCOM1
 #define TM1640_IRQ          SERCOM1_IRQn
@@ -38,6 +40,10 @@
 #define TM1640_PINMUX_PAD3
 
 #endif
+
+#define CTRL_CMD            0x80
+#define CTRL_CMD_DISP_ON    0x08
+#define CTRL_CMD_DISP_OFF   0x00
 
 #define DATA_CMD_ADDR_INC   0x40
 #define DATA_CMD_FIXED      0x44
@@ -119,6 +125,68 @@ static void spi_cb_error(struct spi_module *const module)
     while(1) {}
 }
 
+static inline void tm1640_start(void)
+{
+    // Switch the DO and CLK pins over to GPIOs
+    struct port_config gpio_conf;  
+    gpio_conf.direction = PORT_PIN_DIR_OUTPUT;
+    gpio_conf.input_pull = PORT_PIN_PULL_UP;
+    gpio_conf.powersave = false;
+
+    struct system_pinmux_config do_conf;        
+    struct system_pinmux_config clk_conf;        
+    system_pinmux_get_config_defaults(&do_conf);
+    system_pinmux_get_config_defaults(&clk_conf);
+    do_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+    do_conf.mux_position = TM1640_PINMUX_PAD2 & 0xFFFF;
+    clk_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+    clk_conf.mux_position = WTC6508_PINMUX_PAD1 & 0xFFFF;
+
+    // Bring DOUT and CLK low for 1us each
+    port_pin_set_config(TM1640_DOUT_PIN, &gpio_conf);
+    port_pin_set_config(WTC6508_CLK_GPIO, &gpio_conf);
+    port_pin_set_output_level(TM1640_DOUT_PIN, 0);
+    delay_us_nop(3);
+    port_pin_set_output_level(WTC6508_CLK_GPIO, 0);
+    //delay_us_nop(1);
+
+    // Restore peripheral control
+    system_pinmux_pin_set_config(WTC6508_PINMUX_PAD1 >> 16, &clk_conf);
+    system_pinmux_pin_set_config(TM1640_PINMUX_PAD2 >> 16, &do_conf);
+}
+
+static inline void tm1640_stop(void)
+{
+    // Switch the DO and CLK pins over to GPIOs
+    struct port_config gpio_conf;
+    gpio_conf.direction = PORT_PIN_DIR_OUTPUT;
+    gpio_conf.input_pull = PORT_PIN_PULL_UP;
+    gpio_conf.powersave = false;
+
+    struct system_pinmux_config do_conf;
+    struct system_pinmux_config clk_conf;
+    system_pinmux_get_config_defaults(&do_conf);
+    system_pinmux_get_config_defaults(&clk_conf);
+    do_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+    do_conf.mux_position = TM1640_PINMUX_PAD2 & 0xFFFF;
+    clk_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+    clk_conf.mux_position = WTC6508_PINMUX_PAD1 & 0xFFFF;
+
+    // Bring DOUT low for 1us, then bring DOUT and CLK high for 1us each
+    port_pin_set_config(TM1640_DOUT_PIN, &gpio_conf);
+    port_pin_set_config(WTC6508_CLK_GPIO, &gpio_conf);
+    port_pin_set_output_level(TM1640_DOUT_PIN, 0);
+    delay_us_nop(3);
+    port_pin_set_output_level(WTC6508_CLK_GPIO, 1);
+    delay_us_nop(3);
+    port_pin_set_output_level(TM1640_DOUT_PIN, 1);
+    //delay_us_nop(1);
+
+    // Restore peripheral control
+    system_pinmux_pin_set_config(WTC6508_PINMUX_PAD1 >> 16, &clk_conf);
+    system_pinmux_pin_set_config(TM1640_PINMUX_PAD2 >> 16, &do_conf);
+}
+
 void tm1640_init(void)
 {
     struct spi_config config;
@@ -130,8 +198,7 @@ void tm1640_init(void)
     config.select_slave_low_detect_enable = false;
 #ifndef XPLAINED
     config.mux_setting = SPI_SIGNAL_MUX_SETTING_E;    
-#else
-    //config.mux_setting = SPI_SIGNAL_MUX_SETTING_O;
+#else    
     config.mux_setting = SPI_SIGNAL_MUX_SETTING_E;
 #endif
     config.receiver_enable = false;
@@ -158,6 +225,13 @@ void tm1640_init(void)
     spi_enable(&tm1640_module);
 
     tm1640_sem = xSemaphoreCreateBinary();
+
+    // Turn on the display
+    uint8_t display_on = CTRL_CMD | CTRL_CMD_DISP_ON | BRIGHT_3;
+    tm1640_start();
+    spi_write(&tm1640_module, (uint16_t) display_on);
+    spi_write(&wtc6508_module, 0);
+    tm1640_stop();
 }
 
 enum status_code tm1640_set_display(tm1640_display_t *disp, tm1640_brightness_t brightness)
