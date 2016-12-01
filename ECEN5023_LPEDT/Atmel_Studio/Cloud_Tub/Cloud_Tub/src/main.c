@@ -396,13 +396,13 @@ static void task_1s(void *args)
             }
         }    
         
-       //display_led_test_1Hz();
+       display_led_test_1Hz();
     }
 
 }
 
 #include "tm1640.h"
-static void task_50Hz(void *args)
+static void task_33Hz(void *args)
 {
     TickType_t lastTimer;
 
@@ -410,12 +410,12 @@ static void task_50Hz(void *args)
     tm1640_display_on(1);
 
     lastTimer = xTaskGetTickCount();
-    TickType_t delay_time = pdMS_TO_TICKS(30);        
+    TickType_t delay_time = pdMS_TO_TICKS(MAIN_33HZ_TASK_INTERVAL);        
 
     while(1) {
         vTaskDelayUntil(&lastTimer, delay_time);
 
-        display_update_50Hz();
+        display_update_33Hz();
 
     }
 }
@@ -454,9 +454,9 @@ static void task_Buzzer(void *args)
 
 void vApplicationIdleHook(void);
 void vApplicationIdleHook(void)
-{   
-   // NOTE: NO BLOCKING FUNCTIONS MAY GO IN THE IDLE HOOK
+{      
    m2m_wifi_handle_events(NULL);   
+   display_idle();
 }
 
 void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName );
@@ -553,7 +553,7 @@ int main(void)
 
     xTaskCreate(task_3s, "task_3s", configMINIMAL_STACK_SIZE, 0, TASK_3S_PRIORITY, NULL);
     xTaskCreate(task_1s, "task_1s", configMINIMAL_STACK_SIZE, 0, TASK_1S_PRIORITY, NULL);    
-    xTaskCreate(task_50Hz, "task_50Hz", configMINIMAL_STACK_SIZE, 0, TASK_50HZ_PRIORITY, NULL); 
+    xTaskCreate(task_33Hz, "task_33Hz", configMINIMAL_STACK_SIZE, 0, TASK_50HZ_PRIORITY, NULL); 
     xTaskCreate(task_Buzzer, "task_Buzzer", 100, 0, tskIDLE_PRIORITY, NULL);
     display_mutex = xSemaphoreCreateMutex();
     buzzer_sem = xSemaphoreCreateBinary();

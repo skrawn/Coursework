@@ -64,10 +64,10 @@ enum status_code wtc6508_read(uint8_t *status)
     pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
 
     // Take the display bus mutex
-    /*if (!xSemaphoreTake(display_mutex, portMAX_DELAY)) {
+    if (!xSemaphoreTake(display_mutex, portMAX_DELAY)) {
         // Timeout waiting for semaphore. Just return
         return STATUS_ERR_TIMEOUT;
-    }*/
+    }
 
     taskENTER_CRITICAL();
 
@@ -77,6 +77,14 @@ enum status_code wtc6508_read(uint8_t *status)
 
     port_pin_set_config(WTC6508_CLK_GPIO, &clk_conf);
     port_pin_set_config(WTC6508_DI_GPIO, &di_conf);
+
+    // If the DI pin is already low, then the bus is still busy from the last TM1640 transaction.
+    // Skip the read.
+    if (!port_pin_get_input_level(WTC6508_DI_GPIO)) {
+        xSemaphoreGive(display_mutex);
+        taskEXIT_CRITICAL();
+        return STATUS_BUSY;
+    }
 
     // Need a 10us - 22us clock pulse. Delay low for 6us
     port_pin_set_output_level(WTC6508_CLK_GPIO, 0);        
@@ -108,7 +116,7 @@ enum status_code wtc6508_read(uint8_t *status)
     //xTaskResumeAll();
 
     // Give the display mutex back
-    //xSemaphoreGive(display_mutex);
+    xSemaphoreGive(display_mutex);
     taskEXIT_CRITICAL();
 
     return ret;

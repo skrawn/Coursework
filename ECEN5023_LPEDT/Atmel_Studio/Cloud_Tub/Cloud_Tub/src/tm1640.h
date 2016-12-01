@@ -26,9 +26,10 @@ typedef enum {
     SEG_e = 0x10,
     SEG_f = 0x20,
     SEG_g = 0x40,
+    SEG_DP = 0x80,
 
     // Numbers
-    SEG_0 = 0x1F,
+    SEG_0 = 0x3F,
     SEG_1 = 0x06,
     SEG_2 = 0x5B,
     SEG_3 = 0x4F,
@@ -66,7 +67,7 @@ typedef enum {
 #define DP_MASK     0x80   
 
 void tm1640_init(void);
-enum status_code tm1640_set_display(tm1640_display_t *disp, tm1640_brightness_t brightness);
+enum status_code tm1640_set_display(uint8_t *disp, uint8_t length, tm1640_brightness_t brightness);
 enum status_code tm1640_display_on(uint8_t on);
 
 #endif /* TM1640_H_ */

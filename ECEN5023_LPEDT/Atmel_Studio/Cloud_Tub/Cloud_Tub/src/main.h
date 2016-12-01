@@ -59,7 +59,7 @@ extern "C" {
 #define MAIN_PUBNUB_CHANNEL						        "WINC1500_00:00" /**< Do not change - last digits will be updated with MAC address. */
 #define MAIN_PUBNUB_PUBLISH_INTERVAL                    (3000)
 #define MAIN_PUBNUB_SUBSCRIBE_INTERVAL                  (1000)
-#define MAIN_100HZ_TASK_INTERVAL                        (100)
+#define MAIN_33HZ_TASK_INTERVAL                         (30)
 
 #define BUZZER_FREQUENCY                                4000    // Hz
 #define BUZZER_ON_TIME                                  250     // ms
@@ -70,6 +70,16 @@ extern "C" {
 
 SemaphoreHandle_t                                       display_mutex;
 SemaphoreHandle_t                                       buzzer_sem;
+
+static inline uint8_t fahrenheit_to_celsius(uint8_t deg_f)
+{
+    return (deg_f - 32) * 5 / 9;
+}
+
+static inline uint8_t celsius_to_fahrenheit(uint8_t deg_c)
+{
+    return (deg_c * 9 / 5) + 32;
+}
 
 #ifdef __cplusplus
 }
