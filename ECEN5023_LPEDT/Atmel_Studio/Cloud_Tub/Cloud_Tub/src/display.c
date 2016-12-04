@@ -31,7 +31,7 @@
 #define DISPLAY_LOCK_TIME       10000   // 5 minutes in 30ms increments
 // Unlock time essentially 3 seconds, but needs to take into account the ~150ms
 // delay between touch detection. 
-#define DISPLAY_UNLOCK_TIME     20     // 3 seconds in 150ms increments
+#define DISPLAY_UNLOCK_TIME     16     // 3 seconds in 180ms increments
 
 // When making a setting change, the display will blink for 5 seconds
 #define DISPLAY_BLINK_TIME      5
@@ -78,25 +78,29 @@ SemaphoreHandle_t display_update_mutex;
 
 static void display_update(bool update)
 {
-    if (!xSemaphoreTake(display_update_mutex, portMAX_DELAY)) {
+    taskENTER_CRITICAL();
+    /*if (!xSemaphoreTake(display_update_mutex, portMAX_DELAY)) {
         return;
-    }
+    }*/
     display_state.display_update = update;
-    xSemaphoreGive(display_update_mutex);
+    display_state.display_blink = false;
+    display_state.display_blink_timer = 0;
+    //xSemaphoreGive(display_update_mutex);
+    taskEXIT_CRITICAL();
 }
 
-static void display_number_to_seg(uint8_t num, tm1640_seg_t *chars)
+static void display_number_to_seg(uint8_t num, uint8_t *chars)
 {
     if (num / 100)
         chars[0] = num_to_seg[num/100];
+    else
+        chars[0] = SEG_OFF;
 
-    num -= (num / 100) * 100;
-    if (num / 10)
-        chars[1] = num_to_seg[num / 10];
+    num -= (num / 100) * 100;    
+    chars[1] = num_to_seg[num / 10];
 
-    num -= (num / 10) * 10;
-    if (num)
-        chars[2] = num_to_seg[num];
+    num -= (num / 10) * 10;    
+    chars[2] = num_to_seg[num];
 }
 
 static void display_button_lock_unlock_handler(void)
@@ -125,11 +129,34 @@ static void display_button_water_pump_handler(void)
 {
     if (!display_state.display_locked) {
         xSemaphoreGive(buzzer_sem);
-        display_state.display_lock_timer = 0;
-        display_state.pump_on = true;
-        display_update(true);
+        display_state.display_lock_timer = 0;    
+        
+        // Water and air pump cannot run at the same time
+        if (display_state.bubbles_on) {
+            display_state.bubbles_on = false;
 
-        // TODO: close pump relay
+            // TODO: open air pump relay
+        }
+        
+        if (display_state.pump_on) {
+            display_state.pump_on = false;
+
+            // Pump is already on. Open pump and heater relays (if heater is on)
+            if (display_state.heater_on) {
+                display_state.heater_on = false;
+
+                // TODO: open heater relay
+            }
+
+        }
+        else {
+            display_state.pump_on = true;
+
+            // TODO: close pump relay
+
+        }
+                
+        display_update(true);
     }
 }
 
@@ -139,6 +166,7 @@ static void display_cf_handler(void)
         xSemaphoreGive(buzzer_sem);
         display_state.display_lock_timer = 0;        
         display_state.degrees_F ^= 1;
+        thermal_change_scale(display_state.degrees_F);
         display_update(true);        
     }
 }
@@ -148,16 +176,25 @@ static void display_button_heater_handler(void)
     if (!display_state.display_locked) {
         xSemaphoreGive(buzzer_sem);
         display_state.display_lock_timer = 0;
-        display_state.heater_on ^= 1;
-        display_update(true);
+        display_state.heater_on ^= 1;        
+
+        if (display_state.bubbles_on) {
+            display_state.bubbles_on = false;
+
+            // TODO: Open air pump relay
+        }
 
         // Pump must be running before turning on heater
-        if (display_state.pump_on) {            
+        if (!display_state.pump_on) {            
+            display_state.pump_on = true;
 
             // TODO: Close pump relay
+            
         }
 
         // TODO: close heater relays
+
+        display_update(true);
     }
 }
 
@@ -165,15 +202,21 @@ static void display_button_air_pump_handler(void)
 {
     if (!display_state.display_locked) {
         // Water pump/heater cannot run while air pump is on
-        if (display_state.pump_on) {            
+        display_state.bubbles_on ^= 1;
+
+        if (display_state.pump_on && display_state.bubbles_on) {            
             // TODO: Turn off heater and pump
 
+            display_state.pump_on = false;
+            display_state.heater_on = false;
         }   
         
         xSemaphoreGive(buzzer_sem);
         display_state.display_lock_timer = 0;     
-
+        
         // TODO: Turn on air pump
+
+        display_update(true);
     }
 }
 
@@ -188,7 +231,9 @@ static void display_button_down_handler(void)
         current_temp = thermal_get_temperature();
         if (thermal_set_temperature(current_temp-1) == STATUS_OK) {
             xSemaphoreGive(buzzer_sem);
+            display_update(false);
             display_state.display_blink = true;
+            display_state.display_blink_timer = 0;            
         }
     }
 }
@@ -204,7 +249,9 @@ static void display_button_up_handler(void)
         current_temp = thermal_get_temperature();
         if (thermal_set_temperature(current_temp+1) == STATUS_OK) {
             xSemaphoreGive(buzzer_sem);            
+            display_update(false);
             display_state.display_blink = true;
+            display_state.display_blink_timer = 0;            
         }
     }
 }
@@ -255,6 +302,7 @@ static const display_handler_t display_handlers[] = {
     { BUTTON_AIR_PUMP,      display_button_air_pump_handler },
     { BUTTON_DOWN,          display_button_down_handler },
     { BUTTON_UP,            display_button_up_handler },
+    {BUTTON_TIMER,          display_timer_handler },
     { 0, NULL },
 };
 
@@ -263,21 +311,15 @@ void display_init(void)
     wtc6508_init();   
     tm1640_init();
 
+    memset(&display_state, 0, sizeof(display_state));
+
     // Set the initial display state
     display_state.char_display[0] = SEG_0;
     display_state.char_display[1] = SEG_0;
     display_state.char_display[2] = SEG_0;
 
-    display_state.degrees_F = true;
-    display_state.display_locked = false;
-    display_state.display_blink = false;
-    display_state.display_lock_timer = 0;
-    display_state.display_update = true;
-    display_state.timer_set = false;
-    display_state.heater_on = false;
-    display_state.pump_on = false;
-    display_state.bubbles_on = false;
-    display_state.timer_on = false;
+    display_state.degrees_F = true;        
+    display_state.display_update = true;    
 
     display_update_mutex = xSemaphoreCreateMutex();
 }
@@ -302,8 +344,11 @@ void display_update_1Hz(void)
     uint8_t disp_conf[DISPLAY_CONFIG_LENGTH] = {0};
     uint8_t temperature;
 
-    if (!display_state.display_update) {
+    //if (!display_state.display_update) {  
+    {   
         if (display_state.display_blink) {
+
+            display_set_display(disp_conf);
             // Only the character display should blink        
             if (blink_state) {
                 disp_conf[0] = SEG_OFF;
@@ -312,11 +357,17 @@ void display_update_1Hz(void)
             }
             else {
                 temperature = thermal_get_temperature();
-                display_number_to_seg(temperature, display_state.char_display);
+                display_number_to_seg(temperature, disp_conf);
             }
 
-            display_set_display(disp_conf);
-            blink_state ^= 1;
+            if (display_state.display_blink_timer++ >= DISPLAY_BLINK_TIME) {
+                display_state.display_blink_timer = 0;
+                display_state.display_blink = 0;
+                blink_state = false;
+            }
+            else
+                blink_state ^= 1;
+                        
             tm1640_set_display(disp_conf, DISPLAY_CONFIG_LENGTH, BRIGHT_MAX);
         }
         else {
@@ -324,9 +375,14 @@ void display_update_1Hz(void)
             temperature = thermal_get_water_temp();
             if (temperature != 0xFF) {
                 // 255 represents an invalid/un-updated temperature
-                display_number_to_seg(temperature, display_state.char_display);
-
+                display_number_to_seg(temperature, (uint8_t *) &display_state.char_display[0]);
             }        
+            else {
+                display_state.char_display[0] = SEG_0;
+                display_state.char_display[1] = SEG_0;
+                display_state.char_display[2] = SEG_0;
+            }
+            display_update(true);
         }    
     }
 }
@@ -335,8 +391,7 @@ void display_update_33Hz(void)
 {
     static uint8_t touch_detect_delay = 0;
 
-    uint8_t status = 0;
-    uint8_t button_mask = 0x1;
+    uint8_t status = 0;    
     uint8_t i = 0;
     
     if (!touch_detect_delay) {

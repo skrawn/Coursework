@@ -61,24 +61,26 @@ extern "C" {
 #define MAIN_PUBNUB_SUBSCRIBE_INTERVAL                  (1000)
 #define MAIN_33HZ_TASK_INTERVAL                         (30)
 
-#define BUZZER_FREQUENCY                                4000    // Hz
+#define BUZZER_FREQUENCY                                3000    // Hz
 #define BUZZER_ON_TIME                                  250     // ms
 
 #define MAIN_OTA_URL                                    "http://192.168.1.100/m2m_ota_3ao.bin"
-
-#define N_NOP_PER_US            48
 
 SemaphoreHandle_t                                       display_mutex;
 SemaphoreHandle_t                                       buzzer_sem;
 
 static inline uint8_t fahrenheit_to_celsius(uint8_t deg_f)
 {
-    return (deg_f - 32) * 5 / 9;
+    uint16_t convert = (uint16_t) deg_f;
+    convert = (convert - 32) * 5 / 9;
+    return (uint8_t) convert;
 }
 
 static inline uint8_t celsius_to_fahrenheit(uint8_t deg_c)
 {
-    return (deg_c * 9 / 5) + 32;
+    uint16_t convert = (uint16_t) deg_c;
+    convert = (convert * 9 / 5) + 32;
+    return (uint8_t) convert;
 }
 
 #ifdef __cplusplus

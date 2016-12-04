@@ -11,6 +11,7 @@
 
 void display_init(void);
 void display_idle(void);
+void display_update_1Hz(void);
 void display_update_33Hz(void);
 void display_led_test_1Hz(void);
 

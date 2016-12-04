@@ -17,8 +17,10 @@
 #define MIN_SETPOINT_TEMP_C       20  // C   
 #define MAX_SETPOINT_TEMP_C       40  // C
 
+#define WATER_TEMP_INVALID        0xFF
+
 uint8_t temp_set_point = 80;    // F
-uint8_t water_temp = 255;
+uint8_t water_temp = WATER_TEMP_INVALID;
 
 bool temp_valid = false;
 bool degrees_F  = true;
@@ -34,10 +36,19 @@ void thermal_init(void)
 void thermal_change_scale(bool new_scale)
 {
     if (degrees_F != new_scale) {
-        if (new_scale) 
-            water_temp = celsius_to_fahrenheit(water_temp);
-        else
-            water_temp = fahrenheit_to_celsius(water_temp);
+        degrees_F = new_scale;
+        if (new_scale) {
+            if (water_temp != WATER_TEMP_INVALID) 
+                water_temp = celsius_to_fahrenheit(water_temp);       
+                
+            temp_set_point = celsius_to_fahrenheit(temp_set_point);
+        }
+        else {
+            if (water_temp != WATER_TEMP_INVALID)
+                water_temp = fahrenheit_to_celsius(water_temp);
+
+            temp_set_point = fahrenheit_to_celsius(temp_set_point);
+        }
     }
 
 }

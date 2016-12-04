@@ -287,31 +287,6 @@ static void set_dev_name_to_mac(uint8 *name, uint8 *mac_addr)
 	}
 }
 
-static void configure_button_led(void)
-{
-	struct port_config pin_conf;
-	port_get_config_defaults(&pin_conf);
-	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(LED0_PIN, &pin_conf);
-	port_pin_set_output_level(LED0_PIN, LED0_INACTIVE);
-}
-
-static void configure_light_sensor(void)
-{
-	struct adc_config config_adc;
-	adc_get_config_defaults(&config_adc);
-
-	config_adc.gain_factor = ADC_GAIN_FACTOR_DIV2;
-	config_adc.clock_prescaler = ADC_CLOCK_PRESCALER_DIV512;
-	config_adc.reference = ADC_REFERENCE_INTVCC1;
-	config_adc.positive_input = ADC_POSITIVE_INPUT_PIN0;
-	config_adc.resolution = ADC_RESOLUTION_12BIT;
-	config_adc.clock_source = GCLK_GENERATOR_0;
-	adc_init(&adc_instance, ADC, &config_adc);
-	adc_enable(&adc_instance);
-}
-
-
 static void task_3s(void *args)
 {
     double temperature = 0;
@@ -331,10 +306,10 @@ static void task_3s(void *args)
             temperature = 0;
             //adc_read(&adc_instance, &light);
             sprintf(buf, "{\"device\":\"%s\", \"temperature\":\"%d.%d\", \"light\":\"%d\", \"led\":\"%s\"}",
-            PubNubChannel,
-            (int)temperature, (int)((int)(temperature * 100) % 100),
-            (((4096 - light) * 100) / 4096),
-            port_pin_get_output_level(LED0_PIN) ? "0" : "1");
+                PubNubChannel,
+                (int)temperature, (int)((int)(temperature * 100) % 100),
+                (((4096 - light) * 100) / 4096),
+                port_pin_get_output_level(LED0_PIN) ? "0" : "1");
             printf("main: publish event: {%s}\r\n", buf);
             close(pPubNubCfg->tcp_socket);
             pPubNubCfg->state = PS_IDLE;
@@ -349,7 +324,7 @@ static void task_1s(void *args)
     TickType_t lastTimer;
 
     lastTimer = xTaskGetTickCount();
-    TickType_t delay_time = pdMS_TO_TICKS(1000);
+    TickType_t delay_time = pdMS_TO_TICKS(500);
 
     while (1) {
         vTaskDelayUntil(&lastTimer, delay_time);
@@ -396,7 +371,8 @@ static void task_1s(void *args)
             }
         }    
         
-       display_led_test_1Hz();
+       //display_led_test_1Hz();
+       display_update_1Hz();
     }
 
 }
