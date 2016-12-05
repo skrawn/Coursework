@@ -106,6 +106,7 @@
 #include "PubNub.h"
 
 #include "display.h"
+#include "thermal.h"
 
 #define STRING_EOL    "\r\n"
 #define STRING_HEADER "-- SAMW25 PubNub example --"STRING_EOL	\
@@ -315,7 +316,9 @@ static void task_3s(void *args)
             pPubNubCfg->state = PS_IDLE;
             pPubNubCfg->last_result = PNR_IO_ERROR;
             pubnub_publish(pPubNubCfg, PubNubChannel, buf);            
-        }        
+        }       
+        
+        thermal_3s();
     }
 }
 
@@ -399,9 +402,7 @@ static void task_33Hz(void *args)
 static void task_Buzzer(void *args)
 {
     struct tc_module buzz_module;
-    struct tc_config buzz_config;
-
-    TickType_t lastTimer;
+    struct tc_config buzz_config;    
 
     tc_get_config_defaults(&buzz_config);
     buzz_config.clock_source = GCLK_GENERATOR_5; // ~500kHz
@@ -421,8 +422,7 @@ static void task_Buzzer(void *args)
         // When another task gives up the semaphore, the buzzer will run 
         // for the set delay time.
         tc_set_count_value(&buzz_module, 0);
-        tc_enable(&buzz_module);
-        lastTimer = xTaskGetTickCount();
+        tc_enable(&buzz_module);        
         vTaskDelay(pdMS_TO_TICKS(BUZZER_ON_TIME));
         tc_disable(&buzz_module);
     }
@@ -478,10 +478,7 @@ int main(void)
 	delay_init();	
 
     /* Initialize the display */
-    display_init();
-
-	/* Initialize the Button/LED. */
-	//configure_button_led();
+    display_init();	
 
 	/* Initialize the Wi-Fi BSP. */
 	nm_bsp_init();
@@ -526,6 +523,8 @@ int main(void)
 	printf("main: Wi-Fi connecting to AP using hardcoded credentials...\r\n");
 	m2m_wifi_connect((char *)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID),
 			MAIN_WLAN_AUTH, (char *)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);    
+
+    thermal_init();
 
     xTaskCreate(task_3s, "task_3s", configMINIMAL_STACK_SIZE, 0, TASK_3S_PRIORITY, NULL);
     xTaskCreate(task_1s, "task_1s", configMINIMAL_STACK_SIZE, 0, TASK_1S_PRIORITY, NULL);    

@@ -38,6 +38,8 @@
 
 #define DISPLAY_CONFIG_LENGTH   5
 
+#define WATER_TEMP_HYST         1
+
 // Lights controlled by grid 3
 #define LED_PUMP            SEG_b
 #define LED_HEATON          SEG_c
@@ -79,13 +81,11 @@ SemaphoreHandle_t display_update_mutex;
 static void display_update(bool update)
 {
     taskENTER_CRITICAL();
-    /*if (!xSemaphoreTake(display_update_mutex, portMAX_DELAY)) {
-        return;
-    }*/
+    
     display_state.display_update = update;
     display_state.display_blink = false;
     display_state.display_blink_timer = 0;
-    //xSemaphoreGive(display_update_mutex);
+    
     taskEXIT_CRITICAL();
 }
 
@@ -135,25 +135,23 @@ static void display_button_water_pump_handler(void)
         if (display_state.bubbles_on) {
             display_state.bubbles_on = false;
 
-            // TODO: open air pump relay
+            thermal_turn_on_air_pump(false);
         }
         
         if (display_state.pump_on) {
             display_state.pump_on = false;
+            thermal_turn_on_water_pump(false);
 
             // Pump is already on. Open pump and heater relays (if heater is on)
             if (display_state.heater_on) {
                 display_state.heater_on = false;
-
-                // TODO: open heater relay
-            }
-
+                thermal_turn_on_heater(false);
+            }                        
         }
         else {
             display_state.pump_on = true;
 
-            // TODO: close pump relay
-
+            thermal_turn_on_water_pump(true);
         }
                 
         display_update(true);
@@ -181,18 +179,17 @@ static void display_button_heater_handler(void)
         if (display_state.bubbles_on) {
             display_state.bubbles_on = false;
 
-            // TODO: Open air pump relay
+            thermal_turn_on_air_pump(false);
         }
 
         // Pump must be running before turning on heater
         if (!display_state.pump_on) {            
             display_state.pump_on = true;
 
-            // TODO: Close pump relay
-            
+            thermal_turn_on_water_pump(true);            
         }
 
-        // TODO: close heater relays
+        thermal_turn_on_heater(display_state.heater_on);
 
         display_update(true);
     }
@@ -204,17 +201,18 @@ static void display_button_air_pump_handler(void)
         // Water pump/heater cannot run while air pump is on
         display_state.bubbles_on ^= 1;
 
-        if (display_state.pump_on && display_state.bubbles_on) {            
-            // TODO: Turn off heater and pump
-
+        if (display_state.pump_on && display_state.bubbles_on) {                        
             display_state.pump_on = false;
             display_state.heater_on = false;
+
+            thermal_turn_on_heater(false);
+            thermal_turn_on_water_pump(false);
         }   
         
+        thermal_turn_on_air_pump(display_state.bubbles_on);
+
         xSemaphoreGive(buzzer_sem);
-        display_state.display_lock_timer = 0;     
-        
-        // TODO: Turn on air pump
+        display_state.display_lock_timer = 0;                   
 
         display_update(true);
     }
@@ -344,46 +342,60 @@ void display_update_1Hz(void)
     uint8_t disp_conf[DISPLAY_CONFIG_LENGTH] = {0};
     uint8_t temperature;
 
-    //if (!display_state.display_update) {  
-    {   
-        if (display_state.display_blink) {
+    if (display_state.display_blink) {
 
-            display_set_display(disp_conf);
-            // Only the character display should blink        
-            if (blink_state) {
-                disp_conf[0] = SEG_OFF;
-                disp_conf[1] = SEG_OFF;
-                disp_conf[2] = SEG_OFF;
-            }
-            else {
-                temperature = thermal_get_temperature();
-                display_number_to_seg(temperature, disp_conf);
-            }
-
-            if (display_state.display_blink_timer++ >= DISPLAY_BLINK_TIME) {
-                display_state.display_blink_timer = 0;
-                display_state.display_blink = 0;
-                blink_state = false;
-            }
-            else
-                blink_state ^= 1;
-                        
-            tm1640_set_display(disp_conf, DISPLAY_CONFIG_LENGTH, BRIGHT_MAX);
+        display_set_display(disp_conf);
+        // Only the character display should blink        
+        if (blink_state) {
+            disp_conf[0] = SEG_OFF;
+            disp_conf[1] = SEG_OFF;
+            disp_conf[2] = SEG_OFF;
         }
         else {
-            // Check to see if the temperature changed
-            temperature = thermal_get_water_temp();
-            if (temperature != 0xFF) {
-                // 255 represents an invalid/un-updated temperature
-                display_number_to_seg(temperature, (uint8_t *) &display_state.char_display[0]);
-            }        
-            else {
-                display_state.char_display[0] = SEG_0;
-                display_state.char_display[1] = SEG_0;
-                display_state.char_display[2] = SEG_0;
-            }
+            temperature = thermal_get_temperature();
+            display_number_to_seg(temperature, disp_conf);
+        }
+
+        if (display_state.display_blink_timer++ >= DISPLAY_BLINK_TIME) {
+            display_state.display_blink_timer = 0;
+            display_state.display_blink = 0;
+            blink_state = false;
+        }
+        else
+            blink_state ^= 1;
+                        
+        tm1640_set_display(disp_conf, DISPLAY_CONFIG_LENGTH, BRIGHT_MAX);
+    }
+    else {
+        // Check to see if the temperature changed
+        temperature = thermal_get_water_temp();
+        if (temperature != 0xFF) {
+            // 255 represents an invalid/un-updated temperature
+            display_number_to_seg(temperature, (uint8_t *) &display_state.char_display[0]);
+        }        
+        else {
+            display_state.char_display[0] = SEG_0;
+            display_state.char_display[1] = SEG_0;
+            display_state.char_display[2] = SEG_0;
+        }
+        display_update(true);
+    }    
+
+    if (display_state.heater_on) {
+        if (thermal_get_water_temp() >= (thermal_get_temperature() + WATER_TEMP_HYST)) {
+            display_state.heater_on = false;            
+            thermal_turn_on_heater(false);
             display_update(true);
-        }    
+        }
+    }
+    else {
+        if (display_state.pump_on) {
+            if (thermal_get_water_temp() < (thermal_get_temperature() - WATER_TEMP_HYST)) {
+                display_state.heater_on = true;                
+                thermal_turn_on_heater(true);
+                display_update(true);
+            }
+        }
     }
 }
 

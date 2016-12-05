@@ -17,23 +17,19 @@ void assert_triggered( const char * file, uint32_t line );
 #define configUSE_TICK_HOOK                     0
 #define configPRIO_BITS                         2
 #define configCPU_CLOCK_HZ                      ( 48000000 )
-#define configTICK_RATE_HZ                      ( ( TickType_t ) 1000 )
+#define configTICK_RATE_HZ                      ( ( TickType_t ) 100 )
 #define configMAX_PRIORITIES                    ( ( uint32_t ) 5 )
 #define configMINIMAL_STACK_SIZE                ( ( uint16_t ) 512 )
-//#define configMINIMAL_STACK_SIZE                ( ( uint16_t ) 100 )
 /* configTOTAL_HEAP_SIZE is not used when heap_3.c is used. */
-//#define configTOTAL_HEAP_SIZE                   ( ( size_t ) ( 15000 ) )
 #define configTOTAL_HEAP_SIZE                   ( ( size_t ) ( 15360 ) )
 #define configMAX_TASK_NAME_LEN                 ( 12 )
 #define configUSE_TRACE_FACILITY                0
 #define configUSE_16_BIT_TICKS                  0
-//#define configIDLE_SHOULD_YIELD                 1
 #define configIDLE_SHOULD_YIELD                 0
 #define configUSE_MUTEXES                       1
 #define configQUEUE_REGISTRY_SIZE               5
 #define configCHECK_FOR_STACK_OVERFLOW          1
 #define configUSE_RECURSIVE_MUTEXES             0
-//#define configUSE_MALLOC_FAILED_HOOK            0
 #define configUSE_MALLOC_FAILED_HOOK            1
 #define configUSE_COUNTING_SEMAPHORES           0
 #define configUSE_QUEUE_SETS                    1
