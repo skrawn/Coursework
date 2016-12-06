@@ -4,6 +4,10 @@
 
 src\ASF\common2\services\delay\sam0\cycle_counter.c
 
+src\jsmn_master\jsmn.c
+
+src\wifi.c
+
 src\ASF\sam0\drivers\tc\tc_interrupt.c
 
 src\ASF\sam0\drivers\tc\tc_sam_d_r\tc.c

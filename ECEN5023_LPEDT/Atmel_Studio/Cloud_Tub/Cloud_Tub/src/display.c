@@ -12,7 +12,6 @@
 #include "display.h"
 #include "main.h"
 #include "thermal.h"
-#include "tm1640.h"
 #include "wtc6508.h"
 
 #define BUTTON_LOCK_UNLOCK      0x01
@@ -29,9 +28,9 @@
 #define DISPLAY_TEST_MODE       (0)
 
 #define DISPLAY_LOCK_TIME       10000   // 5 minutes in 30ms increments
-// Unlock time essentially 3 seconds, but needs to take into account the ~150ms
+// Unlock time essentially 3 seconds, but needs to take into account the ~180ms
 // delay between touch detection. 
-#define DISPLAY_UNLOCK_TIME     16     // 3 seconds in 180ms increments
+#define DISPLAY_UNLOCK_TIME     10    
 
 // When making a setting change, the display will blink for 5 seconds
 #define DISPLAY_BLINK_TIME      5
@@ -54,23 +53,7 @@
 #define LED_DEG_F           SEG_b
 #define LED_BUBBLES         SEG_c
 
-struct display_state {
-    tm1640_seg_t char_display[3];        
-    bool degrees_F;
-    bool timer_set;
-    bool timer_on;
-    bool heater_on;
-    bool bubbles_on;
-    bool pump_on;
-
-    bool display_update;
-    bool display_blink;
-    uint8_t display_blink_timer;
-
-    bool display_locked;
-    uint32_t display_lock_timer;
-    uint32_t display_unlock_timer;
-} display_state;
+display_state_t display_state;
 
 const tm1640_seg_t num_to_seg[] = {
     SEG_0, SEG_1, SEG_2, SEG_3, SEG_4, SEG_5, SEG_6, SEG_7, SEG_8, SEG_9
@@ -461,6 +444,11 @@ void display_led_test_1Hz(void)
     }       
 
 #endif
+}
+
+display_state_t *display_get_display_state(void)
+{
+    return &display_state;
 }
 
 void display_buzzer_beep(void)

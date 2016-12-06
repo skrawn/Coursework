@@ -56,6 +56,8 @@ extern "C" {
 /** PubNub settings. */
 #define MAIN_PUBNUB_PUBLISH_KEY                         "demo"
 #define MAIN_PUBNUB_SUBSCRIBE_KEY                       "demo"
+/*#define MAIN_PUBNUB_PUBLISH_KEY                         "pub-c-f32d9bf0-9d25-4e00-95ce-55fd4ba29f31"
+#define MAIN_PUBNUB_SUBSCRIBE_KEY                       "sub-c-a89ddc44-bb5e-11e6-b07a-0619f8945a4f"*/
 #define MAIN_PUBNUB_CHANNEL						        "WINC1500_00:00" /**< Do not change - last digits will be updated with MAC address. */
 #define MAIN_PUBNUB_PUBLISH_INTERVAL                    (3000)
 #define MAIN_PUBNUB_SUBSCRIBE_INTERVAL                  (1000)
