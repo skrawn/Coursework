@@ -35,13 +35,6 @@ volatile wifi_status_t gWifiState = WifiStateInit;
 /** SysTick counter to avoid busy wait delay. */
 volatile uint32_t gu32MsTicks = 0;
 
-/** Global counter delay for timer. */
-static uint32_t gu32publishDelay = 0;
-static uint32_t gu32subscribeDelay = 0;
-
-static uint32_t gu32connectStartTime = 0;
-static uint32_t gu32connectEndTime = 0;
-
 /** PubNub global variables. */
 static const char PubNubPublishKey[] = MAIN_PUBNUB_PUBLISH_KEY;
 static const char PubNubSubscribeKey[] = MAIN_PUBNUB_SUBSCRIBE_KEY;
@@ -153,8 +146,7 @@ static void m2m_wifi_state(uint8_t u8MsgType, void *pvMsg)
 
 	case M2M_WIFI_REQ_DHCP_CONF:
 	{
-		uint8_t *pu8IPAddress = (uint8_t *)pvMsg;
-		gu32connectEndTime = gu32MsTicks;
+		uint8_t *pu8IPAddress = (uint8_t *)pvMsg;		
 		printf("m2m_wifi_state: M2M_WIFI_REQ_DHCP_CONF: IP is %u.%u.%u.%u\r\n",
 				pu8IPAddress[0], pu8IPAddress[1], pu8IPAddress[2], pu8IPAddress[3]);
 		gWifiState = WifiStateConnected;
@@ -196,8 +188,7 @@ void wifi_init(void)
     /* Initialize Wi-Fi parameters structure. */
     memset((uint8_t *)&wifiInitParam, 0, sizeof(tstrWifiInitParam));
     wifiInitParam.pfAppWifiCb = m2m_wifi_state;
-
-    gu32connectStartTime = gu32MsTicks;
+    
     /* Initialize WINC1500 Wi-Fi driver with data and status callbacks. */
     s8InitStatus = m2m_wifi_init(&wifiInitParam);
     if (M2M_SUCCESS != s8InitStatus) {
@@ -236,17 +227,12 @@ void wifi_init(void)
 }
 
 void wifi_task_3s(void)
-{
-    double temperature = 0;
+{    
     uint16_t light = 0;
     char buf[256] = {0};
     display_state_t *disp = display_get_display_state();
 
-    if (gWifiState == WifiStateConnected) {
-        gu32publishDelay = gu32MsTicks;
-        //adc_start_conversion(&adc_instance);
-        temperature = 0;
-        //adc_read(&adc_instance, &light);
+    if (gWifiState == WifiStateConnected) {        
         /*sprintf(buf, "{\"device\":\"%s\", \"water_temp\":\"%d\", \"heater_on\":\"%d\", \"water_pump_on\":\"%s\"}",
             PubNubChannel,
             thermal_get_water_temp(),
@@ -256,8 +242,7 @@ void wifi_task_3s(void)
         sprintf(buf, "{\"device\":\"%s\", \"water_temp\":\"%d\"}",
             PubNubChannel,
             thermal_get_water_temp());
-    
-        printf("main: publish event: {%s}\r\n", buf);
+            
         close(pPubNubCfg->tcp_socket);
         pPubNubCfg->state = PS_IDLE;
         pPubNubCfg->last_result = PNR_IO_ERROR;
@@ -368,11 +353,8 @@ realloc_tokens:
             }
 
             /* Subscribe to receive pending messages. */
-            if (gu32MsTicks - gu32subscribeDelay > MAIN_PUBNUB_SUBSCRIBE_INTERVAL) {
-                gu32subscribeDelay = gu32MsTicks;
-                printf("main: subscribe event, interval.\r\n");
-                pubnub_subscribe(pPubNubCfg, PubNubChannel);
-            }
+            pubnub_subscribe(pPubNubCfg, PubNubChannel);
+            
         }
     }
 }
