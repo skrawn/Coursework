@@ -66,8 +66,25 @@ typedef enum {
 // Adds the decimal point
 #define DP_MASK     0x80   
 
+/**
+ * @brief Initializes the TM1640 driver 
+ */
 void tm1640_init(void);
+
+/**
+ * @brief Sets the TM1640 display
+ * @param disp Pointer the the display configuration structure
+ * @param length Length of the configuration structure
+ * @param brightness Brightness of the display
+ * @return Returns STATUS_OK if there were no faults
+ */
 enum status_code tm1640_set_display(uint8_t *disp, uint8_t length, tm1640_brightness_t brightness);
+
+/**
+ * @brief Turns the TM1640 display on
+ * @param on Turns the display on or off
+ * @return Returns STATUS_OK if there were no faults
+ */
 enum status_code tm1640_display_on(uint8_t on);
 
 #endif /* TM1640_H_ */

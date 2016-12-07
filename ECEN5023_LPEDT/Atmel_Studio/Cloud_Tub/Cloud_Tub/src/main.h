@@ -71,6 +71,11 @@ extern "C" {
 SemaphoreHandle_t                                       display_mutex;
 SemaphoreHandle_t                                       buzzer_sem;
 
+/**
+ * @brief Converts a fahrenheit temperature to celsius
+ * @param deg_f Degrees in fahrenheit
+ * @return Temperature converted to celsius
+ */
 static inline uint8_t fahrenheit_to_celsius(uint8_t deg_f)
 {
     uint16_t convert = (uint16_t) deg_f;
@@ -78,6 +83,11 @@ static inline uint8_t fahrenheit_to_celsius(uint8_t deg_f)
     return (uint8_t) convert;
 }
 
+/**
+ * @brief Converts a celsis temperature to fahrenheit
+ * @param deg_c Degrees in celcius
+ * @return Temperature converted to fahrenheit
+ */
 static inline uint8_t celsius_to_fahrenheit(uint8_t deg_c)
 {
     uint16_t convert = (uint16_t) deg_c;

@@ -21,8 +21,16 @@
 #define WTC6508_PINMUX_PAD2     PINMUX_UNUSED
 #define WTC6508_PINMUX_PAD3     PINMUX_UNUSED
 
+/**
+ * @brief Initializes the WTC6508
+ */
 void wtc6508_init(void);
+
+/**
+ * @brief Reads the button state from the WTC6508
+ * @param status Pointer to the status buffer
+ * @return Returns STATUS_OK if there were no faults
+ */
 enum status_code wtc6508_read(uint8_t *status);
-struct spi_module wtc6508_module;
 
 #endif /* WTC6508_H_ */

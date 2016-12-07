@@ -29,11 +29,35 @@ typedef struct {
     uint32_t display_unlock_timer;
 } display_state_t;
 
+/**
+ * @brief Initializes the display
+ */
 void display_init(void);
+
+/**
+ * @brief Display idle task
+ */
 void display_idle(void);
+
+/**
+ * @brief Display 1Hz task
+ */
 void display_update_1Hz(void);
+
+/**
+ * @brief Display 33Hz task
+ */
 void display_update_33Hz(void);
+
+/**
+ * @brief Display LED test task
+ */
 void display_led_test_1Hz(void);
+
+/**
+ * @brief Gets the current display task
+ * @return Pointer to the display state structure
+ */
 display_state_t *display_get_display_state(void);
 
 
