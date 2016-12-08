@@ -239,9 +239,12 @@ void wifi_task_3s(void)
             (((4096 - light) * 100) / 4096),
             port_pin_get_output_level(LED0_PIN) ? "0" : "1");*/
         
-        sprintf(buf, "{\"device\":\"%s\", \"water_temp\":\"%d\"}",
+        sprintf(buf, "{\"device\":\"%s\", \"water_temp\":\"%d\", \"set_temp\":\"%d\", "
+                     "\"degrees_F\":\"%d\"}",
             PubNubChannel,
-            thermal_get_water_temp());
+            thermal_get_water_temp(), 
+            thermal_get_temperature(),
+            disp->degrees_F);
             
         close(pPubNubCfg->tcp_socket);
         pPubNubCfg->state = PS_IDLE;
@@ -328,11 +331,12 @@ realloc_tokens:
                             if (0 == (strncmp(&msg[key_index->start], wifi_handlers[handler_index].json_string, key_index->end - key_index->start))) {
                                 // Call the handler
                                 wifi_handlers[handler_index].handler(msg, key_index, key_index + 1);                                
+                                key_index++;
                                 break;
                             }
                             handler_index++;
                         }
-                        key_index += 2;
+                        key_index++;
                         handler_index = 0;
                     }
 

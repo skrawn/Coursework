@@ -21,6 +21,8 @@
 #define WTC6508_PINMUX_PAD2     PINMUX_UNUSED
 #define WTC6508_PINMUX_PAD3     PINMUX_UNUSED
 
+struct spi_module wtc6508_module;
+
 /**
  * @brief Initializes the WTC6508
  */
