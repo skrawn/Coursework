@@ -2,7 +2,7 @@
 Repository for my coursework at University of Colorado, Boulder from 2016 to 2017.
 
 ###ECEN5013
-Embedded Systems Essentials
+Embedded Software Essentials
 ###ECEN5023
 Mobile Computing and the Internet of Things (IoT)
 ###ECEN5023_LPEDT
