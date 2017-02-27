@@ -47,13 +47,13 @@ class Ui_MainWindow(object):
         self.label_3.setFont(font)
         self.label_3.setObjectName("label_3")
         self.txtTemp = QtWidgets.QLabel(self.centralWidget)
-        self.txtTemp.setGeometry(QtCore.QRect(440, 120, 81, 41))
+        self.txtTemp.setGeometry(QtCore.QRect(450, 120, 131, 41))
         font = QtGui.QFont()
         font.setPointSize(23)
         self.txtTemp.setFont(font)
         self.txtTemp.setObjectName("txtTemp")
         self.txtHumidity = QtWidgets.QLabel(self.centralWidget)
-        self.txtHumidity.setGeometry(QtCore.QRect(450, 190, 81, 41))
+        self.txtHumidity.setGeometry(QtCore.QRect(450, 190, 131, 41))
         font = QtGui.QFont()
         font.setPointSize(23)
         self.txtHumidity.setFont(font)
@@ -70,6 +70,11 @@ class Ui_MainWindow(object):
         self.statusBar.setObjectName("statusBar")
         MainWindow.setStatusBar(self.statusBar)
 
+        _translate = QtCore.QCoreApplication.translate
+
+        self.txtTemp.setText(_translate("MainWindow", "100 F"))
+        self.txtHumidity.setText(_translate("MainWindow", "80 %"))
+
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -80,7 +85,4 @@ class Ui_MainWindow(object):
         self.btnQuit.setText(_translate("MainWindow", "Quit"))
         self.label.setText(_translate("MainWindow", "DHT22 Temperature and Humity Sensor"))
         self.label_2.setText(_translate("MainWindow", "Temperature"))
-        self.label_3.setText(_translate("MainWindow", "Humidity"))
-        self.txtTemp.setText(_translate("MainWindow", "100 F"))
-        self.txtHumidity.setText(_translate("MainWindow", "80 %"))
-
+        self.label_3.setText(_translate("MainWindow", "Humidity")) 
