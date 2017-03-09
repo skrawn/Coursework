@@ -9,5 +9,7 @@ Mobile Computing and the Internet of Things (IoT)
 Low-Power Embedded Design Techniques
 ###ECEN5053
 Sensors, Signal-Chain and Data Conversion
+###ECEN5053_EID
+Embedded Interface Design
 ###ECEN5623
 Real-Time Embedded Systems
