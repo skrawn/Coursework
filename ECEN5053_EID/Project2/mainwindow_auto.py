@@ -157,6 +157,12 @@ class Ui_MainWindow(object):
         font.setPointSize(18)
         self.label_9.setFont(font)
         self.label_9.setObjectName("label_9")
+        self.btnQuit = QtWidgets.QPushButton(self.centralWidget)
+        self.btnQuit.setGeometry(QtCore.QRect(80, 330, 71, 61))
+        font = QtGui.QFont()
+        font.setPointSize(21)
+        self.btnQuit.setFont(font)
+        self.btnQuit.setObjectName("btnQuit")
         MainWindow.setCentralWidget(self.centralWidget)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 800, 23))
@@ -197,4 +203,5 @@ class Ui_MainWindow(object):
         self.txtStatus.setText(_translate("MainWindow", "Disconnected"))
         self.label_8.setText(_translate("MainWindow", "C"))
         self.label_9.setText(_translate("MainWindow", "F"))
+        self.btnQuit.setText(_translate("MainWindow", "Quit"))
 
