@@ -18,6 +18,11 @@ from pprint import pprint
 
 from tinydb import TinyDB, Query
 
+import tornado.httpserver
+import tornado.websocket
+import tornado.ioloop
+import tornado.web
+
 
 class MainWindow(QMainWindow, mainwindow_auto.Ui_MainWindow):
     # Periodic update handler
@@ -146,12 +151,19 @@ class MainWindow(QMainWindow, mainwindow_auto.Ui_MainWindow):
         exit(1)
 
     def tempSliderChanged(self):
-        global useTempF
+        global max_temp, max_hum, min_temp, min_hum, avg_temp, avg_hum, useTempF
         value = self.sldrTemp.value()
+        _translate = QtCore.QCoreApplication.translate
         if (value == 0):
             useTempF = False
         else:
             useTempF = True
+            self.txtTemp_Avg.setText(_translate("MainWindow", '{0:0.1f} F'.format(
+                self.celsiusToFahrenheit(avg_temp))))
+            self.txtTemp_Min.setText(_translate("MainWindow", '{0} F'.format(
+                self.celsiusToFahrenheit(min_temp))))
+            self.txtTemp_Max.setText(_translate("MainWindow", '{0} F'.format(
+                self.celsiusToFahrenheit(max_temp))))
 
     def __init__(self):
         super(self.__class__, self).__init__()
@@ -166,11 +178,25 @@ class MainWindow(QMainWindow, mainwindow_auto.Ui_MainWindow):
         timerThread.daemon = True
         timerThread.start()
 
+class WSHandler(tornado.websocket.WebSocketHandler):
+
+    def open(self):
+        print('user is connected.\n')
+
+    def on_message(self, message):
+        print('received message: %s\n', message)
+        self.write_message(message + ' OK')
+
+    def on_close(self):
+        print('connection closed\n')
+
 
 quit_app = False
 updating = False
 useTempF = False
 database = TinyDB('project2.json')
+curr_temp = 0.0
+curr_hum = 0.0
 max_temp = 0.0
 max_hum = 0.0
 min_temp = 999.9
@@ -179,6 +205,7 @@ avg_temp = 0.0
 avg_hum = 0.0
 avg_temp_sum = 0.0
 avg_hum_sum = 0.0
+application = tornado.web.Application([(r'/ws', WSHandler),])
 
 
 def main():
@@ -190,4 +217,7 @@ def main():
 
 
 if __name__ == "__main__":
+    http_server = tornado.httpserver.HTTPServer(application)
+    http_server.listen(8888)
+    #tornado.ioloop.IOLoop.instance().start()
     main()
