@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Websocket</title>
+        <script src="http://code.jquery.com/jquery-2.0.0.js"></script>
+    </head>
+<body>
+    <h1>DHT22 Client</h1>
+    <label id="conn_text"></label><br />
+    <label id="response_txt"></label><br />
+    <input type="text" id="input_text"/><br />
+    <input type="submit" id="getCurrTemp" value="Get Current Temperature" />
+    <input type="submit" id="getCurrHum" value="Get Current Humidity" /><br />
+    <input type="submit" id="getMaxTemp" value="Get Max Temperature" />
+    <input type="submit" id="getMaxHum" value="Get Max Humidity" /><br />
+    <input type="submit" id="getMinTemp" value="Get Min Temperature" />
+    <input type="submit" id="getMinHum" value="Get Min Humidity" /><br />
+    <input type="submit" id="getAvgTemp" value="Get Average Temperature" />
+    <input type="submit" id="getAvgHum" value="Get Average Humidity" /><br />
+    <script>
+    $(document).ready(function () {
+        var ws = new WebSocket("ws://192.168.1.16:8888/ws");
+
+        ws.onopen = function(evt) {
+            var conn_status = document.getElementById('conn_text');
+            conn_status.innerHTML = "Connection status: Connected!"
+        };
+
+        ws.onmessage = function(evt) {
+            var newMessage = document.createElement('p');
+            var message = document.getElementById('response_txt');
+            message.innerHTML = evt.data;
+        };
+
+        ws.onclose = function(evt) {
+            alert ("Connection closed");
+        };
+
+        $("#button").click(function(evt) {
+            evt.preventDefault();
+            var message = $("#input_text").val();
+            ws.send(message);
+            var newMessage = document.createElement('p');
+            newMessage.textContent = "Client: " + message;
+            document.getElementById('messages_txt').appendChild(newMessage);
+        });
+
+        $("#getCurrTemp").click(function(evt) {
+	        evt.preventDefault();
+            var message = "getCurrTemp";
+	        ws.send(message);
+        });
+
+        $("#getCurrHum").click(function(evt) {
+	        evt.preventDefault();
+            var message = "getCurrHum";
+	        ws.send(message);
+        });
+
+        $("#getMaxTemp").click(function(evt) {
+	        evt.preventDefault();
+            var message = "getMaxTemp";
+	        ws.send(message);
+        });
+
+        $("#getMaxHum").click(function(evt) {
+	        evt.preventDefault();
+            var message = "getMaxHum";
+	        ws.send(message);
+        });
+
+        $("#getMinTemp").click(function(evt) {
+	        evt.preventDefault();
+            var message = "getMinTemp";
+	        ws.send(message);
+        });
+
+        $("#getMinHum").click(function(evt) {
+	        evt.preventDefault();
+            var message = "getMinHum";
+	        ws.send(message);
+        });
+
+        $("#getAvgTemp").click(function(evt) {
+	        evt.preventDefault();
+            var message = "getAvgTemp";
+	        ws.send(message);
+        });
+
+        $("#getAvgHum").click(function(evt) {
+	        evt.preventDefault();
+            var message = "getAvgHum";
+	        ws.send(message);
+        });
+    });
+    </script>
+</body>
+</html>
