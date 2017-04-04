@@ -64,7 +64,7 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 
 
 application = tornado.web.Application([(r'/ws', WSHandler),])
-database = TinyDB('project2.json')
+database = TinyDB('project3.json')
 
 
 if __name__ == "__main__":

@@ -41,7 +41,7 @@ class MainWindow(QMainWindow, mainwindow_auto.Ui_MainWindow):
         return (tempC * 9 / 5 + 32)
 
     def updateSensor(self):
-        global useTempF, avg_temp_sum, avg_hum_sum, num_samples
+        global useTempF, avg_temp_sum, avg_hum_sum, num_samples, curr_temp
         _translate = QtCore.QCoreApplication.translate
         self.txtStatus.setText(_translate("MainWindow", "Updating"))
         humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 4)
@@ -52,6 +52,7 @@ class MainWindow(QMainWindow, mainwindow_auto.Ui_MainWindow):
         avg_temp_sum = avg_temp_sum + float(strTemp)
         avg_hum_sum = avg_hum_sum + float(strHum)
         num_samples = num_samples + 1
+        curr_temp = float(strTemp)
         self.addToDB(float(strTemp), float(strHum), currTime)
         self.txtDate_Current.setText(_translate("MainWindow", currTime))
         if (useTempF):
@@ -209,22 +210,28 @@ class MainWindow(QMainWindow, mainwindow_auto.Ui_MainWindow):
     def pressedQuit(self):
         quit_app = True
         # Get rid of the old database
-        os.remove("project2.json")
+        os.remove("project3.json")
         exit(1)
 
     def tempSliderChanged(self):
-        global max_temp, max_hum, min_temp, min_hum, avg_temp, avg_hum, useTempF
+        global max_temp, max_hum, min_temp, min_hum, avg_temp, avg_hum, useTempF, curr_temp
         value = self.sldrTemp.value()
         _translate = QtCore.QCoreApplication.translate
         if (value == 0):
-            useTempF = False
+            useTempF = False     
+            self.txtTemp.setText(_translate("MainWindow", '{0:0.1f} F'.format(curr_temp)))
+            self.txtTemp_Avg.setText(_translate("MainWindow", '{0:0.1f} F'.format(avg_temp)))
+            self.txtTemp_Min.setText(_translate("MainWindow", '{0:0.1f} F'.format(min_temp)))
+            self.txtTemp_Max.setText(_translate("MainWindow", '{0:0.1f} F'.format(max_temp)))
         else:
             useTempF = True
+            self.txtTemp.setText(_translate("MainWindow", '{0:0.1f} F'.format(
+                self.celsiusToFahrenheit(curr_temp))))
             self.txtTemp_Avg.setText(_translate("MainWindow", '{0:0.1f} F'.format(
                 self.celsiusToFahrenheit(avg_temp))))
-            self.txtTemp_Min.setText(_translate("MainWindow", '{0} F'.format(
+            self.txtTemp_Min.setText(_translate("MainWindow", '{0:0.1f} F'.format(
                 self.celsiusToFahrenheit(min_temp))))
-            self.txtTemp_Max.setText(_translate("MainWindow", '{0} F'.format(
+            self.txtTemp_Max.setText(_translate("MainWindow", '{0:0.1f} F'.format(
                 self.celsiusToFahrenheit(max_temp))))
 
     def __init__(self):
@@ -245,7 +252,7 @@ class MainWindow(QMainWindow, mainwindow_auto.Ui_MainWindow):
 quit_app = False
 updating = False
 useTempF = False
-database = TinyDB('project2.json')
+database = TinyDB('project3.json')
 curr_temp = 0.0
 curr_hum = 0.0
 max_temp = 0.0
