@@ -5,6 +5,10 @@ import tornado.web
 
 from tinydb import TinyDB, Query
 
+class PageHandler(tornado.web.RequestHandler):
+	def get(self):
+		self.render("client.html")
+
 class WSHandler(tornado.websocket.WebSocketHandler):
 	def check_origin(self, origin):
 		return True
@@ -63,7 +67,9 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 		print("connection closed")
 
 
-application = tornado.web.Application([(r'/ws', WSHandler),])
+application = tornado.web.Application([	
+	(r'/', PageHandler),
+	(r'/ws', WSHandler),])
 database = TinyDB('project3.json')
 
 

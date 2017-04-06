@@ -7,7 +7,7 @@
 <body>
     <h1>DHT22 Client</h1>
     <label id="conn_text"></label><br />
-    <label id="response_txt"></label><br />
+    <label id="response_txt"></label><br />    
     <input type="text" id="input_text"/><br />
     <input type="submit" id="getCurrTemp" value="Get Current Temperature" />
     <input type="submit" id="getCurrHum" value="Get Current Humidity" /><br />
@@ -18,12 +18,12 @@
     <input type="submit" id="getAvgTemp" value="Get Average Temperature" />
     <input type="submit" id="getAvgHum" value="Get Average Humidity" /><br />
     <script>
-    $(document).ready(function () {
-        var ws = new WebSocket("ws://192.168.1.16:8888/ws");
+    $(document).ready(function () {                   
+        var ws = new WebSocket("ws://" + window.location.host + "/ws");
 
         ws.onopen = function(evt) {
             var conn_status = document.getElementById('conn_text');
-            conn_status.innerHTML = "Connection status: Connected!"
+            conn_status.innerHTML = "Connection status: Connected!"            
         };
 
         ws.onmessage = function(evt) {
