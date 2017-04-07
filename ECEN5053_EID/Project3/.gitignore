@@ -4,3 +4,4 @@
 Project2.pro.user
 *.autosave
 **/__pycache__/
+.*/
