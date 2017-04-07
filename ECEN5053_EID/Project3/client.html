@@ -5,92 +5,104 @@
         <script src="http://code.jquery.com/jquery-2.0.0.js"></script>
     </head>
 <body>
-    <h1>DHT22 Client</h1>
+    <h1>Protocol Latency Test</h1>
     <label id="conn_text"></label><br />
-    <label id="response_txt"></label><br />    
-    <input type="text" id="input_text"/><br />
-    <input type="submit" id="getCurrTemp" value="Get Current Temperature" />
-    <input type="submit" id="getCurrHum" value="Get Current Humidity" /><br />
-    <input type="submit" id="getMaxTemp" value="Get Max Temperature" />
-    <input type="submit" id="getMaxHum" value="Get Max Humidity" /><br />
-    <input type="submit" id="getMinTemp" value="Get Min Temperature" />
-    <input type="submit" id="getMinHum" value="Get Min Humidity" /><br />
-    <input type="submit" id="getAvgTemp" value="Get Average Temperature" />
-    <input type="submit" id="getAvgHum" value="Get Average Humidity" /><br />
+    <label id="response_txt"></label><br />        
+    <div class="test_row">
+        <input type="submit" id="websocketTest" value="Run Websocket Test" />
+        <!--<label id="ws_avg"></label>
+        <label id="ws_max"></label>
+        <label id="ws_min"></label>-->
+        <label id="ws_result"></label>
+    </div>
+    <div class="test_row">
+        <input type="submit" id="mqttTest" value="Run MQTT Test" />
+        <label id="mqtt_avg"></label>
+        <label id="mqtt_max"></label>
+        <label id="mqtt_min"></label>
+    </div>
+    <div class="test_row">
+        <input type="submit" id="coapTest" value="Run CoAP Test" />
+        <label id="coap_avg"></label>
+        <label id="coap_max"></label>
+        <label id="coap_min"></label>
+    </div>    
     <script>
     $(document).ready(function () {                   
         var ws = new WebSocket("ws://" + window.location.host + "/ws");
+        var t0 = 0.0;
+        var max_time = 0.0;
+        var min_time = 999999.9;
+        var avg_time = 0.0;
+        var t1 = 0.0;
+        var numLoops = 30;        
+        var loopCount = 0;
+        var testRunning = false;
 
         ws.onopen = function(evt) {
             var conn_status = document.getElementById('conn_text');
             conn_status.innerHTML = "Connection status: Connected!"            
         };
 
-        ws.onmessage = function(evt) {
-            var newMessage = document.createElement('p');
+        ws.onmessage = function(evt) {            
+            t1 = performance.now();
+            if (testRunning) {
+                var elapsed_time = (t1 - t0);
+                if (max_time < elapsed_time) {
+                    max_time = elapsed_time;
+                }
+
+                if (min_time > elapsed_time) {
+                    min_time = elapsed_time;
+                }
+                avg_time += elapsed_time;                    
+                if (++loopCount >= numLoops) {
+                    testRunning = false;
+                    avg_time = avg_time / numLoops;
+                    var message = document.getElementById('ws_result');
+                    message.innerHTML = "Avg: " + avg_time.toFixed(1) + " ms - Max: " + max_time.toFixed(1) + 
+                        " ms - Min: " + min_time.toFixed(1) + " ms";
+                    max_time = 0.0; min_time = 999999.9; avg_time = 0.0; loopCount = 0;                    
+                }
+                else {
+                    ws.send(evt.data);
+                }
+            }            
             var message = document.getElementById('response_txt');
-            message.innerHTML = evt.data;
+            message.innerHTML = "Message received: " + evt.data;            
+
         };
 
         ws.onclose = function(evt) {
             alert ("Connection closed");
         };
 
-        $("#button").click(function(evt) {
-            evt.preventDefault();
-            var message = $("#input_text").val();
+        $("#websocketTest").click(function(evt) {                    
+            var message = "webSocketTest";
+            loopCount = 0;
+            testRunning = true;
+            t0 = performance.now();            
             ws.send(message);
-            var newMessage = document.createElement('p');
-            newMessage.textContent = "Client: " + message;
-            document.getElementById('messages_txt').appendChild(newMessage);
-        });
 
-        $("#getCurrTemp").click(function(evt) {
-	        evt.preventDefault();
-            var message = "getCurrTemp";
-	        ws.send(message);
-        });
+	        evt.preventDefault();  
+            for (count = 0; count < numLoops; count++) {
+                
+	            
+                while (!messageReceived);                
+                t1 = performance.now();
+                messageReceived = false;
+                var elapsed_time = (t1 - t0);
+                if (max_time < elapsed_time) {
+                    max_time = elapsed_time;
+                }
 
-        $("#getCurrHum").click(function(evt) {
-	        evt.preventDefault();
-            var message = "getCurrHum";
-	        ws.send(message);
-        });
+                if (min_time > elapsed_time) {
+                    min_time = elapsed_time;
+                }
+                avg_time += elapsed_time;                
+            }            
 
-        $("#getMaxTemp").click(function(evt) {
-	        evt.preventDefault();
-            var message = "getMaxTemp";
-	        ws.send(message);
-        });
-
-        $("#getMaxHum").click(function(evt) {
-	        evt.preventDefault();
-            var message = "getMaxHum";
-	        ws.send(message);
-        });
-
-        $("#getMinTemp").click(function(evt) {
-	        evt.preventDefault();
-            var message = "getMinTemp";
-	        ws.send(message);
-        });
-
-        $("#getMinHum").click(function(evt) {
-	        evt.preventDefault();
-            var message = "getMinHum";
-	        ws.send(message);
-        });
-
-        $("#getAvgTemp").click(function(evt) {
-	        evt.preventDefault();
-            var message = "getAvgTemp";
-	        ws.send(message);
-        });
-
-        $("#getAvgHum").click(function(evt) {
-	        evt.preventDefault();
-            var message = "getAvgHum";
-	        ws.send(message);
+            
         });
     });
     </script>

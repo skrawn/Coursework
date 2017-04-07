@@ -18,7 +18,7 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 
 	def on_message(self, message):
 		global database
-		print("receive messaged", message)
+		#print("receive messaged", message)
 		dbQ = Query()
 		if (message == "getCurrTemp"):
 			db_data = database.get(dbQ['entry'] == 'curr')
@@ -59,6 +59,8 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 			db_data = database.get(dbQ['entry'] == 'avg')
 			if (db_data is not None):
 				self.write_message("Average Humidity: " + '{0} %'.format(db_data['humidity']))
+		elif (message == "webSocketTest"):
+			self.write_message(message)
 
 		else:
 			self.write_message("Unknown command" + message)
