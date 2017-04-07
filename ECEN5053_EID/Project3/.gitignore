@@ -3,4 +3,4 @@
 /build*/
 Project2.pro.user
 *.autosave
-/__pycache__/
+**/__pycache__/
