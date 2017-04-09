@@ -2,39 +2,58 @@
 <html>
     <head>
         <title>Websocket</title>
-        <script src="http://code.jquery.com/jquery-2.0.0.js"></script>
+        <script src="http://code.jquery.com/jquery-2.0.0.js"></script>        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
     </head>
 <body>
     <h1>Protocol Latency Test</h1>
     <label id="conn_text"></label><br />
     <label id="response_txt"></label><br />        
     <div class="test_row">
-        <input type="submit" id="websocketTest" value="Run Websocket Test" />
-        <!--<label id="ws_avg"></label>
-        <label id="ws_max"></label>
-        <label id="ws_min"></label>-->
+        <input type="submit" id="websocketTest" value="Run Websocket Test" />        
         <label id="ws_result"></label>
     </div>
     <div class="test_row">
         <input type="submit" id="mqttTest" value="Run MQTT Test" />
-        <label id="mqtt_avg"></label>
-        <label id="mqtt_max"></label>
-        <label id="mqtt_min"></label>
+        <label id="mqtt_result"></label>        
     </div>
     <div class="test_row">
         <input type="submit" id="coapTest" value="Run CoAP Test" />
-        <label id="coap_avg"></label>
-        <label id="coap_max"></label>
-        <label id="coap_min"></label>
+        <label id="coap_result"></label>        
     </div>    
     <script>
     $(document).ready(function () {                   
-        var ws = new WebSocket("ws://" + window.location.host + "/ws");
+        var ws = new WebSocket("ws://" + window.location.host + "/ws");        
+        var wsport = 8080;
+
+        var client = new Paho.MQTT.Client("iot.eclipse.org", Number(80), "/ws", "webClient");
+        client.onConnectionLost = onConnectionLost;
+        client.onMessageArrived = onMessageArrived;
+        client.connect({onSuccess:onConnect});
+
+        function onConnect() {
+            console.log("onConnect");
+            client.subscribe("dingus");
+            message = new Paho.MQTT.Message("Client dingus");
+            message.destinationName = "dingus";
+            client.send(message);
+        }
+
+        function onConnectionLost(responseObject) {
+            if (responseObject.errorCode !== 0) {
+                console.log("onConnectionLost: " + responseObject.errorMessage);
+            }
+        }
+
+        function onMessageArrived(message) {
+            console.log("onMessageArrived: " + message.payloadString);
+        }
+
+
         var t0 = 0.0;
         var max_time = 0.0;
         var min_time = 999999.9;
-        var avg_time = 0.0;
-        var t1 = 0.0;
+        var avg_time = 0.0;        
         var numLoops = 30;        
         var loopCount = 0;
         var testRunning = false;
@@ -44,9 +63,9 @@
             conn_status.innerHTML = "Connection status: Connected!"            
         };
 
-        ws.onmessage = function(evt) {            
-            t1 = performance.now();
+        ws.onmessage = function(evt) {                        
             if (testRunning) {
+                var t1 = performance.now();
                 var elapsed_time = (t1 - t0);
                 if (max_time < elapsed_time) {
                     max_time = elapsed_time;
@@ -59,18 +78,19 @@
                 if (++loopCount >= numLoops) {
                     testRunning = false;
                     avg_time = avg_time / numLoops;
-                    var message = document.getElementById('ws_result');
+                    if (evt.data == "websocketTest") {
+                        var message = document.getElementById('ws_result');
+                    }
+                    
                     message.innerHTML = "Avg: " + avg_time.toFixed(1) + " ms - Max: " + max_time.toFixed(1) + 
                         " ms - Min: " + min_time.toFixed(1) + " ms";
                     max_time = 0.0; min_time = 999999.9; avg_time = 0.0; loopCount = 0;                    
                 }
                 else {
+                    t0 = performance.now();
                     ws.send(evt.data);
                 }
-            }            
-            var message = document.getElementById('response_txt');
-            message.innerHTML = "Message received: " + evt.data;            
-
+            }                            
         };
 
         ws.onclose = function(evt) {
@@ -78,31 +98,17 @@
         };
 
         $("#websocketTest").click(function(evt) {                    
-            var message = "webSocketTest";
-            loopCount = 0;
+            var message = "websocketTest";            
             testRunning = true;
             t0 = performance.now();            
-            ws.send(message);
+            ws.send(message);            
+        });
 
-	        evt.preventDefault();  
-            for (count = 0; count < numLoops; count++) {
-                
-	            
-                while (!messageReceived);                
-                t1 = performance.now();
-                messageReceived = false;
-                var elapsed_time = (t1 - t0);
-                if (max_time < elapsed_time) {
-                    max_time = elapsed_time;
-                }
-
-                if (min_time > elapsed_time) {
-                    min_time = elapsed_time;
-                }
-                avg_time += elapsed_time;                
-            }            
-
-            
+        $("#mqttTest").click(function(evt) {                    
+            var message = "mqttTest";            
+            testRunning = true;
+            t0 = performance.now();            
+            ws.send(message);            
         });
     });
     </script>
