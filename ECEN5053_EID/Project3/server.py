@@ -74,14 +74,19 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 
 	def on_close(self):
 		print("connection closed")
-		
+
 
 def on_connect(mqttc, obj, flags, rc):
-	print("rc: " + str(rc))
-	mqttc.subscribe("dingus")
+	#print("rc: " + str(rc))
+	mqttc.subscribe(mqttChannel)
 
 def on_message(mqttc, obj, msg):
-	print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
+	#print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
+	# Paho MQTT appends a b and single quotes to the payload; need to strip that off
+	message = str(msg.payload).strip('b')	
+	message = message.strip("'")	
+	if (message == "mqttTest"):
+		mqttc.publish(mqttChannel, message + "Resp")		
 
 def on_publish(mqttc, obj, mid):
 	print("mid: " + str(mid))
@@ -93,8 +98,9 @@ def on_subscribe(mqttc, obj, mid, granted_qos):
 mqttc = mqtt.Client();
 mqttc.on_message = on_message
 mqttc.on_connect = on_connect
-mqttc.on_publish = on_publish
-mqttc.on_subscribe = on_subscribe
+#mqttc.on_publish = on_publish
+#mqttc.on_subscribe = on_subscribe
+mqttChannel = "dingus"
 
 application = tornado.web.Application([	
 	(r'/', PageHandler),

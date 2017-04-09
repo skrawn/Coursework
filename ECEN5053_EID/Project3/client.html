@@ -26,29 +26,11 @@
         var ws = new WebSocket("ws://" + window.location.host + "/ws");        
         var wsport = 8080;
 
-        var client = new Paho.MQTT.Client("iot.eclipse.org", Number(80), "/ws", "webClient");
-        client.onConnectionLost = onConnectionLost;
-        client.onMessageArrived = onMessageArrived;
-        client.connect({onSuccess:onConnect});
-
-        function onConnect() {
-            console.log("onConnect");
-            client.subscribe("dingus");
-            message = new Paho.MQTT.Message("Client dingus");
-            message.destinationName = "dingus";
-            client.send(message);
-        }
-
-        function onConnectionLost(responseObject) {
-            if (responseObject.errorCode !== 0) {
-                console.log("onConnectionLost: " + responseObject.errorMessage);
-            }
-        }
-
-        function onMessageArrived(message) {
-            console.log("onMessageArrived: " + message.payloadString);
-        }
-
+        var mqttClient = new Paho.MQTT.Client("iot.eclipse.org", Number(80), "/ws", "webClient");
+        mqttClient.onConnectionLost = onConnectionLost;
+        mqttClient.onMessageArrived = onMessageArrived;
+        mqttClient.connect({onSuccess:onConnect});
+        var mqttChannel = "dingus";
 
         var t0 = 0.0;
         var max_time = 0.0;
@@ -58,38 +40,81 @@
         var loopCount = 0;
         var testRunning = false;
 
+        function onConnect() {
+            console.log("onConnect");
+            mqttClient.subscribe(mqttChannel);            
+        }
+
+        function onConnectionLost(responseObject) {
+            if (responseObject.errorCode !== 0) {
+                console.log("onConnectionLost: " + responseObject.errorMessage);
+            }
+        }
+
+        function onMessageArrived(message) {
+            //console.log("onMessageArrived", message.payloadString);
+            if (message.payloadString == "mqttTestResp") {
+                var t1 = performance.now();
+                updateTestStats((t1 - t0), "mqttTest");
+            }
+        }
+
+        function updateTestStats(elapsed_time, testType) {
+            if (max_time < elapsed_time) {
+                max_time = elapsed_time;
+            }
+
+            if (min_time > elapsed_time) {
+                min_time = elapsed_time;
+            }
+            avg_time += elapsed_time;                    
+            if (++loopCount >= numLoops) {
+                testRunning = false;
+                avg_time = avg_time / numLoops;
+                if (testType == "websocketTest") {
+                    var message = document.getElementById('ws_result');
+                }
+                else if (testType == "mqttTest") {
+                    var message = document.getElementById("mqtt_result");
+                }
+                else if (testType == "coapTest") {
+
+                }
+                else {
+                    console.log("unknown test type: " + testType);
+                    return;
+                }
+                
+                message.innerHTML = "Avg: " + avg_time.toFixed(1) + " ms - Max: " + max_time.toFixed(1) + 
+                    " ms - Min: " + min_time.toFixed(1) + " ms";
+                max_time = 0.0; min_time = 999999.9; avg_time = 0.0; loopCount = 0;                    
+            }
+            else {
+                t0 = performance.now();
+                if (testType == "websocketTest") {
+                    ws.send(testType);
+                }
+                else if (testType == "mqttTest") {
+                    var message = new Paho.MQTT.Message("mqttTest");
+                    message.destinationName = mqttChannel;
+                    mqttClient.send(message);
+                }
+                else if (testType == "coapTest") {
+
+                }
+            }
+        }
+
         ws.onopen = function(evt) {
             var conn_status = document.getElementById('conn_text');
             conn_status.innerHTML = "Connection status: Connected!"            
         };
 
         ws.onmessage = function(evt) {                        
-            if (testRunning) {
+            if (testRunning && evt.data == "websocketTest") {
                 var t1 = performance.now();
                 var elapsed_time = (t1 - t0);
-                if (max_time < elapsed_time) {
-                    max_time = elapsed_time;
-                }
-
-                if (min_time > elapsed_time) {
-                    min_time = elapsed_time;
-                }
-                avg_time += elapsed_time;                    
-                if (++loopCount >= numLoops) {
-                    testRunning = false;
-                    avg_time = avg_time / numLoops;
-                    if (evt.data == "websocketTest") {
-                        var message = document.getElementById('ws_result');
-                    }
-                    
-                    message.innerHTML = "Avg: " + avg_time.toFixed(1) + " ms - Max: " + max_time.toFixed(1) + 
-                        " ms - Min: " + min_time.toFixed(1) + " ms";
-                    max_time = 0.0; min_time = 999999.9; avg_time = 0.0; loopCount = 0;                    
-                }
-                else {
-                    t0 = performance.now();
-                    ws.send(evt.data);
-                }
+                updateTestStats(elapsed_time, evt.data);                
             }                            
         };
 
@@ -104,11 +129,12 @@
             ws.send(message);            
         });
 
-        $("#mqttTest").click(function(evt) {                    
-            var message = "mqttTest";            
-            testRunning = true;
-            t0 = performance.now();            
-            ws.send(message);            
+        $("#mqttTest").click(function(evt) {                                            
+            var message = new Paho.MQTT.Message("mqttTest");
+            testRunning = true;        
+            message.destinationName = mqttChannel;
+            t0 = performance.now();
+            mqttClient.send(message);
         });
     });
     </script>
