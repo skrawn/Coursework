@@ -17,10 +17,6 @@
         <input type="submit" id="mqttTest" value="Run MQTT Test" />
         <label id="mqtt_result"></label>        
     </div>
-    <div class="test_row">
-        <input type="submit" id="coapTest" value="Run CoAP Test" />
-        <label id="coap_result"></label>        
-    </div>    
     <script>
     $(document).ready(function () {                   
         var ws = new WebSocket("ws://" + window.location.host + "/ws");        
@@ -85,7 +81,7 @@
                     return;
                 }
                 
-                message.innerHTML = "Avg: " + avg_time.toFixed(1) + " ms - Max: " + max_time.toFixed(1) + 
+                message.innerHTML = " Avg: " + avg_time.toFixed(1) + " ms - Max: " + max_time.toFixed(1) + 
                     " ms - Min: " + min_time.toFixed(1) + " ms";
                 max_time = 0.0; min_time = 999999.9; avg_time = 0.0; loopCount = 0;                    
             }
@@ -123,19 +119,38 @@
         };
 
         $("#websocketTest").click(function(evt) {                    
-            var message = "websocketTest";            
-            testRunning = true;
-            t0 = performance.now();            
-            ws.send(message);            
+            if (!testRunning) {
+                var message = "websocketTest";            
+                testRunning = true;
+                t0 = performance.now();            
+                ws.send(message);  
+            }          
         });
 
-        $("#mqttTest").click(function(evt) {                                            
-            var message = new Paho.MQTT.Message("mqttTest");
-            testRunning = true;        
-            message.destinationName = mqttChannel;
-            t0 = performance.now();
-            mqttClient.send(message);
+        $("#mqttTest").click(function(evt) {       
+            if (!testRunning) {
+                var message = new Paho.MQTT.Message("mqttTest");
+                var status_string = document.getElementById('mqtt_result');
+                status_string.innerHTML = "Running...";
+                testRunning = true;        
+                message.destinationName = mqttChannel;
+                t0 = performance.now();
+                mqttClient.send(message);
+            }
         });
+
+        var HttpClient = function() {
+            this.get = function(aUrl, aCallback) {
+                var httpRequest = new XMLHttpRequest();
+                httpRequest.onreadystatechange = function() {
+                    if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                        aCallback(httpRequest.responseText);
+                    }
+                }
+                httpRequest.open("GET", aUrl, true);
+                httpRequest.send(null);
+            }
+        }
     });
     </script>
 </body>

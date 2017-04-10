@@ -6,7 +6,17 @@ import tornado.web
 
 import paho.mqtt.client as mqtt
 
+import asyncio
+from concurrent.futures import ProcessPoolExecutor
+
+import aiocoap.resource as resource
+import aiocoap
+
+import datetime
+import logging
+
 from tinydb import TinyDB, Query
+
 
 class PageHandler(tornado.web.RequestHandler):
 	def get(self):
@@ -76,6 +86,27 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 		print("connection closed")
 
 
+class TimeResource(resource.ObservableResource):
+	def __init__(self):
+		super(TimeResource, self).__init__()
+		self.notify()
+
+	def notify(self):
+		self.updated_state()
+		asyncio.get_event_loop().call_later(6, self.notify)
+
+	def update_observation_count(self, count):
+		if count:
+			print("Keeping the lcock nearby to trigger observations")
+		else:
+			print("Stowing away the clock until someone asks again")
+
+	@asyncio.coroutine
+	def render_get(self, request):
+		payload = datetime.datetime.now().strftime("%Y-%m-%d %H:%M").encode('ascii')
+		return aiocoap.Message(payload=payload)
+
+
 def on_connect(mqttc, obj, flags, rc):
 	#print("rc: " + str(rc))
 	mqttc.subscribe(mqttChannel)
@@ -109,8 +140,30 @@ database = TinyDB('project3.json')
 
 
 if __name__ == "__main__":
+	executor = ProcessPoolExecutor(2)
 	http_server = tornado.httpserver.HTTPServer(application)
 	http_server.listen(8888)
 	mqttc.connect_async("iot.eclipse.org", 1883, 69)
 	mqttc.loop_start()
-	tornado.ioloop.IOLoop.instance().start()
+
+	coapSite = resource.Site()
+	coapSite.add_resource(('.well-known', 'core'), resource.WKCResource(coapSite.get_resources_as_linkheader))
+	#coapSite.add_resource(('other', 'block'), BlockResource())
+	coapSite.add_resource(('time',), TimeResource())
+
+	loop = asyncio.get_event_loop()
+	#asyncio.ensure_future(loop.run_in_executor(executor, aiocoap.Context.create_server_context(coapSite)))
+	#asyncio.ensure_future(loop.run_in_executor(executor, tornado.ioloop.IOLoop.instance().start))
+	#loop.run_forever()
+	tasks = [
+		asyncio.async(aiocoap.Context.create_server_context(coapSite)),
+		asyncio.async(tornado.ioloop.IOLoop.instance().start())]
+	loop.run_until_complete(asyncio.wait(tasks))
+	loop.close()
+	
+	#asyncio.Task(aiocoap.Context.create_server_context(coapSite))
+	#print("test1")
+	#asyncio.get_event_loop().run_forever()
+	#asyncio.get_event_loop().
+	#print("test2")
+	
