@@ -219,10 +219,10 @@ class MainWindow(QMainWindow, mainwindow_auto.Ui_MainWindow):
         _translate = QtCore.QCoreApplication.translate
         if (value == 0):
             useTempF = False     
-            self.txtTemp.setText(_translate("MainWindow", '{0:0.1f} F'.format(curr_temp)))
-            self.txtTemp_Avg.setText(_translate("MainWindow", '{0:0.1f} F'.format(avg_temp)))
-            self.txtTemp_Min.setText(_translate("MainWindow", '{0:0.1f} F'.format(min_temp)))
-            self.txtTemp_Max.setText(_translate("MainWindow", '{0:0.1f} F'.format(max_temp)))
+            self.txtTemp.setText(_translate("MainWindow", '{0:0.1f} C'.format(curr_temp)))
+            self.txtTemp_Avg.setText(_translate("MainWindow", '{0:0.1f} C'.format(avg_temp)))
+            self.txtTemp_Min.setText(_translate("MainWindow", '{0:0.1f} C'.format(min_temp)))
+            self.txtTemp_Max.setText(_translate("MainWindow", '{0:0.1f} C'.format(max_temp)))
         else:
             useTempF = True
             self.txtTemp.setText(_translate("MainWindow", '{0:0.1f} F'.format(
