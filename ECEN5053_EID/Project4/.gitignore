@@ -5,3 +5,6 @@ Project2.pro.user
 *.autosave
 **/__pycache__/
 .*/
+*.key
+*.pem
+*.crt

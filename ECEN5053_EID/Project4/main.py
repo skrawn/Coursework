@@ -11,17 +11,18 @@ import mainwindow_auto
 import Adafruit_DHT
 import time
 
+import aws_iot
+import server
+
 import threading
 from threading import Thread
+
+import asyncio
+from concurrent.futures import ProcessPoolExecutor
 
 from pprint import pprint
 
 from tinydb import TinyDB, Query
-
-import tornado.httpserver
-import tornado.websocket
-import tornado.ioloop
-import tornado.web
 
 
 class MainWindow(QMainWindow, mainwindow_auto.Ui_MainWindow):
@@ -46,9 +47,13 @@ class MainWindow(QMainWindow, mainwindow_auto.Ui_MainWindow):
         self.txtStatus.setText(_translate("MainWindow", "Updating"))
         humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 4)
         now = datetime.datetime.now()
+
         currTime = now.strftime("%m/%d/%y %I:%M:%S %p")
         strTemp = '{0:0.1f}'.format(temperature)
         strHum = '{0:0.1f}'.format(humidity)
+
+        #AWS_Client.SendData(strTemp, strHum, currTime)
+
         avg_temp_sum = avg_temp_sum + float(strTemp)
         avg_hum_sum = avg_hum_sum + float(strHum)
         num_samples = num_samples + 1
@@ -264,12 +269,29 @@ avg_hum = 0.0
 avg_temp_sum = 0.0
 avg_hum_sum = 0.0
 num_samples = 0
+AWS_Client = aws_iot.AWS_IOT()
 
 
 def main():
+    executor = ProcessPoolExecutor(2)
+    loop = asyncio.get_event_loop()    
+
     app = QApplication(sys.argv)
     form = MainWindow()
     form.show()
+    AWS_Client.Start()
+
+    serverThread = threading.Thread(target=server.Start_Server)
+    serverThread.daemon = True
+    serverThread.start()
+    #server.Start_Server()
+
+    # tasks = [        
+    #     #asyncio.async(server.Start_Server())]
+    #     asyncio.async(form.updateSensor_5s())]
+    #     #asyncio.async(form.show())]
+    # loop.run_until_complete(asyncio.wait(tasks))
+    # loop.close()
 
     sys.exit(app.exec_())
 
