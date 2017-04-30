@@ -19,7 +19,7 @@
     <input type="submit" id="getAvgHum" value="Get Average Humidity" /><br />
     <script>
     $(document).ready(function () {
-        var ws = new WebSocket("ws://192.168.1.16:8888/ws");
+        var ws = new WebSocket("ws://" + window.location.host + "/ws");        
 
         ws.onopen = function(evt) {
             var conn_status = document.getElementById('conn_text');
