@@ -52,11 +52,13 @@ class MainWindow(QMainWindow, mainwindow_auto.Ui_MainWindow):
         strTemp = '{0:0.1f}'.format(temperature)
         strHum = '{0:0.1f}'.format(humidity)
 
-        #AWS_Client.SendData(strTemp, strHum, currTime)
+        AWS_Client.SendData(strTemp, strHum, currTime)
 
         avg_temp_sum = avg_temp_sum + float(strTemp)
         avg_hum_sum = avg_hum_sum + float(strHum)
         num_samples = num_samples + 1
+        self.txtPackets.setText(_translate("MainWindow", '{0}'.format(num_samples)))
+
         curr_temp = float(strTemp)
         self.addToDB(float(strTemp), float(strHum), currTime)
         self.txtDate_Current.setText(_translate("MainWindow", currTime))
@@ -284,14 +286,6 @@ def main():
     serverThread = threading.Thread(target=server.Start_Server)
     serverThread.daemon = True
     serverThread.start()
-    #server.Start_Server()
-
-    # tasks = [        
-    #     #asyncio.async(server.Start_Server())]
-    #     asyncio.async(form.updateSensor_5s())]
-    #     #asyncio.async(form.show())]
-    # loop.run_until_complete(asyncio.wait(tasks))
-    # loop.close()
 
     sys.exit(app.exec_())
 

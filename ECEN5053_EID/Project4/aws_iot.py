@@ -23,7 +23,7 @@ class AWS_IOT():
             'humidity':humidity, 'timestamp': timestamp}, sort_keys=True,
             indent=4, separators=(',', ':'))
         print("Sending message: " + message)
-        self.mqttClient.publish("dht22_data", message, 1)
+        self.mqttClient.publish("sdk/test/dht22", message, 1)
 
     def Start(self):
         self.mqttClient = AWSIoTMQTTClient("dht22")
