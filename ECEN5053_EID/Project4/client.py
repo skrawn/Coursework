@@ -63,7 +63,8 @@ class MainWindow(QMainWindow, mainclient_auto.Ui_MainClient):
                         self.txtDateMinHum.setVisible(True)
                         self.txtDateMaxTemp.setVisible(True)
                         self.txtDateMinTemp.setVisible(True)
-                        self.txtCurrDate.setVisible(True)                
+                        self.txtCurrDate.setVisible(True)         
+            message.delete()       
 
                 
     def updateStats(self, temp, hum, date):
@@ -128,7 +129,7 @@ class MainWindow(QMainWindow, mainclient_auto.Ui_MainClient):
         self.txtStatus.setText(self._translate("MainClient", "Collecting samples..."))
 
         self.timer = QtCore.QTimer(self)
-        self.timer.setInterval(2000)
+        self.timer.setInterval(1000)
         self.timer.timeout.connect(self.handleSQS)
         self.timer.start()
 
