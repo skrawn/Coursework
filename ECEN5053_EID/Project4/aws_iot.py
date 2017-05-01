@@ -1,6 +1,7 @@
 
 import json
 import time
+import boto3
 
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
@@ -39,8 +40,7 @@ class AWS_IOT():
 
         self.mqttClient.connect()
         self.mqttClient.subscribe("dht22_request", 1, self.AWSMQTT_Callback)
-        time.sleep(2)
 
-
-    
-
+        # Purge the SQS queue
+        sqs = boto3.client('sqs')
+        sqs.purge_queue(QueueUrl="https://sqs.us-west-2.amazonaws.com/824840598937/DHT22_Queue")

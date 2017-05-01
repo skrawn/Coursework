@@ -17,9 +17,6 @@ import server
 import threading
 from threading import Thread
 
-import asyncio
-from concurrent.futures import ProcessPoolExecutor
-
 from pprint import pprint
 
 from tinydb import TinyDB, Query
@@ -275,9 +272,6 @@ AWS_Client = aws_iot.AWS_IOT()
 
 
 def main():
-    executor = ProcessPoolExecutor(2)
-    loop = asyncio.get_event_loop()    
-
     app = QApplication(sys.argv)
     form = MainWindow()
     form.show()
