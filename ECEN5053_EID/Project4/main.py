@@ -45,6 +45,10 @@ class MainWindow(QMainWindow, mainwindow_auto.Ui_MainWindow):
         humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 4)
         now = datetime.datetime.now()
 
+        # Sometimes the DHT22 gives bad values?
+        if (humidity > 100.0 or temperature > 100.0):
+            return
+
         currTime = now.strftime("%m/%d/%y %I:%M:%S %p")
         strTemp = '{0:0.1f}'.format(temperature)
         strHum = '{0:0.1f}'.format(humidity)
@@ -247,10 +251,18 @@ class MainWindow(QMainWindow, mainwindow_auto.Ui_MainWindow):
         self.sldrTemp.valueChanged.connect(lambda: self.tempSliderChanged())
         self.btnQuit.clicked.connect(lambda: self.pressedQuit())
 
+        self.txtDate_Avg_Hum.setVisible(False)
+        self.txtDate_Avg_Temp.setVisible(False)
+
+        self.timer = QtCore.QTimer(self)
+        self.timer.setInterval(5000)
+        self.timer.timeout.connect(self.updateSensor)
+        self.timer.start()
+
         # Periodic thread for automatic updates
-        timerThread = threading.Thread(target=self.updateSensor_5s)
-        timerThread.daemon = True
-        timerThread.start()
+        # timerThread = threading.Thread(target=self.updateSensor_5s)
+        # timerThread.daemon = True
+        # timerThread.start()
 
 
 quit_app = False
@@ -277,9 +289,9 @@ def main():
     form.show()
     AWS_Client.Start()
 
-    serverThread = threading.Thread(target=server.Start_Server)
-    serverThread.daemon = True
-    serverThread.start()
+    # serverThread = threading.Thread(target=server.Start_Server)
+    # serverThread.daemon = True
+    # serverThread.start()
 
     sys.exit(app.exec_())
 
