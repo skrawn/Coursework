@@ -1,3 +1,3 @@
-## Project 3
+## Project 4
 
-Project 3 extends Project 2 by benchmarking the different Web protocols.
+Project 4 extends the client/server interface into Amazon Web Services, utilizing the AWS IoT framework and the SQS service.
